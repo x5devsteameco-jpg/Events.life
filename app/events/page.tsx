@@ -61,53 +61,75 @@ export default async function BrowseEventsPage({
         </div>
       </nav>
 
-      <div className="max-w-6xl mx-auto px-4 py-10">
-        {/* Header */}
-        <div className="mb-10">
-          <h1 className="text-4xl font-black text-[#e8f4f8] mb-2" style={{ fontFamily: 'var(--font-display)' }}>
-            Browse Events
+      <div className="max-w-6xl mx-auto px-4">
+        {/* Hero */}
+        <div className="py-16 text-center">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold mb-5" style={{ background: 'rgba(0,229,204,0.08)', border: '1px solid rgba(0,229,204,0.2)', color: '#00e5cc' }}>
+            <span className="w-1.5 h-1.5 rounded-full bg-[#00e5cc] animate-pulse" />
+            {events.length} event{events.length !== 1 ? 's' : ''} live now
+          </div>
+          <h1 className="text-5xl sm:text-6xl font-black text-[#e8f4f8] mb-4 leading-tight" style={{ fontFamily: 'var(--font-display)' }}>
+            Discover<br />
+            <span className="gradient-text-static">Events Near You</span>
           </h1>
-          <p className="text-[#4d7a90]">Discover upcoming events and RSVP in seconds.</p>
+          <p className="text-[#4d7a90] max-w-xl mx-auto mb-8">
+            Find networking events, product demos, private gatherings and more. RSVP in seconds — no account needed.
+          </p>
+
+          {/* Prominent search */}
+          <form className="flex flex-wrap gap-3 max-w-2xl mx-auto" method="get">
+            <div className="flex-1 min-w-[200px] relative">
+              <svg className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#2d5268]" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+              <input
+                name="search"
+                defaultValue={search}
+                placeholder="Search events by name…"
+                className="w-full h-12 pl-10 pr-4 rounded-xl text-sm text-[#e8f4f8] outline-none focus:ring-2 focus:ring-[rgba(0,229,204,0.3)] transition-all"
+                style={{ background: 'rgba(12,26,31,0.9)', border: '1px solid rgba(0,229,204,0.2)' }}
+              />
+            </div>
+            <select
+              name="category"
+              defaultValue={category ?? ''}
+              className="h-12 px-4 rounded-xl text-sm text-[#e8f4f8] outline-none"
+              style={{ background: 'rgba(12,26,31,0.9)', border: '1px solid rgba(0,229,204,0.2)' }}
+            >
+              <option value="">All Categories</option>
+              {CATEGORIES.map((c) => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+            </select>
+            <button
+              type="submit"
+              className="h-12 px-6 rounded-xl text-sm font-bold text-[#020408] transition-all hover:shadow-[0_0_20px_rgba(0,229,204,0.3)] hover:-translate-y-0.5"
+              style={{ background: 'linear-gradient(135deg, #00e5cc, #7fff00)' }}
+            >
+              Search
+            </button>
+            {(search || category) && (
+              <Link href="/events" className="h-12 px-5 inline-flex items-center rounded-xl text-sm text-[#4d7a90] hover:text-[#e8f4f8] transition-colors" style={{ background: 'rgba(12,26,31,0.5)', border: '1px solid rgba(0,229,204,0.08)' }}>
+                Clear
+              </Link>
+            )}
+          </form>
         </div>
 
-        {/* Filters */}
-        <form className="flex flex-wrap gap-3 mb-8" method="get">
-          <input
-            name="search"
-            defaultValue={search}
-            placeholder="Search events…"
-            className="flex-1 min-w-[200px] px-4 py-2.5 rounded-xl text-sm text-[#e8f4f8] outline-none focus:ring-1 focus:ring-[rgba(0,229,204,0.4)]"
-            style={{ background: 'rgba(12,26,31,0.8)', border: '1px solid rgba(0,229,204,0.15)' }}
-          />
-          <select
-            name="category"
-            defaultValue={category ?? ''}
-            className="px-4 py-2.5 rounded-xl text-sm text-[#e8f4f8] outline-none"
-            style={{ background: 'rgba(12,26,31,0.8)', border: '1px solid rgba(0,229,204,0.15)' }}
-          >
-            <option value="">All Categories</option>
-            {CATEGORIES.map((c) => (
-              <option key={c} value={c}>{c}</option>
-            ))}
-          </select>
-          <button
-            type="submit"
-            className="px-5 py-2.5 rounded-xl text-sm font-bold text-[#020408]"
-            style={{ background: 'linear-gradient(135deg, #00e5cc, #7fff00)' }}
-          >
-            Search
-          </button>
-          {(search || category) && (
-            <Link href="/events" className="px-5 py-2.5 rounded-xl text-sm text-[#4d7a90] hover:text-[#e8f4f8] transition-colors" style={{ background: 'rgba(12,26,31,0.5)', border: '1px solid rgba(0,229,204,0.08)' }}>
-              Clear
-            </Link>
-          )}
-        </form>
-
-        {/* Results count */}
-        <p className="text-xs text-[#2d5268] mb-6">
-          {events.length} event{events.length !== 1 ? 's' : ''} found
-        </p>
+        {/* Active filter chips */}
+        {(search || category) && (
+          <div className="flex items-center gap-2 mb-6 flex-wrap">
+            <span className="text-xs text-[#2d5268]">Filtering by:</span>
+            {search && (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ background: 'rgba(0,229,204,0.08)', border: '1px solid rgba(0,229,204,0.15)', color: '#00e5cc' }}>
+                &ldquo;{search}&rdquo;
+              </span>
+            )}
+            {category && (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ background: 'rgba(127,255,0,0.06)', border: '1px solid rgba(127,255,0,0.15)', color: '#7fff00' }}>
+                {category}
+              </span>
+            )}
+          </div>
+        )}
 
         {/* Grid */}
         {events.length === 0 ? (

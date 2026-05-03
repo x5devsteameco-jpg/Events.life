@@ -5,6 +5,7 @@ import { formatDate } from '@/lib/utils';
 import { Badge, statusToBadgeVariant } from '@/components/ui/badge';
 import { RSVPForm } from '@/components/events/rsvp-form';
 import { AgeGate } from '@/components/events/age-gate';
+import { ShareButton } from '@/components/events/share-button';
 import type { EventStatus } from '@/lib/types';
 
 type Props = { params: Promise<{ slug: string }> };
@@ -51,7 +52,10 @@ export default async function PublicEventPage({ params }: Props) {
       {/* Nav */}
       <nav className="border-b px-6 py-4 flex items-center justify-between sticky top-0 z-30" style={{ background: 'rgba(2,4,8,0.85)', backdropFilter: 'blur(20px)', borderColor: 'rgba(0,229,204,0.1)' }}>
         <Link href="/" className="text-[#00e5cc] font-black text-lg" style={{ fontFamily: 'var(--font-display)' }}>Gatewise Events</Link>
-        <Badge variant={statusToBadgeVariant(event.status as EventStatus)}>{event.status}</Badge>
+        <div className="flex items-center gap-3">
+          <ShareButton title={event.title} />
+          <Badge variant={statusToBadgeVariant(event.status as EventStatus)}>{event.status}</Badge>
+        </div>
       </nav>
 
       <div className="max-w-4xl mx-auto px-4 py-10">

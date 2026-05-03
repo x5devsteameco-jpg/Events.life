@@ -1,8 +1,8 @@
 'use client';
 
-import { useRef } from 'react';
+import React, { useRef } from 'react';
 import Link from 'next/link';
-import { motion, useInView } from 'framer-motion';
+import { motion, useInView, AnimatePresence } from 'framer-motion';
 
 function Particle({ style }: { style: React.CSSProperties }) {
   return <div className="absolute rounded-full pointer-events-none" style={style} />;
@@ -19,25 +19,62 @@ function AnimSection({ children, className, delay = 0 }: { children: React.React
 }
 
 function Navbar() {
+  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const navLinks = [{ href: '/events', label: 'Explore' }, { href: '#how-it-works', label: 'How It Works' }, { href: '#for-hosts', label: 'For Hosts' }];
   return (
-    <motion.nav initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="fixed top-0 left-0 right-0 z-50" style={{ background: 'rgba(2,4,8,0.85)', backdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(0,229,204,0.08)' }}>
+    <motion.nav initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="fixed top-0 left-0 right-0 z-50" style={{ background: 'rgba(2,4,8,0.92)', backdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(0,229,204,0.08)' }}>
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2">
+        <Link href="/" className="flex items-center gap-2" onClick={() => setMobileOpen(false)}>
           <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #00e5cc, #7fff00)' }}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#020408" strokeWidth="2.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
           </div>
           <span className="text-lg font-bold gradient-text-static" style={{ fontFamily: 'var(--font-display)' }}>Gatewise Events</span>
         </Link>
         <div className="hidden md:flex items-center gap-8">
-          {[{ href: '/events', label: 'Explore' }, { href: '#how-it-works', label: 'How It Works' }, { href: '#for-hosts', label: 'For Hosts' }].map((link) => (
+          {navLinks.map((link) => (
             <Link key={link.href} href={link.href} className="text-sm font-medium text-[#7aafc4] hover:text-[#00e5cc] transition-colors">{link.label}</Link>
           ))}
         </div>
         <div className="flex items-center gap-3">
           <Link href="/login" className="hidden sm:block text-sm font-medium text-[#7aafc4] hover:text-[#00e5cc] transition-colors px-4 py-2 rounded-lg hover:bg-[rgba(0,229,204,0.06)]">Sign In</Link>
-          <Link href="/register" className="text-sm font-bold px-4 py-2 rounded-lg transition-all text-[#020408] hover:shadow-[0_0_20px_rgba(0,229,204,0.4)] hover:-translate-y-0.5" style={{ background: 'linear-gradient(135deg, #00e5cc, #7fff00)' }}>Get Started</Link>
+          <Link href="/register" className="hidden sm:block text-sm font-bold px-4 py-2 rounded-lg transition-all text-[#020408] hover:shadow-[0_0_20px_rgba(0,229,204,0.4)] hover:-translate-y-0.5" style={{ background: 'linear-gradient(135deg, #00e5cc, #7fff00)' }}>Get Started</Link>
+          {/* Mobile hamburger */}
+          <button
+            type="button"
+            className="md:hidden p-2 rounded-lg text-[#7aafc4] hover:text-[#00e5cc] hover:bg-[rgba(0,229,204,0.08)] transition-all"
+            onClick={() => setMobileOpen(!mobileOpen)}
+            aria-label="Toggle menu"
+          >
+            {mobileOpen
+              ? <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              : <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            }
+          </button>
         </div>
       </div>
+      {/* Mobile menu */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.2 }}
+            className="md:hidden overflow-hidden"
+            style={{ borderTop: '1px solid rgba(0,229,204,0.06)' }}
+          >
+            <div className="px-6 py-4 space-y-1">
+              {navLinks.map((link) => (
+                <Link key={link.href} href={link.href} onClick={() => setMobileOpen(false)} className="block py-2.5 text-sm font-medium text-[#7aafc4] hover:text-[#00e5cc] transition-colors">{link.label}</Link>
+              ))}
+              <div className="pt-3 flex flex-col gap-2">
+                <Link href="/login" onClick={() => setMobileOpen(false)} className="block py-2.5 text-center text-sm font-medium text-[#7aafc4] rounded-lg" style={{ border: '1px solid rgba(0,229,204,0.15)' }}>Sign In</Link>
+                <Link href="/register" onClick={() => setMobileOpen(false)} className="block py-2.5 text-center text-sm font-bold rounded-lg text-[#020408]" style={{ background: 'linear-gradient(135deg, #00e5cc, #7fff00)' }}>Get Started</Link>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.nav>
   );
 }
@@ -182,7 +219,7 @@ export default function HomePage() {
           </AnimSection>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
-              { number: '1', title: 'Create & Customize', description: 'Use our 8-step wizard to build your event. Set age gates, certification requirements, custom RSVP questions, and more.' },
+              { number: '1', title: 'Create & Customize', description: 'Use our 9-step wizard to build your event. Set age gates, certification requirements, custom RSVP questions, FAQs, and more.' },
               { number: '2', title: 'Invite & Share', description: 'Blast email invites to your list, share a public link, or keep it private. You control who can see and RSVP.' },
               { number: '3', title: 'Collect & Grow', description: 'Manage attendees, confirm RSVPs, export your leads, and use the data to grow your brand and community.' },
             ].map((step, i) => (
