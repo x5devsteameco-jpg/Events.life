@@ -32,7 +32,7 @@ export default async function AttendeesPage() {
   return (
     <div className="max-w-6xl mx-auto space-y-6">
       <div>
-        <h1 className="text-2xl font-black text-[#e8f4f8]" style={{ fontFamily: 'var(--font-display)' }}>
+        <h1 className="text-2xl font-black text-[#e8f4f8]" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>
           Attendees
         </h1>
         <p className="text-sm text-[#4d7a90] mt-1">

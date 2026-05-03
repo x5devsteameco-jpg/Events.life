@@ -10,7 +10,7 @@ export default function PrivacyPage() {
   return (
     <main className="min-h-screen bg-[#020408] text-[#e8f4f8] px-6 py-12">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-black mb-3" style={{ fontFamily: 'var(--font-display)' }}>
+        <h1 className="text-4xl font-black mb-3" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>
           Gatewise Events Privacy Policy
         </h1>
         <p className="text-sm text-[#4d7a90] mb-8">Policy version: {POLICY_VERSION}</p>

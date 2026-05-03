@@ -60,7 +60,7 @@ export default function RegisterPage() {
               <polyline points="20 6 9 17 4 12" />
             </svg>
           </div>
-          <h2 className="text-xl font-bold text-[#e8f4f8] mb-2" style={{ fontFamily: 'var(--font-display)' }}>Account created!</h2>
+          <h2 className="text-xl font-bold text-[#e8f4f8] mb-2" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>Account created!</h2>
           <p className="text-sm text-[#4d7a90]">Redirecting you to sign in…</p>
         </motion.div>
       </div>
@@ -70,7 +70,7 @@ export default function RegisterPage() {
   return (
     <div className="p-8">
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
-        <h1 className="text-2xl font-black text-[#e8f4f8] mb-1" style={{ fontFamily: 'var(--font-display)' }}>
+        <h1 className="text-2xl font-black text-[#e8f4f8] mb-1" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>
           Create your account
         </h1>
         <p className="text-sm text-[#4d7a90] mb-8">Start hosting events for free</p>

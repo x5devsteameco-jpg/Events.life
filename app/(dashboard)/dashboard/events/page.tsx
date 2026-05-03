@@ -132,7 +132,7 @@ export default function MyEventsPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-black text-[#e8f4f8]" style={{ fontFamily: 'var(--font-display)' }}>My Events</h1>
+          <h1 className="text-2xl font-black text-[#e8f4f8]" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>My Events</h1>
           <p className="text-sm text-[#4d7a90] mt-1">{events.length} event{events.length !== 1 ? 's' : ''} total</p>
         </div>
         <Link
@@ -178,7 +178,7 @@ export default function MyEventsPage() {
       ) : filtered.length === 0 ? (
         <div className="text-center py-20 rounded-2xl" style={{ background: 'rgba(12,26,31,0.3)', border: '1px dashed rgba(0,229,204,0.1)' }}>
           <div className="text-4xl mb-3">📅</div>
-          <h3 className="text-lg font-bold text-[#e8f4f8] mb-2" style={{ fontFamily: 'var(--font-display)' }}>
+          <h3 className="text-lg font-bold text-[#e8f4f8] mb-2" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>
             {filter === 'ALL' ? 'No events yet' : `No ${filter.toLowerCase()} events`}
           </h3>
           <p className="text-sm text-[#4d7a90] mb-5">

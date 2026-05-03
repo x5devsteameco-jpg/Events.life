@@ -68,7 +68,7 @@ export default async function BrowseEventsPage({
             <span className="w-1.5 h-1.5 rounded-full bg-[#00e5cc] animate-pulse" />
             {events.length} event{events.length !== 1 ? 's' : ''} live now
           </div>
-          <h1 className="text-5xl sm:text-6xl font-black text-[#e8f4f8] mb-4 leading-tight" style={{ fontFamily: 'var(--font-display)' }}>
+          <h1 className="text-5xl sm:text-6xl font-black text-[#e8f4f8] mb-4 leading-tight" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)", letterSpacing: '0.04em' }}>
             Discover<br />
             <span className="gradient-text-static">Events Near You</span>
           </h1>
@@ -135,7 +135,7 @@ export default async function BrowseEventsPage({
         {events.length === 0 ? (
           <div className="text-center py-24 rounded-2xl" style={{ background: 'rgba(12,26,31,0.3)', border: '1px dashed rgba(0,229,204,0.1)' }}>
             <div className="text-5xl mb-4">🔍</div>
-            <h2 className="text-xl font-bold text-[#e8f4f8] mb-2" style={{ fontFamily: 'var(--font-display)' }}>No events found</h2>
+            <h2 className="text-xl font-bold text-[#e8f4f8] mb-2" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>No events found</h2>
             <p className="text-sm text-[#4d7a90] mb-6">Try adjusting your search or check back later.</p>
             <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm text-[#020408]" style={{ background: 'linear-gradient(135deg, #00e5cc, #7fff00)' }}>
               Host Your Own Event
@@ -184,7 +184,7 @@ export default async function BrowseEventsPage({
                     {event.category && (
                       <span className="text-[10px] font-bold uppercase tracking-widest text-[#00e5cc] mb-1">{event.category}</span>
                     )}
-                    <h3 className="font-bold text-[#e8f4f8] line-clamp-2 mb-2 leading-snug" style={{ fontFamily: 'var(--font-display)' }}>
+                    <h3 className="font-bold text-[#e8f4f8] line-clamp-2 mb-2 leading-snug" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>
                       {event.title}
                     </h3>
 

@@ -124,13 +124,13 @@ export default function EditEventPage() {
         <button type="button" onClick={() => router.back()} className="text-[#4d7a90] hover:text-[#e8f4f8] transition-colors">
           ← Back
         </button>
-        <h1 className="text-2xl font-black text-[#e8f4f8]" style={{ fontFamily: 'var(--font-display)' }}>Edit Event</h1>
+        <h1 className="text-2xl font-black text-[#e8f4f8]" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>Edit Event</h1>
       </div>
 
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
         {/* Status toggle */}
         <div className="glass-strong rounded-2xl p-5">
-          <h2 className="text-sm font-bold text-[#e8f4f8] mb-3" style={{ fontFamily: 'var(--font-display)' }}>Event Status</h2>
+          <h2 className="text-sm font-bold text-[#e8f4f8] mb-3" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>Event Status</h2>
           <div className="flex gap-3">
             {[{ val: 'DRAFT', label: '📝 Draft' }, { val: 'LIVE', label: '🚀 Live' }, { val: 'CANCELLED', label: '🚫 Cancelled' }].map(({ val, label }) => (
               <button key={val} type="button" onClick={() => set({ status: val })}
@@ -143,7 +143,7 @@ export default function EditEventPage() {
 
         {/* Basics */}
         <div className="glass-strong rounded-2xl p-5 space-y-4">
-          <h2 className="text-sm font-bold text-[#e8f4f8]" style={{ fontFamily: 'var(--font-display)' }}>Basics</h2>
+          <h2 className="text-sm font-bold text-[#e8f4f8]" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>Basics</h2>
           <Input label="Event Name *" value={form.title} onChange={(e) => set({ title: e.target.value })} />
           <Select label="Category" options={CATEGORIES} value={form.category} onChange={(e) => set({ category: e.target.value })} />
           <div>
@@ -162,7 +162,7 @@ export default function EditEventPage() {
 
         {/* Date & Time */}
         <div className="glass-strong rounded-2xl p-5 space-y-4">
-          <h2 className="text-sm font-bold text-[#e8f4f8]" style={{ fontFamily: 'var(--font-display)' }}>Date & Time</h2>
+          <h2 className="text-sm font-bold text-[#e8f4f8]" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>Date & Time</h2>
           <div className="grid grid-cols-2 gap-4">
             <Input label="Start *" type="datetime-local" value={form.date} onChange={(e) => set({ date: e.target.value })} />
             <Input label="End" type="datetime-local" value={form.endDate} onChange={(e) => set({ endDate: e.target.value })} />
@@ -172,7 +172,7 @@ export default function EditEventPage() {
 
         {/* Location */}
         <div className="glass-strong rounded-2xl p-5 space-y-4">
-          <h2 className="text-sm font-bold text-[#e8f4f8]" style={{ fontFamily: 'var(--font-display)' }}>Location</h2>
+          <h2 className="text-sm font-bold text-[#e8f4f8]" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>Location</h2>
           <Input label="Venue Name" value={form.location} onChange={(e) => set({ location: e.target.value })} />
           <Input label="Address" value={form.address} onChange={(e) => set({ address: e.target.value })} />
           <Textarea label="Things to Know / Bring" rows={3} value={form.thingsToKnow} onChange={(e) => set({ thingsToKnow: e.target.value })} />
@@ -180,7 +180,7 @@ export default function EditEventPage() {
 
         {/* Capacity & Age */}
         <div className="glass-strong rounded-2xl p-5 space-y-4">
-          <h2 className="text-sm font-bold text-[#e8f4f8]" style={{ fontFamily: 'var(--font-display)' }}>Capacity & Requirements</h2>
+          <h2 className="text-sm font-bold text-[#e8f4f8]" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>Capacity & Requirements</h2>
           <Input label="Max Attendees (leave blank for unlimited)" type="number" min="1" value={form.maxAttendees ?? ''} onChange={(e) => set({ maxAttendees: e.target.value ? parseInt(e.target.value) : null })} />
           <div>
             <label className="label-base">Age Gate</label>
@@ -197,7 +197,7 @@ export default function EditEventPage() {
 
         {/* Visibility */}
         <div className="glass-strong rounded-2xl p-5 space-y-3">
-          <h2 className="text-sm font-bold text-[#e8f4f8]" style={{ fontFamily: 'var(--font-display)' }}>Visibility</h2>
+          <h2 className="text-sm font-bold text-[#e8f4f8]" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>Visibility</h2>
           <div className="flex gap-3">
             {[{ val: 'PUBLIC', label: '🌐 Public' }, { val: 'PRIVATE', label: '🔒 Private' }].map(({ val, label }) => (
               <button key={val} type="button" onClick={() => set({ visibility: val })}

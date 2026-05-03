@@ -98,7 +98,7 @@ export function Sidebar({ user }: SidebarProps) {
                 exit={{ opacity: 0, x: -8 }}
                 transition={{ duration: 0.15 }}
                 className="font-black text-sm gradient-text-static whitespace-nowrap"
-                style={{ fontFamily: 'var(--font-display)' }}
+                style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)", letterSpacing: '0.06em', fontSize: '0.82rem' }}
               >
                 Gatewise Events
               </motion.span>

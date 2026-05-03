@@ -47,7 +47,7 @@ export default async function EventManagePage({ params, searchParams }: Props) {
             <Badge variant={statusToBadgeVariant(event.status as EventStatus)}>{event.status}</Badge>
             {event.category && <span className="text-xs text-[#4d7a90]">{event.category}</span>}
           </div>
-          <h1 className="text-2xl font-black text-[#e8f4f8]" style={{ fontFamily: 'var(--font-display)' }}>{event.title}</h1>
+          <h1 className="text-2xl font-black text-[#e8f4f8]" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>{event.title}</h1>
           <p className="text-sm text-[#4d7a90] mt-1">{formatDate(event.date)}</p>
         </div>
         <div className="flex items-center gap-2">

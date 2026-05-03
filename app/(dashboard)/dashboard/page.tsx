@@ -42,7 +42,7 @@ export default async function DashboardPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-black text-[#e8f4f8]" style={{ fontFamily: 'var(--font-display)' }}>
+          <h1 className="text-2xl font-black text-[#e8f4f8]" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>
             Dashboard
           </h1>
           <p className="text-sm text-[#4d7a90] mt-1">Welcome back, {session.user.name || 'Host'}</p>
@@ -81,7 +81,7 @@ export default async function DashboardPage() {
 
       {/* Events */}
       <div className="flex items-center justify-between mb-5">
-        <h2 className="text-lg font-bold text-[#e8f4f8]" style={{ fontFamily: 'var(--font-display)' }}>
+        <h2 className="text-lg font-bold text-[#e8f4f8]" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>
           Recent Events
         </h2>
         <Link href="/dashboard/events" className="text-sm text-[#4d7a90] hover:text-[#00e5cc] transition-colors">
@@ -96,7 +96,7 @@ export default async function DashboardPage() {
           style={{ background: 'rgba(12,26,31,0.4)', border: '1px dashed rgba(0,229,204,0.15)' }}
         >
           <div className="text-5xl mb-4">🎪</div>
-          <h3 className="text-xl font-bold text-[#e8f4f8] mb-2" style={{ fontFamily: 'var(--font-display)' }}>
+          <h3 className="text-xl font-bold text-[#e8f4f8] mb-2" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>
             No events yet
           </h3>
           <p className="text-sm text-[#4d7a90] mb-6 max-w-sm mx-auto">

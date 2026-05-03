@@ -95,7 +95,7 @@ function Step1({ data, setData }: { data: WizardData; setData: (d: Partial<Wizar
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-black text-[#e8f4f8] mb-1" style={{ fontFamily: 'var(--font-display)' }}>Event Basics</h2>
+        <h2 className="text-xl font-black text-[#e8f4f8] mb-1" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>Event Basics</h2>
         <p className="text-sm text-[#4d7a90]">Give your event a name and tell us what kind of event it is.</p>
       </div>
       <Input label="Event Name *" placeholder="e.g. Summer Brand Showcase 2025" value={data.title} onChange={(e) => setData({ title: e.target.value })} />
@@ -159,7 +159,7 @@ function Step2({ data, setData }: { data: WizardData; setData: (d: Partial<Wizar
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-black text-[#e8f4f8] mb-1" style={{ fontFamily: 'var(--font-display)' }}>Event Details</h2>
+        <h2 className="text-xl font-black text-[#e8f4f8] mb-1" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>Event Details</h2>
         <p className="text-sm text-[#4d7a90]">Describe your event and add a banner image.</p>
       </div>
       <Textarea
@@ -207,7 +207,7 @@ function Step3({ data, setData }: { data: WizardData; setData: (d: Partial<Wizar
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-black text-[#e8f4f8] mb-1" style={{ fontFamily: 'var(--font-display)' }}>Date & Time</h2>
+        <h2 className="text-xl font-black text-[#e8f4f8] mb-1" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>Date & Time</h2>
         <p className="text-sm text-[#4d7a90]">When does your event start and end?</p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -233,7 +233,7 @@ function Step4({ data, setData }: { data: WizardData; setData: (d: Partial<Wizar
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-black text-[#e8f4f8] mb-1" style={{ fontFamily: 'var(--font-display)' }}>Location</h2>
+        <h2 className="text-xl font-black text-[#e8f4f8] mb-1" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>Location</h2>
         <p className="text-sm text-[#4d7a90]">Where is your event taking place?</p>
       </div>
 
@@ -272,7 +272,7 @@ function Step5({ data, setData }: { data: WizardData; setData: (d: Partial<Wizar
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-black text-[#e8f4f8] mb-1" style={{ fontFamily: 'var(--font-display)' }}>Tickets</h2>
+        <h2 className="text-xl font-black text-[#e8f4f8] mb-1" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>Tickets</h2>
         <p className="text-sm text-[#4d7a90]">All events are free to attend. Paid tickets coming soon.</p>
       </div>
       <div className="p-4 rounded-xl flex items-center gap-3" style={{ background: 'rgba(0,229,204,0.06)', border: '1px solid rgba(0,229,204,0.15)' }}>
@@ -325,7 +325,7 @@ function Step6({ data, setData }: { data: WizardData; setData: (d: Partial<Wizar
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-black text-[#e8f4f8] mb-1" style={{ fontFamily: 'var(--font-display)' }}>Requirements</h2>
+        <h2 className="text-xl font-black text-[#e8f4f8] mb-1" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>Requirements</h2>
         <p className="text-sm text-[#4d7a90]">Set age requirements, certification requirements, and custom RSVP questions.</p>
       </div>
 
@@ -421,7 +421,7 @@ function Step7Faq({ data, setData }: { data: WizardData; setData: (d: Partial<Wi
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-black text-[#e8f4f8] mb-1" style={{ fontFamily: 'var(--font-display)' }}>Frequently Asked Questions</h2>
+        <h2 className="text-xl font-black text-[#e8f4f8] mb-1" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>Frequently Asked Questions</h2>
         <p className="text-sm text-[#4d7a90]">Add Q&amp;As that will be shown on your event page to help attendees before RSVPing.</p>
       </div>
 
@@ -482,7 +482,7 @@ function Step7({ data }: { data: WizardData }) {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-black text-[#e8f4f8] mb-1" style={{ fontFamily: 'var(--font-display)' }}>RSVP Form Preview</h2>
+        <h2 className="text-xl font-black text-[#e8f4f8] mb-1" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>RSVP Form Preview</h2>
         <p className="text-sm text-[#4d7a90]">This is what attendees will fill out when they RSVP to your event.</p>
       </div>
 
@@ -544,7 +544,7 @@ function Step8({ data, setData, onSubmit, submitting }: { data: WizardData; setD
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-black text-[#e8f4f8] mb-1" style={{ fontFamily: 'var(--font-display)' }}>Invite & Launch</h2>
+        <h2 className="text-xl font-black text-[#e8f4f8] mb-1" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>Invite & Launch</h2>
         <p className="text-sm text-[#4d7a90]">Send invites and choose how your event appears.</p>
       </div>
 
@@ -572,7 +572,7 @@ function Step8({ data, setData, onSubmit, submitting }: { data: WizardData; setD
 
       {/* Summary */}
       <div className="rounded-xl p-5 space-y-3" style={{ background: 'rgba(12,26,31,0.6)', border: '1px solid rgba(0,229,204,0.1)' }}>
-        <h3 className="text-sm font-bold text-[#e8f4f8]" style={{ fontFamily: 'var(--font-display)' }}>Event Summary</h3>
+        <h3 className="text-sm font-bold text-[#e8f4f8]" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>Event Summary</h3>
         {[
           { label: 'Title', value: data.title || '—' },
           { label: 'Category', value: data.category || '—' },
@@ -685,7 +685,7 @@ export default function NewEventPage() {
     <div className="max-w-2xl mx-auto">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-black text-[#e8f4f8]" style={{ fontFamily: 'var(--font-display)' }}>Create Event</h1>
+        <h1 className="text-2xl font-black text-[#e8f4f8]" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>Create Event</h1>
         <p className="text-sm text-[#4d7a90] mt-1">Step {step} of {STEPS.length}: {STEPS[step - 1].label}</p>
       </div>
 

@@ -101,7 +101,7 @@ export function RSVPForm({ eventId, title, requiresCertification, certificationN
           style={{ background: 'rgba(12,26,31,0.85)', border: '1px solid rgba(0,229,204,0.2)' }}
         >
           <div className="text-5xl mb-4">{rsvpStatus === 'CONFIRMED' ? '🎉' : '⏳'}</div>
-          <h3 className="text-xl font-black text-[#00e5cc] mb-2" style={{ fontFamily: 'var(--font-display)' }}>
+          <h3 className="text-xl font-black text-[#00e5cc] mb-2" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>
             {rsvpStatus === 'CONFIRMED' ? "You're In!" : "You're on the waitlist"}
           </h3>
           <p className="text-sm text-[#4d7a90]">
@@ -122,7 +122,7 @@ export function RSVPForm({ eventId, title, requiresCertification, certificationN
   return (
     <div className="rounded-2xl overflow-hidden" style={{ background: 'rgba(12,26,31,0.85)', border: '1px solid rgba(0,229,204,0.15)' }}>
       <div className="px-5 py-4" style={{ background: 'rgba(0,229,204,0.06)', borderBottom: '1px solid rgba(0,229,204,0.1)' }}>
-        <h3 className="text-sm font-black text-[#00e5cc]" style={{ fontFamily: 'var(--font-display)' }}>RSVP to {title}</h3>
+        <h3 className="text-sm font-black text-[#00e5cc]" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>RSVP to {title}</h3>
         <p className="text-xs text-[#4d7a90] mt-0.5">Free event · Takes 30 seconds</p>
       </div>
 

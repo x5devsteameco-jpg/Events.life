@@ -78,7 +78,7 @@ export default async function PublicEventPage({ params }: Props) {
                 {event.category && <Badge variant="default">{event.category}</Badge>}
                 {event.ageGate > 0 && <Badge variant="cancelled">{event.ageGate}+ Only</Badge>}
               </div>
-              <h1 className="text-3xl sm:text-4xl font-black text-[#e8f4f8] leading-tight mb-3" style={{ fontFamily: 'var(--font-display)' }}>
+              <h1 className="text-3xl sm:text-4xl font-black text-[#e8f4f8] leading-tight mb-3" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>
                 {event.title}
               </h1>
               <p className="text-[#4d7a90] text-sm">

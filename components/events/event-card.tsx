@@ -75,7 +75,7 @@ export function EventCard({ event }: EventCardProps) {
       <div className="p-4 flex-1 flex flex-col">
         <h3
           className="font-bold text-[#e8f4f8] line-clamp-1 mb-1 text-sm"
-          style={{ fontFamily: 'var(--font-display)' }}
+          style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)", letterSpacing: '0.02em' }}
         >
           {event.title}
         </h3>
