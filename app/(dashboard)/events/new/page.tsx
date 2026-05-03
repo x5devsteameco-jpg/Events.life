@@ -657,7 +657,11 @@ export default function NewEventPage() {
       }
 
       toast(status === 'LIVE' ? '🚀 Event launched!' : '📝 Saved as draft', 'success');
-      router.push(`/dashboard/events`);
+      if (status === 'LIVE' && json.data?.slug) {
+        router.push(`/event/${json.data.slug}?launched=1`);
+      } else {
+        router.push(`/dashboard/events`);
+      }
     } catch {
       toast('Something went wrong', 'error');
     } finally {
