@@ -81,7 +81,7 @@ export function SettingsForm({ initialData }: Props) {
       <section className="rounded-2xl p-6" style={{ background: 'rgba(12,26,31,0.6)', border: '1px solid rgba(0,229,204,0.08)' }}>
         <div className="flex items-center gap-3 mb-6">
           {/* Avatar */}
-          <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-xl font-black text-[#020408] flex-shrink-0" style={{ background: 'linear-gradient(135deg, #00e5cc, #7fff00)' }}>
+          <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-xl font-black text-[#020408] flex-shrink-0" style={{ background: 'linear-gradient(135deg, #00c4a8, #00e5cc)' }}>
             {(initialData.name?.[0] ?? initialData.email[0] ?? 'U').toUpperCase()}
           </div>
           <div>

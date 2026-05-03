@@ -53,7 +53,7 @@
   --gradient-hero:    linear-gradient(135deg, #020408 0%, #060d10 40%, #0c1a1f 100%);
   --gradient-teal:    linear-gradient(135deg, #00e5cc, #00b8a3);
   --gradient-green:   linear-gradient(135deg, #7fff00, #5ecc00);
-  --gradient-accent:  linear-gradient(135deg, #00e5cc 0%, #7fff00 100%);
+  --gradient-accent:  linear-gradient(135deg, #00c4a8 0%, #00e5cc 100%);
   --gradient-danger:  linear-gradient(135deg, #ff3cac, #cc2e89);
   --gradient-card:    linear-gradient(180deg, rgba(12,26,31,0.94) 0%, rgba(6,13,16,0.98) 100%);
 

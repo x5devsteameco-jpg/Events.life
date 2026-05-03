@@ -31,7 +31,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
             </span>
             <div
               className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold text-[#020408]"
-              style={{ background: 'linear-gradient(135deg, #00e5cc, #7fff00)' }}
+              style={{ background: 'linear-gradient(135deg, #00c4a8, #00e5cc)' }}
             >
               {(session.user.name?.[0] ?? session.user.email?.[0] ?? 'U').toUpperCase()}
             </div>
@@ -39,7 +39,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
         </header>
 
         {/* Main content */}
-        <main className="flex-1 overflow-y-auto p-6">
+        <main className="flex-1 overflow-y-auto p-8 pt-10">
           {children}
         </main>
       </div>

@@ -85,7 +85,7 @@ export function Sidebar({ user }: SidebarProps) {
       {/* Logo */}
       <div className="h-14 flex items-center px-4 flex-shrink-0" style={{ borderBottom: '1px solid rgba(0,229,204,0.06)' }}>
         <Link href="/dashboard" className="flex items-center gap-2 min-w-0">
-          <div className="w-7 h-7 flex-shrink-0 rounded-lg flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #00e5cc, #7fff00)' }}>
+          <div className="w-7 h-7 flex-shrink-0 rounded-lg flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #00c4a8, #00e5cc)' }}>
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#020408" strokeWidth="2.5" aria-hidden="true">
               <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
             </svg>
@@ -170,7 +170,7 @@ export function Sidebar({ user }: SidebarProps) {
         <div className={cn('flex items-center gap-3 p-2 rounded-xl', collapsed && 'justify-center')}>
           <div
             className="w-8 h-8 flex-shrink-0 rounded-full flex items-center justify-center text-xs font-bold text-[#020408]"
-            style={{ background: 'linear-gradient(135deg, #00e5cc, #7fff00)' }}
+            style={{ background: 'linear-gradient(135deg, #00c4a8, #00e5cc)' }}
           >
             {(user.name?.[0] ?? user.email?.[0] ?? 'U').toUpperCase()}
           </div>

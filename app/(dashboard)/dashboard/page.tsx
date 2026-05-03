@@ -32,7 +32,7 @@ export default async function DashboardPage() {
 
   const stats = [
     { label: 'Total Events', value: total, icon: '📅', color: '#00e5cc' },
-    { label: 'Total RSVPs', value: rsvpCount, icon: '✅', color: '#7fff00' },
+    { label: 'Total RSVPs', value: rsvpCount, icon: '✅', color: '#00d4b0' },
     { label: 'Upcoming', value: upcoming, icon: '🚀', color: '#00e5cc' },
     { label: 'Drafts', value: drafts, icon: '📝', color: '#4d7a90' },
   ];
@@ -50,7 +50,7 @@ export default async function DashboardPage() {
         <Link
           href="/dashboard/events/new"
           className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-[#020408] transition-all hover:-translate-y-0.5 hover:shadow-[0_0_24px_rgba(0,229,204,0.3)]"
-          style={{ background: 'linear-gradient(135deg, #00e5cc, #7fff00)' }}
+          style={{ background: 'linear-gradient(135deg, #00c4a8, #00e5cc)' }}
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
             <path d="M12 5v14M5 12h14" />
@@ -105,7 +105,7 @@ export default async function DashboardPage() {
           <Link
             href="/dashboard/events/new"
             className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-[#020408]"
-            style={{ background: 'linear-gradient(135deg, #00e5cc, #7fff00)' }}
+            style={{ background: 'linear-gradient(135deg, #00c4a8, #00e5cc)' }}
           >
             Create Your First Event
           </Link>

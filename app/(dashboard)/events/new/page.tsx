@@ -529,7 +529,7 @@ function Step7({ data }: { data: WizardData }) {
           )}
 
           <div className="pt-2">
-            <div className="w-full py-3 rounded-xl text-sm font-bold text-center text-[#020408]" style={{ background: 'linear-gradient(135deg, #00e5cc, #7fff00)' }}>
+            <div className="w-full py-3 rounded-xl text-sm font-bold text-center text-[#020408]" style={{ background: 'linear-gradient(135deg, #00c4a8, #00e5cc)' }}>
               Submit RSVP
             </div>
           </div>

@@ -44,7 +44,7 @@ export default async function BrowseEventsPage({
         style={{ background: 'rgba(2,4,8,0.9)', backdropFilter: 'blur(20px)', borderBottom: '1px solid rgba(0,229,204,0.08)' }}
       >
         <Link href="/" className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #00e5cc, #7fff00)' }}>
+          <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #00c4a8, #00e5cc)' }}>
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#020408" strokeWidth="2.5" aria-hidden="true">
               <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
             </svg>
@@ -55,7 +55,7 @@ export default async function BrowseEventsPage({
         </Link>
         <div className="flex items-center gap-3">
           <Link href="/login" className="text-sm text-[#7aafc4] hover:text-[#00e5cc] transition-colors px-3 py-1.5">Sign In</Link>
-          <Link href="/register" className="text-sm font-bold px-4 py-2 rounded-lg text-[#020408]" style={{ background: 'linear-gradient(135deg, #00e5cc, #7fff00)' }}>
+          <Link href="/register" className="text-sm font-bold px-4 py-2 rounded-lg text-[#020408]" style={{ background: 'linear-gradient(135deg, #00c4a8, #00e5cc)' }}>
             Get Started
           </Link>
         </div>
@@ -102,7 +102,7 @@ export default async function BrowseEventsPage({
             <button
               type="submit"
               className="h-12 px-6 rounded-xl text-sm font-bold text-[#020408] transition-all hover:shadow-[0_0_20px_rgba(0,229,204,0.3)] hover:-translate-y-0.5"
-              style={{ background: 'linear-gradient(135deg, #00e5cc, #7fff00)' }}
+              style={{ background: 'linear-gradient(135deg, #00c4a8, #00e5cc)' }}
             >
               Search
             </button>
@@ -137,7 +137,7 @@ export default async function BrowseEventsPage({
             <div className="text-5xl mb-4">🔍</div>
             <h2 className="text-xl font-bold text-[#e8f4f8] mb-2" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>No events found</h2>
             <p className="text-sm text-[#4d7a90] mb-6">Try adjusting your search or check back later.</p>
-            <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm text-[#020408]" style={{ background: 'linear-gradient(135deg, #00e5cc, #7fff00)' }}>
+            <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm text-[#020408]" style={{ background: 'linear-gradient(135deg, #00c4a8, #00e5cc)' }}>
               Host Your Own Event
             </Link>
           </div>

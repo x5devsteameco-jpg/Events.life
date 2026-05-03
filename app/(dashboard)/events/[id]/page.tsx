@@ -62,7 +62,7 @@ export default async function EventManagePage({ params, searchParams }: Props) {
           <Link
             href={`/dashboard/events/${id}/edit`}
             className="px-4 py-2 rounded-xl text-sm font-bold text-[#020408] transition-all"
-            style={{ background: 'linear-gradient(135deg, #00e5cc, #7fff00)' }}
+            style={{ background: 'linear-gradient(135deg, #00c4a8, #00e5cc)' }}
           >
             Edit Event
           </Link>
@@ -181,7 +181,7 @@ function InvitePanel({ eventId }: { eventId: string }) {
           placeholder="one@example.com&#10;two@example.com"
           className="input-base w-full resize-none"
         />
-        <button type="submit" className="px-5 py-2 rounded-xl text-sm font-bold text-[#020408]" style={{ background: 'linear-gradient(135deg, #00e5cc, #7fff00)' }}>
+        <button type="submit" className="px-5 py-2 rounded-xl text-sm font-bold text-[#020408]" style={{ background: 'linear-gradient(135deg, #00c4a8, #00e5cc)' }}>
           Send Invites
         </button>
       </form>

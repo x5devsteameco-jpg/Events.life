@@ -40,7 +40,7 @@ function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-3" onClick={() => setMobileOpen(false)}>
-          <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #00e5cc, #7fff00)', boxShadow: '0 0 16px rgba(0,229,204,0.3)' }}>
+          <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #00c4a8, #00e5cc)', boxShadow: '0 0 16px rgba(0,229,204,0.3)' }}>
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#020408" strokeWidth="2.5" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
           </div>
           <span style={{ fontFamily: CINZEL, color: '#00e5cc', letterSpacing: '0.06em', fontWeight: 700, fontSize: '0.95rem' }}>GATEWISE</span>
@@ -52,7 +52,7 @@ function Navbar() {
         </div>
         <div className="flex items-center gap-3">
           <Link href="/login" className="hidden sm:block text-sm font-medium px-4 py-2 rounded-xl" style={{ color: '#7aafc4', border: '1px solid rgba(0,229,204,0.12)' }}>Sign In</Link>
-          <Link href="/register" className="hidden sm:block text-sm font-bold px-5 py-2.5 rounded-xl text-[#020408]" style={{ background: 'linear-gradient(135deg, #00e5cc, #7fff00)', boxShadow: '0 0 20px rgba(0,229,204,0.25)' }}>Get Started</Link>
+          <Link href="/register" className="hidden sm:block text-sm font-bold px-5 py-2.5 rounded-xl text-[#020408]" style={{ background: 'linear-gradient(135deg, #00c4a8, #00e5cc)', boxShadow: '0 0 20px rgba(0,229,204,0.25)' }}>Get Started</Link>
           <button type="button" className="md:hidden p-2 rounded-xl" style={{ color: '#7aafc4', border: '1px solid rgba(0,229,204,0.12)' }} onClick={() => setMobileOpen(!mobileOpen)} aria-label="Toggle menu">
             {mobileOpen
               ? <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
@@ -69,7 +69,7 @@ function Navbar() {
               ))}
               <div className="pt-3 flex flex-col gap-2">
                 <Link href="/login" onClick={() => setMobileOpen(false)} className="block py-2.5 text-center text-sm font-medium rounded-xl" style={{ border: '1px solid rgba(0,229,204,0.18)', color: '#7aafc4' }}>Sign In</Link>
-                <Link href="/register" onClick={() => setMobileOpen(false)} className="block py-2.5 text-center text-sm font-bold rounded-xl text-[#020408]" style={{ background: 'linear-gradient(135deg, #00e5cc, #7fff00)' }}>Get Started</Link>
+                <Link href="/register" onClick={() => setMobileOpen(false)} className="block py-2.5 text-center text-sm font-bold rounded-xl text-[#020408]" style={{ background: 'linear-gradient(135deg, #00c4a8, #00e5cc)' }}>Get Started</Link>
               </div>
             </div>
           </motion.div>
@@ -133,7 +133,7 @@ export default function HomePage() {
               lineHeight: 0.95,
               letterSpacing: '0.03em',
               marginBottom: '0.12em',
-              background: 'linear-gradient(135deg, #00e5cc 0%, #7fff00 55%, #00e5cc 100%)',
+              background: 'linear-gradient(135deg, #00b89e 0%, #00e5cc 60%, #00b89e 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',
@@ -171,7 +171,7 @@ export default function HomePage() {
             transition={{ duration: 0.6, delay: 0.35 }}
             className="flex flex-col sm:flex-row items-center justify-center gap-4"
           >
-            <Link href="/register" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 font-bold text-[#020408]" style={{ background: 'linear-gradient(135deg, #00e5cc, #7fff00)', padding: '14px 32px', borderRadius: '14px', fontSize: '1rem', boxShadow: '0 0 32px rgba(0,229,204,0.3), 0 8px 24px rgba(0,0,0,0.4)', minHeight: '52px' }}>
+            <Link href="/register" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 font-bold text-[#020408]" style={{ background: 'linear-gradient(135deg, #00c4a8, #00e5cc)', padding: '14px 32px', borderRadius: '14px', fontSize: '1rem', boxShadow: '0 0 32px rgba(0,229,204,0.3), 0 8px 24px rgba(0,0,0,0.4)', minHeight: '52px' }}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
               Create Your First Event
             </Link>
@@ -224,7 +224,7 @@ export default function HomePage() {
             <p style={{ fontFamily: BEBAS, fontSize: '0.88rem', letterSpacing: '0.2em', color: '#00e5cc', textTransform: 'uppercase', marginBottom: '12px' }}>Platform Features</p>
             <h2 style={{ fontFamily: CINZEL, fontSize: 'clamp(2rem, 5vw, 3.6rem)', fontWeight: 800, color: '#e8f4f8', letterSpacing: '0.04em', lineHeight: 1.1, marginBottom: '16px' }}>
               Everything You Need.{' '}
-              <span style={{ background: 'linear-gradient(135deg, #00e5cc, #7fff00)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Nothing You Don&apos;t.</span>
+              <span style={{ background: 'linear-gradient(135deg, #00c4a8, #00e5cc)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Nothing You Don&apos;t.</span>
             </h2>
             <p style={{ color: '#7aafc4', maxWidth: '520px', margin: '0 auto', fontSize: '1rem', lineHeight: 1.65 }}>
               Built from the ground up for hosts who need modern event tools and clear compliance controls.
@@ -305,7 +305,7 @@ export default function HomePage() {
             <p style={{ color: '#7aafc4', fontSize: '1.05rem', maxWidth: '480px', margin: '0 auto 2.5rem', lineHeight: 1.65 }}>
               Join hosts across Canada running professional events with stronger compliance and full data ownership.
             </p>
-            <Link href="/register" className="inline-flex items-center justify-center gap-2 font-bold text-[#020408]" style={{ background: 'linear-gradient(135deg, #00e5cc, #7fff00)', padding: '16px 40px', borderRadius: '14px', fontSize: '1.05rem', boxShadow: '0 0 40px rgba(0,229,204,0.3), 0 8px 32px rgba(0,0,0,0.5)' }}>
+            <Link href="/register" className="inline-flex items-center justify-center gap-2 font-bold text-[#020408]" style={{ background: 'linear-gradient(135deg, #00c4a8, #00e5cc)', padding: '16px 40px', borderRadius: '14px', fontSize: '1.05rem', boxShadow: '0 0 40px rgba(0,229,204,0.3), 0 8px 32px rgba(0,0,0,0.5)' }}>
               Start for Free
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
             </Link>
@@ -319,7 +319,7 @@ export default function HomePage() {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
-                <div style={{ width: 32, height: 32, borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg, #00e5cc, #7fff00)', boxShadow: '0 0 12px rgba(0,229,204,0.2)' }}>
+                <div style={{ width: 32, height: 32, borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg, #00c4a8, #00e5cc)', boxShadow: '0 0 12px rgba(0,229,204,0.2)' }}>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#020408" strokeWidth="2.5" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
                 </div>
                 <span style={{ fontFamily: CINZEL, fontSize: '0.88rem', fontWeight: 700, color: '#00e5cc', letterSpacing: '0.1em' }}>GATEWISE EVENTS</span>
