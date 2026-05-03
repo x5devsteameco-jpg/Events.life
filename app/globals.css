@@ -1,9 +1,9 @@
-@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap");
 @import "tailwindcss";
 
 /* ============================================================
-   EVENTS.LIFE — DESIGN SYSTEM
-   Teal / Electric Green / Hot Pink — Dark Festival Aesthetic
+   GATEWISE EVENTS — DESIGN SYSTEM v2
+   Teal / Electric Green / Hot Pink — Dark Luxury Festival
+   Cinzel headings · Bebas Neue labels · Space Grotesk UI
    ============================================================ */
 
 :root {
@@ -14,6 +14,8 @@
   --bg-raised:  #132530;
   --bg-surface: #1a3040;
   --bg-overlay: #1f3a4d;
+  --panel:      rgba(10, 20, 26, 0.94);
+  --panel-soft: rgba(12, 24, 32, 0.92);
 
   /* Accent system */
   --teal:       #00e5cc;
@@ -31,13 +33,18 @@
   --pink-glow:  rgba(255, 60, 172, 0.25);
   --pink-glass: rgba(255, 60, 172, 0.08);
 
+  /* Line / border system (After Dark inspired) */
+  --line:       rgba(0, 229, 204, 0.32);
+  --line-soft:  rgba(0, 229, 204, 0.12);
+  --line-faint: rgba(0, 229, 204, 0.05);
+
   /* Text */
   --text-primary:   #e8f4f8;
   --text-secondary: #7aafc4;
   --text-muted:     #4d7a90;
   --text-subtle:    #2d5268;
 
-  /* Borders */
+  /* Borders (legacy compat) */
   --border-teal:  rgba(0, 229, 204, 0.2);
   --border-dim:   rgba(0, 229, 204, 0.08);
   --border-faint: rgba(255, 255, 255, 0.04);
@@ -48,17 +55,19 @@
   --gradient-green:   linear-gradient(135deg, #7fff00, #5ecc00);
   --gradient-accent:  linear-gradient(135deg, #00e5cc 0%, #7fff00 100%);
   --gradient-danger:  linear-gradient(135deg, #ff3cac, #cc2e89);
-  --gradient-card:    linear-gradient(135deg, rgba(19,37,48,0.9) 0%, rgba(12,26,31,0.95) 100%);
+  --gradient-card:    linear-gradient(180deg, rgba(12,26,31,0.94) 0%, rgba(6,13,16,0.98) 100%);
 
   /* Font families */
   --font-display: 'Space Grotesk', system-ui, sans-serif;
-  --font-body:    'Inter', system-ui, sans-serif;
+  --font-body:    'Space Grotesk', system-ui, sans-serif;
+  /* --font-heading and --font-label are injected by Next.js font system on <html> */
 
-  /* Shadows */
-  --shadow-teal:  0 0 30px rgba(0, 229, 204, 0.15), 0 4px 20px rgba(0,0,0,0.4);
-  --shadow-green: 0 0 30px rgba(127, 255, 0, 0.12), 0 4px 20px rgba(0,0,0,0.4);
-  --shadow-card:  0 8px 32px rgba(0,0,0,0.5), 0 2px 8px rgba(0,0,0,0.3);
-  --shadow-deep:  0 20px 60px rgba(0,0,0,0.6);
+  /* Shadows — deeper, more dramatic */
+  --shadow-teal:  0 0 40px rgba(0, 229, 204, 0.18), 0 8px 32px rgba(0,0,0,0.6);
+  --shadow-green: 0 0 40px rgba(127, 255, 0, 0.14), 0 8px 32px rgba(0,0,0,0.6);
+  --shadow-card:  0 12px 48px rgba(0,0,0,0.65), 0 2px 8px rgba(0,0,0,0.4), 0 0 0 1px var(--line-soft);
+  --shadow-panel: 0 28px 70px rgba(0,0,0,0.5), 0 4px 12px rgba(0,0,0,0.4);
+  --shadow-deep:  0 24px 80px rgba(0,0,0,0.7);
 
   /* Transitions */
   --transition-fast:   150ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -90,8 +99,13 @@ html {
 }
 
 body {
-  font-family: var(--font-body);
+  font-family: var(--font-display);
   background-color: var(--bg-void);
+  /* Rich multi-radial background — depth and warmth */
+  background-image:
+    radial-gradient(ellipse at 15% 0%, rgba(0, 229, 204, 0.07) 0%, transparent 38%),
+    radial-gradient(ellipse at 85% 10%, rgba(127, 255, 0, 0.04) 0%, transparent 32%),
+    radial-gradient(ellipse at 50% 100%, rgba(255, 60, 172, 0.04) 0%, transparent 40%);
   color: var(--text-primary);
   line-height: 1.6;
   min-height: 100vh;
@@ -101,10 +115,11 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-display);
+  font-family: var(--font-heading, 'Cinzel', Georgia, serif);
   font-weight: 700;
-  line-height: 1.2;
+  line-height: 1.15;
   color: var(--text-primary);
+  letter-spacing: 0.01em;
 }
 
 a {
@@ -126,11 +141,11 @@ button {
   cursor: pointer;
   border: none;
   background: none;
-  font-family: var(--font-body);
+  font-family: var(--font-display);
 }
 
 input, textarea, select {
-  font-family: var(--font-body);
+  font-family: var(--font-display);
 }
 
 /* ============================================================
@@ -291,12 +306,15 @@ input, textarea, select {
   gap: 8px;
   font-family: var(--font-display);
   font-weight: 600;
-  border-radius: var(--radius-md);
+  border-radius: 14px;
+  min-height: 48px;
+  padding: 0 22px;
   transition: all var(--transition-base);
   position: relative;
   overflow: hidden;
   user-select: none;
   white-space: nowrap;
+  letter-spacing: 0.02em;
 }
 
 .btn:disabled {
@@ -311,23 +329,26 @@ input, textarea, select {
   color: #020408;
   border: none;
   animation: gradient-shift 4s ease infinite;
+  box-shadow: 0 0 28px var(--teal-glow), 0 4px 16px rgba(0,0,0,0.4);
 }
 
 .btn-primary:hover {
-  box-shadow: 0 0 24px var(--teal-glow), 0 4px 12px rgba(0,0,0,0.3);
-  transform: translateY(-1px);
+  box-shadow: 0 0 40px rgba(0, 229, 204, 0.38), 0 4px 20px rgba(0,0,0,0.5);
+  transform: translateY(-2px);
+  filter: brightness(1.08);
 }
 
 .btn-secondary {
   background: var(--teal-glass);
   color: var(--teal);
-  border: 1px solid var(--border-teal);
+  border: 1px solid rgba(0, 229, 204, 0.5);
+  box-shadow: inset 0 0 0 1px rgba(0, 229, 204, 0.06), 0 0 16px rgba(0, 229, 204, 0.08);
 }
 
 .btn-secondary:hover {
   background: rgba(0, 229, 204, 0.15);
   border-color: var(--teal);
-  box-shadow: 0 0 16px var(--teal-glow);
+  box-shadow: inset 0 0 0 1px rgba(0, 229, 204, 0.12), 0 0 28px var(--teal-glow);
 }
 
 .btn-ghost {
@@ -364,14 +385,15 @@ input, textarea, select {
 .input-base {
   width: 100%;
   background: rgba(12, 26, 31, 0.8);
-  border: 1px solid var(--border-dim);
-  border-radius: var(--radius-md);
+  border: 1px solid var(--line-soft);
+  border-radius: 14px;
   color: var(--text-primary);
-  font-family: var(--font-body);
+  font-family: var(--font-display);
   font-size: 14px;
-  padding: 10px 14px;
+  padding: 12px 16px;
   transition: all var(--transition-fast);
   outline: none;
+  min-height: 48px;
 }
 
 .input-base::placeholder {
@@ -542,5 +564,147 @@ input, textarea, select {
   --color-bg-raised:  #132530;
   --color-bg-surface: #1a3040;
   --font-display:     'Space Grotesk', system-ui, sans-serif;
-  --font-body:        'Inter', system-ui, sans-serif;
+  --font-body:        'Space Grotesk', system-ui, sans-serif;
 }
+
+/* ============================================================
+   PANEL / SECTION SYSTEM (After Dark inspired)
+   ============================================================ */
+
+.panel-card {
+  padding: 28px 32px;
+  border-radius: 28px;
+  border: 1px solid var(--line);
+  background: linear-gradient(180deg, rgba(10, 22, 30, 0.96), rgba(5, 12, 18, 0.98));
+  box-shadow: var(--shadow-panel);
+}
+
+.panel-card-sm {
+  padding: 20px 24px;
+  border-radius: 22px;
+  border: 1px solid var(--line-soft);
+  background: linear-gradient(180deg, rgba(10, 22, 30, 0.92), rgba(5, 12, 18, 0.96));
+  box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+}
+
+/* Section heading in Cinzel */
+.section-heading {
+  font-family: var(--font-heading, 'Cinzel', Georgia, serif);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+  color: var(--teal);
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+}
+
+/* Eyebrow / kicker label in Bebas Neue */
+.eyebrow {
+  font-family: var(--font-label, 'Bebas Neue', 'Arial Narrow', sans-serif);
+  font-size: 0.88rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+/* Display headline — very large, Cinzel */
+.display-heading {
+  font-family: var(--font-heading, 'Cinzel', Georgia, serif);
+  font-size: clamp(3.5rem, 8vw, 6.5rem);
+  font-weight: 900;
+  line-height: 0.96;
+  letter-spacing: 0.02em;
+}
+
+/* Panel section header row */
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.panel-header h3 {
+  font-family: var(--font-heading, 'Cinzel', Georgia, serif);
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  color: var(--teal);
+  letter-spacing: 0.04em;
+}
+
+/* Drop-card — product/event cards with per-element accent */
+.drop-card {
+  display: grid;
+  gap: 14px;
+  padding: 14px;
+  border-radius: 22px;
+  border: 1px solid color-mix(in srgb, var(--accent, var(--teal)) 40%, rgba(255,255,255,0.08));
+  background: linear-gradient(180deg, rgba(12,24,32,0.94), rgba(6,13,16,0.98));
+  transition: all var(--transition-smooth);
+}
+
+.drop-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 32px color-mix(in srgb, var(--accent, var(--teal)) 20%, transparent), 0 12px 40px rgba(0,0,0,0.6);
+  border-color: color-mix(in srgb, var(--accent, var(--teal)) 62%, rgba(255,255,255,0.1));
+}
+
+/* Decorative orbs for hero sections */
+.orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(80px);
+  pointer-events: none;
+}
+
+.orb-teal {
+  background: radial-gradient(circle, rgba(0, 229, 204, 0.22) 0%, transparent 70%);
+}
+
+.orb-green {
+  background: radial-gradient(circle, rgba(127, 255, 0, 0.14) 0%, transparent 70%);
+}
+
+.orb-pink {
+  background: radial-gradient(circle, rgba(255, 60, 172, 0.14) 0%, transparent 70%);
+}
+
+/* Pill badge */
+.pill-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  border: 1px solid var(--line-soft);
+  background: rgba(0, 229, 204, 0.06);
+  color: var(--teal);
+}
+
+/* Step circle for how-it-works */
+.step-circle {
+  display: inline-grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 9999px;
+  border: 1px solid var(--line);
+  color: var(--teal);
+  font-family: var(--font-heading, 'Cinzel', Georgia, serif);
+  font-size: 1.4rem;
+  font-weight: 700;
+  background: rgba(0, 229, 204, 0.04);
+  flex-shrink: 0;
+}
+
+/* Step connector line */
+.step-line {
+  width: 1px;
+  flex: 1;
+  background: linear-gradient(180deg, rgba(0, 229, 204, 0.4) 0%, transparent 100%);
+  margin: 4px 0;
+}
+

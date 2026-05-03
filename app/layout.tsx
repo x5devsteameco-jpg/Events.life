@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import { spaceGrotesk, inter } from '@/lib/fonts';
+import { spaceGrotesk, cinzel, bebasNeue } from '@/lib/fonts';
 import { Providers } from '@/components/providers';
 import { ToastProvider } from '@/components/toast';
 
@@ -36,7 +36,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${spaceGrotesk.variable} ${inter.variable} h-full antialiased`}
+      className={`${spaceGrotesk.variable} ${cinzel.variable} ${bebasNeue.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-[#020408] text-[#e8f4f8]">
         <Providers>
