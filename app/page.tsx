@@ -82,16 +82,16 @@ function Navbar() {
 export default function HomePage() {
   const features = [
     { icon: '\u26a1', title: 'Full Event Control', body: 'Draft, publish, pause or end events at any time. Set visibility, capacity, and attendee requirements exactly how you need.', accent: '#00e5cc' },
-    { icon: '\U0001f51e', title: 'Age Gates Built-In', body: 'Set minimum age requirements (18, 19, 21+). Attendees verify before seeing event details. Fully compliance-ready.', accent: '#ff3cac' },
-    { icon: '\U0001f4cb', title: 'RSVP & Lead Capture', body: 'Collect store name, brand, position, and certifications from every attendee. Export to CSV at any time.', accent: '#7fff00' },
-    { icon: '\u2753', title: 'Custom Questions', body: 'Add your own RSVP fields \u2014 text, dropdowns, or checkboxes. Perfect for dietary needs, product preferences, or compliance checks.', accent: '#00e5cc' },
-    { icon: '\U0001f4e7', title: 'Email Blast Invites', body: 'Paste a list of emails and send personalized invites instantly. Track RSVPs directly from your dashboard.', accent: '#00e5cc' },
-    { icon: '\U0001f465', title: 'Team Sharing', body: 'Invite team members to co-manage events with view or edit permissions. No extra seats to purchase.', accent: '#7fff00' },
+    { icon: '🔞', title: 'Age Gates Built-In', body: 'Set minimum age requirements (18, 19, 21+). Attendees verify before seeing event details. Fully compliance-ready.', accent: '#ff3cac' },
+    { icon: '📋', title: 'RSVP & Lead Capture', body: 'Collect store name, brand, position, and certifications from every attendee. Export to CSV at any time.', accent: '#7fff00' },
+    { icon: '❓', title: 'Custom Questions', body: 'Add your own RSVP fields — text, dropdowns, or checkboxes. Perfect for dietary needs, product preferences, or compliance checks.', accent: '#00e5cc' },
+    { icon: '📧', title: 'Email Blast Invites', body: 'Paste a list of emails and send personalized invites instantly. Track RSVPs directly from your dashboard.', accent: '#00e5cc' },
+    { icon: '👥', title: 'Team Sharing', body: 'Invite team members to co-manage events with view or edit permissions. No extra seats to purchase.', accent: '#7fff00' },
   ];
 
   const steps = [
     { num: '01', title: 'Create Your Event', body: 'Use our 9-step wizard: set name, date, location, age gates, certification requirements, custom RSVP questions, FAQs, ticket tiers, and more.' },
-    { num: '02', title: 'Invite & Share', body: 'Blast personalized email invites, share a public link, or keep it invite-only. Full visibility control \u2014 always.' },
+    { num: '02', title: 'Invite & Share', body: 'Blast personalized email invites, share a public link, or keep it invite-only. Full visibility control — always.' },
     { num: '03', title: 'Manage & Grow', body: 'Confirm RSVPs, manage attendees, check compliance, export your lead list, and use real data to grow your brand.' },
   ];
 
@@ -122,7 +122,7 @@ export default function HomePage() {
             style={{ background: 'rgba(0,229,204,0.06)', border: '1px solid rgba(0,229,204,0.22)', color: '#00e5cc', fontSize: '0.72rem', letterSpacing: '0.16em', textTransform: 'uppercase', fontFamily: BEBAS }}
           >
             <span className="w-1.5 h-1.5 rounded-full bg-[#00e5cc] animate-pulse" />
-            Industry-Neutral \u00b7 Compliance-Grade \u00b7 Built for Canada \U0001f341
+            Industry-Neutral · Compliance-Grade · Built for Canada 🍁
           </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 32 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.1 }}>
@@ -162,7 +162,7 @@ export default function HomePage() {
             transition={{ duration: 0.6, delay: 0.25 }}
             style={{ color: '#7aafc4', fontSize: '1.12rem', lineHeight: 1.65, maxWidth: '560px', margin: '0 auto 2.5rem' }}
           >
-            The industry-neutral event platform for Canadian hosts. Age gates, RSVP collection, compliance workflows, and full data ownership \u2014 all free.
+            The industry-neutral event platform for Canadian hosts. Age gates, RSVP collection, compliance workflows, and full data ownership — all free.
           </motion.p>
 
           <motion.div
@@ -206,7 +206,7 @@ export default function HomePage() {
               { value: '100%', label: 'Data Ownership', color: '#00e5cc' },
               { value: '9-Step', label: 'Event Wizard', color: '#7fff00' },
               { value: 'Free', label: 'Forever to Start', color: '#00e5cc' },
-              { value: '\U0001f341', label: 'Canadian Built', color: '#ff3cac' },
+              { value: '🍁', label: 'Canadian Built', color: '#ff3cac' },
             ].map((stat) => (
               <div key={stat.label} className="text-center p-5 rounded-[22px]" style={{ border: '1px solid rgba(0,229,204,0.1)', background: 'rgba(10,22,30,0.6)' }}>
                 <div style={{ fontSize: 'clamp(1.8rem, 4vw, 2.6rem)', fontFamily: CINZEL, fontWeight: 900, color: stat.color, lineHeight: 1.1, marginBottom: '6px' }}>{stat.value}</div>
@@ -325,7 +325,7 @@ export default function HomePage() {
                 <span style={{ fontFamily: CINZEL, fontSize: '0.88rem', fontWeight: 700, color: '#00e5cc', letterSpacing: '0.1em' }}>GATEWISE EVENTS</span>
               </div>
               <p style={{ fontSize: '0.75rem', color: '#2d5268' }}>Your events. Your data. Your rules.</p>
-              <p style={{ fontSize: '0.75rem', color: '#2d5268', marginTop: '2px' }}>Built in Canada \U0001f341</p>
+              <p style={{ fontSize: '0.75rem', color: '#2d5268', marginTop: '2px' }}>Built in Canada 🍁</p>
             </div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '24px', fontSize: '0.875rem', color: '#4d7a90' }}>
               {[{ href: '/events', label: 'Browse Events' }, { href: '/register', label: 'Create Account' }, { href: '/login', label: 'Sign In' }, { href: '/dashboard', label: 'Dashboard' }].map((link) => (
