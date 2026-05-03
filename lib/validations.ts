@@ -52,6 +52,13 @@ export const eventSchema = z.object({
       required: z.boolean().default(false),
     })
   ).optional(),
+  faqs: z.array(
+    z.object({
+      id: z.string(),
+      question: z.string(),
+      answer: z.string(),
+    })
+  ).optional(),
   emailInviteList: z.string().optional(),
   visibility: z.enum(['PUBLIC', 'PRIVATE']).default('PUBLIC'),
   status: z.enum(['DRAFT', 'LIVE', 'PRIVATE', 'CANCELLED', 'ENDED']).default('DRAFT'),

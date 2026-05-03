@@ -3,6 +3,7 @@ import { auth } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { eventSchema } from '@/lib/validations';
 import { generateEventSlug } from '@/lib/utils';
+import { sendEventInvite } from '@/lib/email';
 
 export async function POST(req: NextRequest) {
   const session = await auth();
@@ -49,11 +50,26 @@ export async function POST(req: NextRequest) {
         thingsToKnow: d.thingsToKnow,
         category: d.category,
         customQuestions: d.customQuestions ? JSON.stringify(d.customQuestions) : null,
+        faqs: d.faqs ? JSON.stringify(d.faqs) : null,
         parkingAvailable: d.parkingAvailable ?? false,
         parkingNotes: d.parkingNotes,
         hostId: session.user.id,
+        emailInviteList: d.emailInviteList,
+        publishedAt: d.status === 'LIVE' ? new Date() : null,
       },
     });
+
+    // Auto-send invites when launching LIVE
+    if (d.status === 'LIVE' && d.emailInviteList) {
+      const emails = d.emailInviteList
+        .split(/[\n,]+/)
+        .map((e: string) => e.trim())
+        .filter((e: string) => e.includes('@'));
+      const hostName = session.user.name ?? session.user.email ?? 'Event Host';
+      for (const email of emails) {
+        sendEventInvite(email, event, hostName).catch(() => null);
+      }
+    }
 
     return NextResponse.json({ data: event }, { status: 201 });
   } catch (error) {

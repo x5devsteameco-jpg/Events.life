@@ -8,7 +8,7 @@ import { useToast } from '@/components/toast';
 import { Button } from '@/components/ui/button';
 import { Input, Textarea, Select } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
-import type { CustomQuestion } from '@/lib/types';
+import type { CustomQuestion, FAQ } from '@/lib/types';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface WizardData {
@@ -40,9 +40,11 @@ interface WizardData {
   requiresCertification: boolean;
   certificationNote: string;
   customQuestions: CustomQuestion[];
-  // Step 7 (preview / field toggles)
+  // Step 7 — FAQ
+  faqs: FAQ[];
+  // Step 8 (preview / field toggles)
   requiredFields: string[];
-  // Step 8
+  // Step 9
   emailInviteList: string;
   visibility: 'PUBLIC' | 'PRIVATE';
 }
@@ -54,6 +56,7 @@ const INITIAL: WizardData = {
   location: '', address: '', parkingAvailable: false, parkingNotes: '', onlineLink: '', thingsToKnow: '',
   ticketName: 'General Admission', ticketDescription: '', ticketQuantity: '', ticketUnlimited: true,
   ageGate: 0, requiresCertification: false, certificationNote: '', customQuestions: [],
+  faqs: [],
   requiredFields: ['guestName', 'guestEmail'],
   emailInviteList: '', visibility: 'PUBLIC',
 };
@@ -65,8 +68,9 @@ const STEPS = [
   { num: 4, label: 'Location' },
   { num: 5, label: 'Tickets' },
   { num: 6, label: 'Requirements' },
-  { num: 7, label: 'RSVP Form' },
-  { num: 8, label: 'Launch' },
+  { num: 7, label: 'FAQ' },
+  { num: 8, label: 'RSVP Form' },
+  { num: 9, label: 'Launch' },
 ];
 
 const CATEGORIES = [
@@ -399,6 +403,71 @@ function Step6({ data, setData }: { data: WizardData; setData: (d: Partial<Wizar
   );
 }
 
+// ─── Step 7: FAQ Builder ───────────────────────────────────────────────────────
+function Step7Faq({ data, setData }: { data: WizardData; setData: (d: Partial<WizardData>) => void }) {
+  const addFaq = () => {
+    const newFaq: FAQ = { id: Math.random().toString(36).slice(2), question: '', answer: '' };
+    setData({ faqs: [...data.faqs, newFaq] });
+  };
+
+  const updateFaq = (id: string, updates: Partial<FAQ>) => {
+    setData({ faqs: data.faqs.map((f) => f.id === id ? { ...f, ...updates } : f) });
+  };
+
+  const removeFaq = (id: string) => {
+    setData({ faqs: data.faqs.filter((f) => f.id !== id) });
+  };
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-xl font-black text-[#e8f4f8] mb-1" style={{ fontFamily: 'var(--font-display)' }}>Frequently Asked Questions</h2>
+        <p className="text-sm text-[#4d7a90]">Add Q&amp;As that will be shown on your event page to help attendees before RSVPing.</p>
+      </div>
+
+      <div className="space-y-3">
+        {data.faqs.map((faq, i) => (
+          <div key={faq.id} className="p-4 rounded-xl space-y-3" style={{ background: 'rgba(12,26,31,0.6)', border: '1px solid rgba(0,229,204,0.08)' }}>
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-[#2d5268] uppercase tracking-wider">Q{i + 1}</span>
+              <button type="button" onClick={() => removeFaq(faq.id)} className="p-1 rounded-lg text-[#4d7a90] hover:text-[#ff3cac] transition-colors">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+            <Input
+              placeholder="Question — e.g. Is this event 19+?"
+              value={faq.question}
+              onChange={(e) => updateFaq(faq.id, { question: e.target.value })}
+            />
+            <Textarea
+              placeholder="Answer — e.g. Yes, valid ID required at the door."
+              rows={3}
+              value={faq.answer}
+              onChange={(e) => updateFaq(faq.id, { answer: e.target.value })}
+            />
+          </div>
+        ))}
+
+        <button
+          type="button"
+          onClick={addFaq}
+          className="w-full py-4 rounded-xl border-2 border-dashed text-sm font-medium text-[#4d7a90] hover:text-[#00e5cc] hover:border-[rgba(0,229,204,0.3)] transition-all flex items-center justify-center gap-2"
+          style={{ borderColor: 'rgba(0,229,204,0.12)' }}
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+          Add FAQ
+        </button>
+      </div>
+
+      {data.faqs.length === 0 && (
+        <div className="rounded-xl p-4 text-sm" style={{ background: 'rgba(0,229,204,0.04)', border: '1px solid rgba(0,229,204,0.1)' }}>
+          <p className="text-[#4d7a90]">💡 <span className="text-[#7aafc4]">Pro tip:</span> Common questions include parking details, dress code, what to bring, ID requirements, and cancellation policies.</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── Step 7 ───────────────────────────────────────────────────────────────────
 function Step7({ data }: { data: WizardData }) {
   const baseFields = [
@@ -548,7 +617,7 @@ export default function NewEventPage() {
   }, []);
 
   const goNext = () => {
-    if (step < 8) { setDirection(1); setStep((s) => s + 1); }
+    if (step < 9) { setDirection(1); setStep((s) => s + 1); }
   };
 
   const goPrev = () => {
@@ -571,6 +640,7 @@ export default function NewEventPage() {
         maxAttendees: data.ticketUnlimited ? null : parseInt(data.ticketQuantity) || null,
         ticketQuantity: data.ticketUnlimited ? null : parseInt(data.ticketQuantity) || null,
         customQuestions: JSON.stringify(data.customQuestions),
+        faqs: data.faqs,
       };
 
       const res = await fetch('/api/events', {
@@ -587,7 +657,7 @@ export default function NewEventPage() {
       }
 
       toast(status === 'LIVE' ? '🚀 Event launched!' : '📝 Saved as draft', 'success');
-      router.push(`/dashboard/events/${json.data.id}`);
+      router.push(`/dashboard/events`);
     } catch {
       toast('Something went wrong', 'error');
     } finally {
@@ -602,8 +672,9 @@ export default function NewEventPage() {
     <Step4 key={4} data={data} setData={setData} />,
     <Step5 key={5} data={data} setData={setData} />,
     <Step6 key={6} data={data} setData={setData} />,
-    <Step7 key={7} data={data} />,
-    <Step8 key={8} data={data} setData={setData} onSubmit={handleSubmit} submitting={submitting} />,
+    <Step7Faq key={7} data={data} setData={setData} />,
+    <Step7 key={8} data={data} />,
+    <Step8 key={9} data={data} setData={setData} onSubmit={handleSubmit} submitting={submitting} />,
   ];
 
   return (
@@ -650,18 +721,18 @@ export default function NewEventPage() {
       </div>
 
       {/* Navigation */}
-      {step < 8 && (
+      {step < 9 && (
         <div className="flex items-center justify-between">
           <Button type="button" variant="ghost" onClick={goPrev} disabled={step === 1}>
             ← Back
           </Button>
           <span className="text-xs text-[#2d5268]">{step} / {STEPS.length}</span>
           <Button type="button" variant="primary" onClick={goNext} disabled={!canProceed()}>
-            {step === 7 ? 'Review & Launch →' : 'Next →'}
+            {step === 8 ? 'Review & Launch →' : 'Next →'}
           </Button>
         </div>
       )}
-      {step === 8 && (
+      {step === 9 && (
         <div className="flex items-center justify-between">
           <Button type="button" variant="ghost" onClick={goPrev}>← Back</Button>
           <span className="text-xs text-[#2d5268]">{step} / {STEPS.length}</span>

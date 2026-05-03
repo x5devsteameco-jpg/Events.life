@@ -1,10 +1,9 @@
 generator client {
   provider = "prisma-client-js"
-  engineType = "library"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
 }
 
 enum Role {
@@ -126,6 +125,7 @@ model Event {
   category             String?
   tags                 String?
   customQuestions      String?
+  faqs                 String?
   emailInviteList      String?
   publishedAt          DateTime?
   createdAt            DateTime        @default(now())

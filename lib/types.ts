@@ -45,6 +45,7 @@ export interface Event {
   category: string | null;
   tags: string | null;
   customQuestions: string | null;
+  faqs: string | null;
   emailInviteList: string | null;
   publishedAt: Date | null;
   createdAt: Date;
@@ -93,6 +94,12 @@ export interface CustomQuestion {
   type: 'text' | 'select' | 'checkbox';
   options?: string[];
   required: boolean;
+}
+
+export interface FAQ {
+  id: string;
+  question: string;
+  answer: string;
 }
 
 // ─── API Response Types ──────────────────────────────────────────────────────

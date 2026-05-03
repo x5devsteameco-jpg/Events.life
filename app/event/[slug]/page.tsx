@@ -132,6 +132,28 @@ export default async function PublicEventPage({ params }: Props) {
               </div>
             )}
 
+            {/* FAQ */}
+            {event.faqs && (() => {
+              let faqList: { id: string; question: string; answer: string }[] = [];
+              try { faqList = JSON.parse(event.faqs as string); } catch { /* ignore */ }
+              return faqList.length > 0 ? (
+                <div>
+                  <h3 className="text-sm font-bold text-[#00e5cc] mb-3 flex items-center gap-2"><span>❓</span> FAQ</h3>
+                  <div className="space-y-2">
+                    {faqList.map((faq) => (
+                      <details key={faq.id} className="group rounded-xl overflow-hidden" style={{ border: '1px solid rgba(0,229,204,0.1)' }}>
+                        <summary className="px-4 py-3 text-sm font-semibold text-[#e8f4f8] cursor-pointer flex items-center justify-between gap-2 hover:bg-[rgba(0,229,204,0.04)] transition-colors list-none">
+                          <span>{faq.question}</span>
+                          <svg className="flex-shrink-0 group-open:rotate-180 transition-transform" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+                        </summary>
+                        <div className="px-4 pb-3 pt-1 text-sm text-[#6b9bb0] leading-relaxed">{faq.answer}</div>
+                      </details>
+                    ))}
+                  </div>
+                </div>
+              ) : null;
+            })()}
+
             {/* Capacity */}
             {event.maxAttendees && (
               <div className="flex items-center gap-3 text-sm">

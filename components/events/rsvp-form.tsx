@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -35,17 +35,46 @@ export function RSVPForm({ eventId, title, requiresCertification, certificationN
   const [submitted, setSubmitted] = useState(false);
   const [rsvpStatus, setRsvpStatus] = useState<'CONFIRMED' | 'WAITLISTED' | null>(null);
   const [customAnswers, setCustomAnswers] = useState<Record<string, string>>({});
+  const [certFile, setCertFile] = useState<File | null>(null);
+  const [certUploading, setCertUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormValues>({
     resolver: zodResolver(schema),
   });
 
+  const uploadCert = async (file: File): Promise<string | null> => {
+    setCertUploading(true);
+    try {
+      const fd = new FormData();
+      fd.append('file', file);
+      const res = await fetch('/api/upload', { method: 'POST', body: fd });
+      const json = await res.json();
+      return res.ok ? json.url : null;
+    } catch {
+      return null;
+    } finally {
+      setCertUploading(false);
+    }
+  };
+
   const onSubmit = async (values: FormValues) => {
+    let certificationUrl: string | undefined;
+
+    if (requiresCertification && certFile) {
+      const url = await uploadCert(certFile);
+      if (!url) {
+        toast('Failed to upload certification — please try again', 'error');
+        return;
+      }
+      certificationUrl = url;
+    }
+
     try {
       const res = await fetch(`/api/events/${eventId}/rsvp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...values, customAnswers }),
+        body: JSON.stringify({ ...values, customAnswers, certificationUrl }),
       });
 
       const json = await res.json();
@@ -174,16 +203,76 @@ export function RSVPForm({ eventId, title, requiresCertification, certificationN
           </div>
         ))}
 
-        {requiresCertification && certificationNote && (
-          <div className="p-3 rounded-xl text-xs" style={{ background: 'rgba(255,60,172,0.06)', border: '1px solid rgba(255,60,172,0.15)' }}>
-            <p className="text-[#ff3cac] font-semibold mb-1">Certification Required</p>
-            <p className="text-[#6b9bb0]">You must hold a valid {certificationNote} to attend. Staff may verify at the door.</p>
+        {/* Certification upload */}
+        {requiresCertification && (
+          <div className="space-y-2">
+            <div className="p-3 rounded-xl text-xs" style={{ background: 'rgba(255,60,172,0.06)', border: '1px solid rgba(255,60,172,0.15)' }}>
+              <p className="text-[#ff3cac] font-semibold mb-1">📎 Certification Required</p>
+              <p className="text-[#6b9bb0]">
+                {certificationNote
+                  ? `Please attach your ${certificationNote} certificate below.`
+                  : 'Please attach your certification document below.'}
+              </p>
+            </div>
+
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept=".pdf,.jpg,.jpeg,.png"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.target.files?.[0] ?? null;
+                setCertFile(file);
+              }}
+            />
+
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition-all"
+              style={{
+                background: certFile ? 'rgba(127,255,0,0.06)' : 'rgba(12,26,31,0.6)',
+                border: certFile ? '1px solid rgba(127,255,0,0.25)' : '1px dashed rgba(0,229,204,0.2)',
+                color: certFile ? '#7fff00' : '#4d7a90',
+              }}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" y1="3" x2="12" y2="15"/>
+              </svg>
+              {certFile ? (
+                <span className="truncate">{certFile.name}</span>
+              ) : (
+                <span>Upload certificate (PDF, JPG, PNG)</span>
+              )}
+              {certFile && (
+                <button
+                  type="button"
+                  onClick={(e) => { e.stopPropagation(); setCertFile(null); if (fileInputRef.current) fileInputRef.current.value = ''; }}
+                  className="ml-auto text-[#ff3cac] hover:text-[#ff3cac]"
+                  aria-label="Remove file"
+                >
+                  ×
+                </button>
+              )}
+            </button>
           </div>
         )}
 
-        <Button type="submit" variant="primary" size="lg" className="w-full" loading={isSubmitting}>
-          Submit RSVP
+        <Button
+          type="submit"
+          variant="primary"
+          size="lg"
+          className="w-full"
+          loading={isSubmitting || certUploading}
+          disabled={requiresCertification && !certFile}
+        >
+          {certUploading ? 'Uploading cert…' : 'Submit RSVP'}
         </Button>
+        {requiresCertification && !certFile && (
+          <p className="text-[10px] text-center text-[#4d7a90]">Certification upload required to submit</p>
+        )}
       </form>
     </div>
   );

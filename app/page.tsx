@@ -124,6 +124,25 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* STATS BAND */}
+      <section className="py-12 px-6" style={{ background: 'rgba(6,13,16,0.7)', borderTop: '1px solid rgba(0,229,204,0.06)', borderBottom: '1px solid rgba(0,229,204,0.06)' }}>
+        <div className="max-w-4xl mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+            {[
+              { value: '100%', label: 'Data Ownership', color: '#00e5cc' },
+              { value: '9-Step', label: 'Event Wizard', color: '#7fff00' },
+              { value: 'Free', label: 'To Start', color: '#00e5cc' },
+              { value: '🍁', label: 'Canadian Built', color: '#ff3cac' },
+            ].map((stat) => (
+              <div key={stat.label}>
+                <div className="text-3xl font-black mb-1" style={{ color: stat.color, fontFamily: 'var(--font-display)' }}>{stat.value}</div>
+                <div className="text-xs text-[#4d7a90] font-medium">{stat.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* FEATURES */}
       <section id="for-hosts" className="py-24 px-6">
         <div className="max-w-6xl mx-auto">
@@ -172,6 +191,25 @@ export default function HomePage() {
               </AnimSection>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* INDUSTRIES */}
+      <section className="py-16 px-6">
+        <div className="max-w-4xl mx-auto text-center">
+          <AnimSection>
+            <span className="text-xs font-semibold text-[#ff3cac] uppercase tracking-widest">Industry Neutral</span>
+            <h2 className="text-3xl font-black mt-3 mb-6" style={{ fontFamily: 'var(--font-display)' }}>
+              Built for any industry that needs <span style={{ color: '#ff3cac' }}>access control.</span>
+            </h2>
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              {['Cannabis Retail', 'Adult Beverage', 'Nightlife & Clubs', 'Trade Shows', 'Dispensary B2B', 'Brand Activation', 'Private Networking', 'Certification Events'].map((industry) => (
+                <span key={industry} className="px-4 py-2 rounded-full text-sm font-medium" style={{ background: 'rgba(255,60,172,0.06)', border: '1px solid rgba(255,60,172,0.15)', color: '#c87a9e' }}>
+                  {industry}
+                </span>
+              ))}
+            </div>
+          </AnimSection>
         </div>
       </section>
 

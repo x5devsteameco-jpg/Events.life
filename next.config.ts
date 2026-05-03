@@ -4,8 +4,8 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
-        source: '/dashboard/events/:path*',
-        destination: '/events/:path*',
+        source: '/dashboard/events/:path+',
+        destination: '/events/:path+',
         permanent: false,
       },
     ];
