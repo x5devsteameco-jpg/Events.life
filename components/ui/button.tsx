@@ -31,7 +31,7 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 
 const variantClasses: Record<string, string> = {
   primary: [
-    'bg-gradient-to-r from-[#00e5cc] to-[#7fff00]',
+    'bg-gradient-to-r from-[#00c4a8] to-[#00e5cc]',
     'text-[#020408] font-bold',
     'border-0',
     'hover:shadow-[0_0_24px_rgba(0,229,204,0.4)] hover:-translate-y-0.5',

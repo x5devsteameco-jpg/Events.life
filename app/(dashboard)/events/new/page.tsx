@@ -639,7 +639,7 @@ export default function NewEventPage() {
         isOnline: data.eventType === 'ONLINE' || data.eventType === 'HYBRID',
         maxAttendees: data.ticketUnlimited ? null : parseInt(data.ticketQuantity) || null,
         ticketQuantity: data.ticketUnlimited ? null : parseInt(data.ticketQuantity) || null,
-        customQuestions: JSON.stringify(data.customQuestions),
+          customQuestions: data.customQuestions,
         faqs: data.faqs,
       };
 
