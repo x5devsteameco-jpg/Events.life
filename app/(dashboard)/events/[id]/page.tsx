@@ -74,7 +74,7 @@ export default async function EventManagePage({ params, searchParams }: Props) {
         {[
           { label: 'Confirmed', value: confirmed, color: '#00e5cc' },
           { label: 'Waitlisted', value: waitlisted, color: '#ff3cac' },
-          { label: 'Capacity', value: event.maxAttendees ? `${capacityPct}%` : '∞', color: '#7fff00' },
+          { label: 'Capacity', value: event.maxAttendees ? `${confirmed}/${event.maxAttendees}` : '∞', color: '#7fff00' },
           { label: 'Total RSVPs', value: event._count.rsvps, color: '#e8f4f8' },
         ].map(({ label, value, color }) => (
           <div key={label} className="p-4 rounded-xl" style={{ background: 'rgba(12,26,31,0.6)', border: '1px solid rgba(0,229,204,0.08)' }}>
@@ -104,7 +104,7 @@ export default async function EventManagePage({ params, searchParams }: Props) {
             { label: 'Date & Time', value: formatDate(event.date) },
             { label: 'Event Type', value: event.isOnline ? 'Online' : 'In-Person' },
             { label: 'Location', value: event.location ?? (event.isOnline ? 'Online' : '—') },
-            { label: 'Address', value: event.address ?? '—' },
+            ...(event.address ? [{ label: 'Address', value: event.address }] : []),
             { label: 'Age Gate', value: event.ageGate > 0 ? `${event.ageGate}+` : 'None' },
             { label: 'Certification', value: event.requiresCertification ? (event.certificationNote ?? 'Required') : 'Not required' },
           ].map(({ label, value }) => (
