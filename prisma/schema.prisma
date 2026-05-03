@@ -1,0 +1,185 @@
+generator client {
+  provider = "prisma-client-js"
+  engineType = "library"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+enum Role {
+  ADMIN
+  HOST
+  ATTENDEE
+}
+
+enum EventStatus {
+  DRAFT
+  LIVE
+  PRIVATE
+  CANCELLED
+  ENDED
+}
+
+enum EventVisibility {
+  PUBLIC
+  PRIVATE
+}
+
+enum RSVPStatus {
+  PENDING
+  CONFIRMED
+  WAITLISTED
+  CANCELLED
+}
+
+enum SharePermission {
+  VIEW
+  EDIT
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  password  String?
+  image     String?
+  role      Role     @default(ATTENDEE)
+  company   String?
+  position  String?
+  termsAcceptedAt DateTime?
+  privacyAcceptedAt DateTime?
+  hostResponsibilityAcceptedAt DateTime?
+  policyVersion String?
+  signupIp String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  hostedEvents  Event[]      @relation("HostedEvents")
+  rsvps         RSVP[]
+  sharedEvents  EventShare[] @relation("SharedWith")
+
+  // NextAuth required fields
+  emailVerified DateTime?
+  accounts      Account[]
+  sessions      Session[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Event {
+  id                   String          @id @default(cuid())
+  title                String
+  slug                 String          @unique
+  description          String?
+  bannerImage          String?
+  hostId               String
+  status               EventStatus     @default(DRAFT)
+  visibility           EventVisibility @default(PUBLIC)
+  date                 DateTime
+  endDate              DateTime?
+  location             String?
+  address              String?
+  isOnline             Boolean         @default(false)
+  onlineLink           String?
+  maxAttendees         Int?
+  ageGate              Int             @default(0)
+  parkingAvailable     Boolean         @default(false)
+  parkingNotes         String?
+  thingsToKnow         String?
+  requiresCertification Boolean        @default(false)
+  certificationNote    String?
+  category             String?
+  tags                 String?
+  customQuestions      String?
+  emailInviteList      String?
+  publishedAt          DateTime?
+  createdAt            DateTime        @default(now())
+  updatedAt            DateTime        @updatedAt
+
+  host    User         @relation("HostedEvents", fields: [hostId], references: [id])
+  rsvps   RSVP[]
+  tickets Ticket[]
+  shares  EventShare[]
+}
+
+model RSVP {
+  id               String     @id @default(cuid())
+  eventId          String
+  userId           String?
+  guestEmail       String
+  guestName        String
+  storeName        String?
+  storeAddress     String?
+  brand            String?
+  position         String?
+  certificationUrl String?
+  status           RSVPStatus @default(PENDING)
+  answers          String?
+  createdAt        DateTime   @default(now())
+
+  event Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user  User?  @relation(fields: [userId], references: [id])
+}
+
+model Ticket {
+  id           String   @id @default(cuid())
+  eventId      String
+  name         String   @default("General Admission")
+  description  String?
+  price        Float    @default(0)
+  isFree       Boolean  @default(true)
+  quantity     Int?
+  quantitySold Int      @default(0)
+  isVisible    Boolean  @default(true)
+  createdAt    DateTime @default(now())
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+}
+
+model EventShare {
+  id             String          @id @default(cuid())
+  eventId        String
+  sharedWithUserId String
+  permission     SharePermission @default(VIEW)
+  createdAt      DateTime        @default(now())
+
+  event        Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  sharedWith   User  @relation("SharedWith", fields: [sharedWithUserId], references: [id])
+
+  @@unique([eventId, sharedWithUserId])
+}
