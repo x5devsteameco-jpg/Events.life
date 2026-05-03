@@ -49,7 +49,7 @@ export default async function DashboardPage() {
         </div>
         <Link
           href="/dashboard/events/new"
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-[#020408] transition-all hover:-translate-y-0.5 hover:shadow-[0_0_24px_rgba(0,229,204,0.3)]"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-[#020408] transition-all hover:-translate-y-0.5 hover:shadow-[0_0_24px_rgba(0,229,204,0.3)] flex-shrink-0 whitespace-nowrap"
           style={{ background: 'linear-gradient(135deg, #00c4a8, #00e5cc)' }}
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
@@ -64,17 +64,23 @@ export default async function DashboardPage() {
         {stats.map((stat) => (
           <div
             key={stat.label}
-            className="rounded-2xl p-5"
+            className="rounded-2xl p-5 relative overflow-hidden"
             style={{ background: 'rgba(12,26,31,0.6)', border: '1px solid rgba(0,229,204,0.08)' }}
           >
-            <div className="text-2xl mb-2">{stat.icon}</div>
             <div
-              className="text-3xl font-black mb-1"
-              style={{ fontFamily: 'var(--font-display)', color: stat.color }}
-            >
-              {stat.value}
+              className="absolute top-0 left-0 right-0 h-0.5 rounded-t-2xl"
+              style={{ background: `linear-gradient(90deg, ${stat.color}80, ${stat.color}20)` }}
+            />
+            <div className="flex items-start justify-between mb-3">
+              <div className="text-xl">{stat.icon}</div>
+              <div
+                className="text-2xl font-black leading-none"
+                style={{ fontFamily: 'var(--font-display)', color: stat.color }}
+              >
+                {stat.value}
+              </div>
             </div>
-            <div className="text-xs text-[#4d7a90]">{stat.label}</div>
+            <div className="text-xs font-medium text-[#4d7a90] uppercase tracking-wider">{stat.label}</div>
           </div>
         ))}
       </div>
