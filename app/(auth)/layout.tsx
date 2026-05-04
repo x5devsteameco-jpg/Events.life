@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { BrandLogo } from '@/components/brand/logo';
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -18,26 +19,17 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       {/* Decorative floating orbs */}
       <div className="fixed pointer-events-none" style={{ top: '15%', left: '8%', width: '320px', height: '320px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(0,229,204,0.12) 0%, transparent 70%)', filter: 'blur(40px)' }} aria-hidden="true" />
       <div className="fixed pointer-events-none" style={{ bottom: '20%', right: '8%', width: '280px', height: '280px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(0,180,150,0.1) 0%, transparent 70%)', filter: 'blur(40px)' }} aria-hidden="true" />
-      <div className="fixed pointer-events-none" style={{ top: '60%', left: '30%', width: '200px', height: '200px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(127,255,0,0.05) 0%, transparent 70%)', filter: 'blur(30px)' }} aria-hidden="true" />
+      <div className="fixed pointer-events-none" style={{ top: '60%', left: '30%', width: '200px', height: '200px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(255,60,172,0.06) 0%, transparent 70%)', filter: 'blur(30px)' }} aria-hidden="true" />
 
       <div className="w-full max-w-md relative">
         {/* Logo */}
         <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center gap-2.5 group">
-            <div
-              className="w-9 h-9 rounded-xl flex items-center justify-center transition-all group-hover:shadow-[0_0_24px_rgba(0,229,204,0.5)]"
-              style={{ background: 'linear-gradient(135deg, #00c4a8, #00e5cc)' }}
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#020408" strokeWidth="2.5" aria-hidden="true">
-                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-              </svg>
-            </div>
-            <span
-              className="text-2xl font-black gradient-text-static"
-              style={{ fontFamily: 'var(--font-display)' }}
-            >
-              Gatewise Events
-            </span>
+          <Link href="/" className="inline-flex items-center group">
+            <BrandLogo
+              size="lg"
+              className="group-hover:opacity-95 transition-opacity"
+              textClassName="text-2xl tracking-[0.06em]"
+            />
           </Link>
         </div>
 

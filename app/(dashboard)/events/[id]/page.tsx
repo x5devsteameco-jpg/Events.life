@@ -6,6 +6,7 @@ import { formatDate } from '@/lib/utils';
 import { Badge, statusToBadgeVariant } from '@/components/ui/badge';
 import { AttendeeTable } from '@/components/events/attendee-table';
 import type { EventStatus } from '@/lib/types';
+import { DuplicateEventButton } from '@/components/events/duplicate-event-button';
 
 type Props = { params: Promise<{ id: string }>; searchParams: Promise<{ tab?: string }> };
 
@@ -59,8 +60,9 @@ export default async function EventManagePage({ params, searchParams }: Props) {
           >
             View Public Page ↗
           </Link>
+          <DuplicateEventButton eventId={id} />
           <Link
-            href={`/dashboard/events/${id}/edit`}
+            href={`/events/${id}/edit`}
             className="px-4 py-2 rounded-xl text-sm font-bold text-[#020408] transition-all"
             style={{ background: 'linear-gradient(135deg, #00c4a8, #00e5cc)' }}
           >
@@ -89,7 +91,7 @@ export default async function EventManagePage({ params, searchParams }: Props) {
         {tabs.map(({ key, label }) => (
           <Link
             key={key}
-            href={`/dashboard/events/${id}?tab=${key}`}
+            href={`/events/${id}?tab=${key}`}
             className={`px-5 py-3 text-sm font-medium transition-all border-b-2 -mb-px ${tab === key ? 'border-[#00e5cc] text-[#00e5cc]' : 'border-transparent text-[#4d7a90] hover:text-[#e8f4f8]'}`}
           >
             {label}

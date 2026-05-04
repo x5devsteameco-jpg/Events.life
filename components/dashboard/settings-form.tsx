@@ -9,10 +9,24 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/toast';
 
+const THEME_PRESETS = [
+  { id: 'teal',    label: 'Teal',    accent: '#00e5cc', glow: 'rgba(0,229,204,0.3)' },
+  { id: 'violet', label: 'Violet',  accent: '#9c6bff', glow: 'rgba(156,107,255,0.3)' },
+  { id: 'rose',   label: 'Rose',    accent: '#ff3cac', glow: 'rgba(255,60,172,0.3)' },
+  { id: 'amber',  label: 'Amber',   accent: '#f59e0b', glow: 'rgba(245,158,11,0.3)' },
+  { id: 'sky',    label: 'Sky',     accent: '#38bdf8', glow: 'rgba(56,189,248,0.3)' },
+  { id: 'emerald',label: 'Emerald', accent: '#34d399', glow: 'rgba(52,211,153,0.3)' },
+] as const;
+type ThemePreset = typeof THEME_PRESETS[number]['id'];
+
 const profileSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters').max(100),
   company: z.string().max(150).optional().or(z.literal('')),
   position: z.string().max(100).optional().or(z.literal('')),
+  image: z.string().url('Profile image must be a valid URL').optional().or(z.literal('')),
+  bio: z.string().max(500).optional().or(z.literal('')),
+  organizerLogo: z.string().url('Must be a valid URL').optional().or(z.literal('')),
+  themePreset: z.enum(['teal', 'violet', 'rose', 'amber', 'sky', 'emerald']).optional(),
 });
 type ProfileForm = z.infer<typeof profileSchema>;
 
@@ -20,8 +34,12 @@ interface Props {
   initialData: {
     name: string | null;
     email: string;
+    image: string | null;
     company: string | null;
     position: string | null;
+    bio: string | null;
+    organizerLogo: string | null;
+    themePreset: string | null;
     role: string;
     policyVersion: string | null;
     termsAcceptedAt: Date | null;
@@ -38,6 +56,8 @@ export function SettingsForm({ initialData }: Props) {
   const {
     register,
     handleSubmit,
+    watch,
+    setValue,
     formState: { errors, isSubmitting, isDirty },
   } = useForm<ProfileForm>({
     resolver: zodResolver(profileSchema),
@@ -45,6 +65,10 @@ export function SettingsForm({ initialData }: Props) {
       name: initialData.name ?? '',
       company: initialData.company ?? '',
       position: initialData.position ?? '',
+      image: initialData.image ?? '',
+      bio: initialData.bio ?? '',
+      organizerLogo: initialData.organizerLogo ?? '',
+      themePreset: (initialData.themePreset as ThemePreset) ?? 'teal',
     },
   });
 
@@ -81,9 +105,14 @@ export function SettingsForm({ initialData }: Props) {
       <section className="rounded-2xl p-6" style={{ background: 'rgba(12,26,31,0.6)', border: '1px solid rgba(0,229,204,0.08)' }}>
         <div className="flex items-center gap-3 mb-6">
           {/* Avatar */}
-          <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-xl font-black text-[#020408] flex-shrink-0" style={{ background: 'linear-gradient(135deg, #00c4a8, #00e5cc)' }}>
-            {(initialData.name?.[0] ?? initialData.email[0] ?? 'U').toUpperCase()}
-          </div>
+          {watch('image') ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={watch('image')} alt="Profile" className="w-14 h-14 rounded-2xl object-cover flex-shrink-0" />
+          ) : (
+            <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-xl font-black text-[#020408] flex-shrink-0" style={{ background: 'linear-gradient(135deg, #00c4a8, #00e5cc)' }}>
+              {(initialData.name?.[0] ?? initialData.email[0] ?? 'U').toUpperCase()}
+            </div>
+          )}
           <div>
             <p className="font-bold text-[#e8f4f8]">{initialData.name || 'Your Name'}</p>
             <p className="text-sm text-[#4d7a90]">{initialData.email}</p>
@@ -125,6 +154,77 @@ export function SettingsForm({ initialData }: Props) {
               {...register('position')}
               error={errors.position?.message}
             />
+            <Input
+              label="Profile Image URL"
+              type="url"
+              placeholder="https://images.example.com/avatar.jpg"
+              {...register('image')}
+              error={errors.image?.message}
+              hint="Used across your dashboard avatar and profile card"
+            />
+          </div>
+
+          {/* Bio */}
+          <div>
+            <label className="label-base">Organizer Bio <span className="text-[#2d5268] text-[10px] font-normal ml-1">shown on public event pages</span></label>
+            <textarea
+              {...register('bio')}
+              placeholder="Tell attendees about yourself, your brand, or what kind of events you host…"
+              maxLength={500}
+              rows={3}
+              className="w-full px-3 py-2.5 rounded-lg text-sm text-[#e8f4f8] placeholder-[#2d5268] resize-none mt-1 focus:outline-none focus:ring-1 focus:ring-[#00e5cc]/40"
+              style={{ background: 'rgba(6,13,16,0.7)', border: '1px solid rgba(0,229,204,0.1)' }}
+            />
+            <div className="text-right text-[10px] text-[#2d5268] mt-0.5">{watch('bio')?.length ?? 0}/500</div>
+          </div>
+
+          {/* Organizer logo */}
+          <div className="space-y-2">
+            <Input
+              label="Organizer Logo URL"
+              type="url"
+              placeholder="https://cdn.example.com/your-logo.png"
+              {...register('organizerLogo')}
+              error={errors.organizerLogo?.message}
+              hint="Square or horizontal logo shown next to your name on event pages"
+            />
+            {watch('organizerLogo') && (
+              <div className="flex items-center gap-3 p-3 rounded-xl" style={{ background: 'rgba(6,13,16,0.5)', border: '1px solid rgba(0,229,204,0.08)' }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={watch('organizerLogo')} alt="Logo preview" className="h-10 max-w-[120px] object-contain rounded" />
+                <span className="text-xs text-[#4d7a90]">Logo preview</span>
+              </div>
+            )}
+          </div>
+
+          {/* Theme preset picker */}
+          <div>
+            <label className="label-base">Event Page Accent Colour</label>
+            <div className="flex flex-wrap gap-2 mt-2">
+              {THEME_PRESETS.map((preset) => {
+                const selected = watch('themePreset') === preset.id;
+                return (
+                  <button
+                    key={preset.id}
+                    type="button"
+                    onClick={() => {
+                      setValue('themePreset', preset.id, { shouldDirty: true });
+                    }}
+                    className="flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-medium transition-all"
+                    style={{
+                      background: selected ? `${preset.glow}` : 'rgba(12,26,31,0.6)',
+                      border: `1px solid ${selected ? preset.accent : 'rgba(0,229,204,0.1)'}`,
+                      color: selected ? preset.accent : '#4d7a90',
+                      boxShadow: selected ? `0 0 12px ${preset.glow}` : 'none',
+                    }}
+                  >
+                    <span className="w-3 h-3 rounded-full flex-shrink-0" style={{ background: preset.accent }} />
+                    {preset.label}
+                  </button>
+                );
+              })}
+            </div>
+            <input type="hidden" {...register('themePreset')} />
           </div>
 
           <div className="flex items-center gap-3 pt-2">
@@ -132,7 +232,7 @@ export function SettingsForm({ initialData }: Props) {
               {saved ? '✓ Saved' : 'Save Changes'}
             </Button>
             {saved && (
-              <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-sm text-[#7fff00]">
+              <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-sm text-[#00e5cc]">
                 Profile updated successfully
               </motion.span>
             )}
@@ -163,7 +263,7 @@ export function SettingsForm({ initialData }: Props) {
             <div key={label} className="flex items-center justify-between py-2.5 px-4 rounded-xl" style={{ background: 'rgba(6,13,16,0.5)', border: '1px solid rgba(0,229,204,0.05)' }}>
               <span className="text-xs text-[#4d7a90]">{label}</span>
               <div className="flex items-center gap-2">
-                {accent && <span className="w-1.5 h-1.5 rounded-full bg-[#7fff00]" />}
+                {accent && <span className="w-1.5 h-1.5 rounded-full bg-[#00e5cc]" />}
                 <span className="text-xs text-[#e8f4f8] font-medium">{value}</span>
               </div>
             </div>

@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import { auth } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { SettingsForm } from '@/components/dashboard/settings-form';
+import { DataDeletionSection } from '@/components/dashboard/data-deletion-section';
 
 export const metadata = {
   title: 'Settings',
@@ -16,8 +17,12 @@ export default async function SettingsPage() {
     select: {
       name: true,
       email: true,
+      image: true,
       company: true,
       position: true,
+      bio: true,
+      organizerLogo: true,
+      themePreset: true,
       role: true,
       termsAcceptedAt: true,
       privacyAcceptedAt: true,
@@ -29,5 +34,10 @@ export default async function SettingsPage() {
 
   if (!user) redirect('/login');
 
-  return <SettingsForm initialData={user} />;
+  return (
+    <div className="space-y-10">
+      <SettingsForm initialData={user} />
+      <DataDeletionSection />
+    </div>
+  );
 }

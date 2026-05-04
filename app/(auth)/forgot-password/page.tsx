@@ -33,7 +33,7 @@ export default function ForgotPasswordPage() {
             To reset your password, please email us at{' '}
             <a
               href="mailto:support@gatewise.ca"
-              className="text-[#00e5cc] font-semibold hover:text-[#7fff00] transition-colors"
+              className="text-[#00e5cc] font-semibold hover:underline transition-colors"
             >
               support@gatewise.ca
             </a>{' '}

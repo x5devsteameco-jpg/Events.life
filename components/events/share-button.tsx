@@ -30,9 +30,9 @@ export function ShareButton({ title }: ShareButtonProps) {
       onClick={handleShare}
       className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all"
       style={{
-        background: copied ? 'rgba(127,255,0,0.1)' : 'rgba(0,229,204,0.08)',
-        border: `1px solid ${copied ? 'rgba(127,255,0,0.25)' : 'rgba(0,229,204,0.2)'}`,
-        color: copied ? '#7fff00' : '#00e5cc',
+        background: copied ? 'rgba(0,229,204,0.14)' : 'rgba(0,229,204,0.08)',
+        border: `1px solid ${copied ? 'rgba(0,229,204,0.32)' : 'rgba(0,229,204,0.2)'}`,
+        color: '#00e5cc',
       }}
       aria-label="Share this event"
     >

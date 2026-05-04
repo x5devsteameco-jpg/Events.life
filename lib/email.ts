@@ -51,7 +51,7 @@ export async function sendRSVPConfirmation(rsvp: RSVP, event: Event): Promise<vo
       <p style="margin:0 0 16px;color:#7aafc4;">📅 ${dateStr}</p>
       <p style="margin:0 0 12px;color:#00e5cc;font-weight:700;">✅ You're on the list, ${rsvp.guestName}!</p>
       <p style="margin:0 0 20px;color:#7aafc4;">Status: ${rsvp.status}</p>
-      <a href="${eventUrl}" style="display:inline-block;padding:12px 18px;border-radius:10px;background:linear-gradient(135deg,#00e5cc,#7fff00);color:#020408;text-decoration:none;font-weight:700;">View Event Details</a>
+      <a href="${eventUrl}" style="display:inline-block;padding:12px 18px;border-radius:10px;background:linear-gradient(135deg,#00c4a8,#00e5cc);color:#020408;text-decoration:none;font-weight:700;">View Event Details</a>
       <p style="margin-top:18px;font-size:12px;color:#4d7a90;">You're receiving this because you RSVP'd to an event on Gatewise Events.</p>
     `
   );
@@ -76,7 +76,7 @@ export async function sendEventInvite(email: string, event: Event, hostName: str
       <p style="margin:0 0 8px;color:#7aafc4;">${hostName} invited you to:</p>
       <h1 style="margin:0 0 8px;font-size:24px;">${event.title}</h1>
       <p style="margin:0 0 16px;color:#7aafc4;">📅 ${dateStr}</p>
-      <a href="${rsvpUrl}" style="display:inline-block;padding:12px 18px;border-radius:10px;background:linear-gradient(135deg,#00e5cc,#7fff00);color:#020408;text-decoration:none;font-weight:700;">RSVP Now</a>
+      <a href="${rsvpUrl}" style="display:inline-block;padding:12px 18px;border-radius:10px;background:linear-gradient(135deg,#00c4a8,#00e5cc);color:#020408;text-decoration:none;font-weight:700;">RSVP Now</a>
       <p style="margin-top:18px;font-size:12px;color:#4d7a90;">You were invited by ${hostName} via Gatewise Events.</p>
     `
   );
@@ -97,7 +97,7 @@ export async function sendEventUpdate(rsvp: RSVP, event: Event, updateMessage: s
     `
       <h1 style="margin:0 0 8px;font-size:24px;">${event.title}</h1>
       <p style="margin:0 0 16px;color:#7aafc4;">${updateMessage}</p>
-      <a href="${eventUrl}" style="display:inline-block;padding:12px 18px;border-radius:10px;background:linear-gradient(135deg,#00e5cc,#7fff00);color:#020408;text-decoration:none;font-weight:700;">View Event Details</a>
+      <a href="${eventUrl}" style="display:inline-block;padding:12px 18px;border-radius:10px;background:linear-gradient(135deg,#00c4a8,#00e5cc);color:#020408;text-decoration:none;font-weight:700;">View Event Details</a>
       <p style="margin-top:18px;font-size:12px;color:#4d7a90;">You're receiving this because you RSVP'd to an event on Gatewise Events.</p>
     `
   );

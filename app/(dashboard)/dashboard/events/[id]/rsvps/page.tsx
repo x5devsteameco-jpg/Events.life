@@ -4,6 +4,7 @@ import { auth } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { formatDateTime } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
+import { RSVPExportButton } from '@/components/dashboard/rsvp-export-button';
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -54,6 +55,9 @@ export default async function EventRSVPsPage({ params }: Props) {
           <Link href={`/event/${event.slug}`} target="_blank" className="px-4 py-2 rounded-xl text-xs font-semibold text-[#4d7a90] hover:text-[#00e5cc] transition-colors" style={{ background: 'rgba(12,26,31,0.6)', border: '1px solid rgba(0,229,204,0.1)' }}>
             View Event Page ↗
           </Link>
+          {event.rsvps.length > 0 && (
+            <RSVPExportButton rsvps={event.rsvps} eventTitle={event.title} />
+          )}
         </div>
       </div>
 

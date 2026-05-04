@@ -23,10 +23,10 @@
   --teal-glow:  rgba(0, 229, 204, 0.25);
   --teal-glass: rgba(0, 229, 204, 0.08);
 
-  --green:      #7fff00;
-  --green-dim:  #5ecc00;
-  --green-glow: rgba(127, 255, 0, 0.2);
-  --green-glass:rgba(127, 255, 0, 0.06);
+  --green:      #f59e0b;
+  --green-dim:  #d97706;
+  --green-glow: rgba(245, 158, 11, 0.2);
+  --green-glass:rgba(245, 158, 11, 0.06);
 
   --pink:       #ff3cac;
   --pink-dim:   #cc2e89;
@@ -52,7 +52,7 @@
   /* Gradients */
   --gradient-hero:    linear-gradient(135deg, #020408 0%, #060d10 40%, #0c1a1f 100%);
   --gradient-teal:    linear-gradient(135deg, #00e5cc, #00b8a3);
-  --gradient-green:   linear-gradient(135deg, #7fff00, #5ecc00);
+  --gradient-green:   linear-gradient(135deg, #f59e0b, #d97706);
   --gradient-accent:  linear-gradient(135deg, #00c4a8 0%, #00e5cc 100%);
   --gradient-danger:  linear-gradient(135deg, #ff3cac, #cc2e89);
   --gradient-card:    linear-gradient(180deg, rgba(12,26,31,0.94) 0%, rgba(6,13,16,0.98) 100%);
@@ -64,7 +64,7 @@
 
   /* Shadows — deeper, more dramatic */
   --shadow-teal:  0 0 40px rgba(0, 229, 204, 0.18), 0 8px 32px rgba(0,0,0,0.6);
-  --shadow-green: 0 0 40px rgba(127, 255, 0, 0.14), 0 8px 32px rgba(0,0,0,0.6);
+  --shadow-green: 0 0 40px rgba(245, 158, 11, 0.14), 0 8px 32px rgba(0,0,0,0.6);
   --shadow-card:  0 12px 48px rgba(0,0,0,0.65), 0 2px 8px rgba(0,0,0,0.4), 0 0 0 1px var(--line-soft);
   --shadow-panel: 0 28px 70px rgba(0,0,0,0.5), 0 4px 12px rgba(0,0,0,0.4);
   --shadow-deep:  0 24px 80px rgba(0,0,0,0.7);
@@ -106,7 +106,7 @@ body {
   /* Rich multi-radial background — depth and warmth */
   background-image:
     radial-gradient(ellipse at 15% 0%, rgba(0, 229, 204, 0.07) 0%, transparent 38%),
-    radial-gradient(ellipse at 85% 10%, rgba(127, 255, 0, 0.04) 0%, transparent 32%),
+    radial-gradient(ellipse at 85% 10%, rgba(0, 229, 204, 0.03) 0%, transparent 32%),
     radial-gradient(ellipse at 50% 100%, rgba(255, 60, 172, 0.04) 0%, transparent 40%);
   color: var(--text-primary);
   line-height: 1.6;
@@ -131,7 +131,16 @@ a {
 }
 
 a:hover {
-  color: var(--green);
+  color: var(--teal);
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid rgba(0, 229, 204, 0.55);
+  outline-offset: 2px;
 }
 
 img, video {
@@ -450,7 +459,7 @@ input, textarea, select {
 }
 
 .gradient-text-green {
-  background: linear-gradient(135deg, #7fff00 0%, #00e5cc 100%);
+  background: linear-gradient(135deg, #f59e0b 0%, #00e5cc 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -520,7 +529,7 @@ input, textarea, select {
   background-color: var(--bg-void);
   background-image:
     radial-gradient(ellipse at 20% 20%, rgba(0, 229, 204, 0.06) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 80%, rgba(127, 255, 0, 0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(0, 180, 150, 0.04) 0%, transparent 50%),
     radial-gradient(ellipse at 50% 50%, rgba(255, 60, 172, 0.03) 0%, transparent 60%);
 }
 
@@ -549,7 +558,7 @@ input, textarea, select {
 .badge-ended      { background: rgba(100,100,100,0.15);color: #888; border: 1px solid rgba(100,100,100,0.3); }
 .badge-pending    { background: rgba(255,165,0,0.15);  color: #ffa500; border: 1px solid rgba(255,165,0,0.3); }
 .badge-confirmed  { background: rgba(0,229,204,0.15);  color: #00e5cc; border: 1px solid rgba(0,229,204,0.3); }
-.badge-waitlisted { background: rgba(127,255,0,0.15);  color: #7fff00; border: 1px solid rgba(127,255,0,0.3); }
+.badge-waitlisted { background: rgba(245,158,11,0.15); color: #f59e0b; border: 1px solid rgba(245,158,11,0.3); }
 
 /* ============================================================
    TAILWIND THEME EXTENSION (v4 syntax)
@@ -558,7 +567,7 @@ input, textarea, select {
 @theme inline {
   --color-teal:       #00e5cc;
   --color-teal-dim:   #00b8a3;
-  --color-green:      #7fff00;
+  --color-green:      #f59e0b;
   --color-pink:       #ff3cac;
   --color-bg-void:    #020408;
   --color-bg-deep:    #060d10;
@@ -663,7 +672,7 @@ input, textarea, select {
 }
 
 .orb-green {
-  background: radial-gradient(circle, rgba(127, 255, 0, 0.14) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(0, 200, 170, 0.12) 0%, transparent 70%);
 }
 
 .orb-pink {

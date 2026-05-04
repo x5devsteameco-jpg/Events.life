@@ -90,6 +90,15 @@ const TIMEZONES = [
   { value: 'America/St_Johns', label: 'Newfoundland (NT)' },
 ];
 
+const BANNER_PRESETS = [
+  { id: 'city-neon', label: 'Neon Skyline', url: 'https://images.unsplash.com/photo-1465447142348-e9952c393450?auto=format&fit=crop&w=1400&q=80' },
+  { id: 'networking-lounge', label: 'Networking Lounge', url: 'https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=1400&q=80' },
+  { id: 'conference-stage', label: 'Conference Stage', url: 'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&w=1400&q=80' },
+  { id: 'product-launch', label: 'Product Launch', url: 'https://images.unsplash.com/photo-1558403194-611308249627?auto=format&fit=crop&w=1400&q=80' },
+  { id: 'rooftop-evening', label: 'Rooftop Evening', url: 'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&w=1400&q=80' },
+  { id: 'minimal-studio', label: 'Studio Editorial', url: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1400&q=80' },
+];
+
 // ─── Step 1 ───────────────────────────────────────────────────────────────────
 function Step1({ data, setData }: { data: WizardData; setData: (d: Partial<WizardData>) => void }) {
   return (
@@ -168,11 +177,47 @@ function Step2({ data, setData }: { data: WizardData; setData: (d: Partial<Wizar
         showCount maxLength={2000}
       />
       <div>
+        <label className="label-base">Quick Banner Presets</label>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-3">
+          {BANNER_PRESETS.map((preset) => {
+            const active = data.bannerImage === preset.url;
+            return (
+              <button
+                key={preset.id}
+                type="button"
+                onClick={() => setData({ bannerImage: preset.url })}
+                className={cn('relative h-20 rounded-lg overflow-hidden border transition-all text-left', active ? 'border-[#00e5cc] ring-1 ring-[rgba(0,229,204,0.45)]' : 'border-[rgba(0,229,204,0.16)] hover:border-[rgba(0,229,204,0.35)]')}
+              >
+                <div className="absolute inset-0" style={{ backgroundImage: `url(${preset.url})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
+                <div className="absolute inset-0 bg-gradient-to-t from-[rgba(2,4,8,0.92)] via-[rgba(2,4,8,0.38)] to-transparent" />
+                <span className="absolute left-2 bottom-1.5 text-[10px] font-semibold text-[#d6edf2] tracking-wide">{preset.label}</span>
+              </button>
+            );
+          })}
+        </div>
+        <Input
+          label="Banner URL"
+          type="url"
+          placeholder="https://images.example.com/banner.jpg"
+          value={data.bannerImage}
+          onChange={(e) => setData({ bannerImage: e.target.value })}
+          hint="Use your own CDN/drive image URL or pick a preset above"
+        />
+      </div>
+      <div>
         <label className="label-base">Banner Image</label>
         {data.bannerImage ? (
-          <div className="relative rounded-xl overflow-hidden h-48">
+          <div className="relative rounded-xl overflow-hidden h-52">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={data.bannerImage} alt="Event banner" className="w-full h-full object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[rgba(2,4,8,0.9)] via-[rgba(2,4,8,0.24)] to-transparent" />
+            <div className="absolute left-4 bottom-4 right-4">
+              <p className="text-[10px] uppercase tracking-[0.14em] text-[#7aafc4] mb-1">Live Preview</p>
+              <p className="text-lg font-black text-[#e8f4f8] leading-tight truncate" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>
+                {data.title || 'Your Event Title'}
+              </p>
+              <p className="text-xs text-[#9fc5d3] mt-1 line-clamp-2">{data.description || 'Your event subtitle and key message will appear here.'}</p>
+            </div>
             <button type="button" onClick={() => setData({ bannerImage: '' })} className="absolute top-3 right-3 p-1.5 rounded-lg bg-black/60 text-white hover:bg-black/80 transition-colors">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
             </button>

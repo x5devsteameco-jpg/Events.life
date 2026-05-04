@@ -3,6 +3,7 @@
 import React, { useRef } from 'react';
 import Link from 'next/link';
 import { motion, useInView, AnimatePresence } from 'framer-motion';
+import { BrandLogo } from '@/components/brand/logo';
 
 const CINZEL = "var(--font-heading, 'Cinzel', Georgia, serif)";
 const BEBAS = "var(--font-label, 'Bebas Neue', 'Arial Narrow', sans-serif)";
@@ -39,11 +40,8 @@ function Navbar() {
       }}
     >
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-3" onClick={() => setMobileOpen(false)}>
-          <div className="w-8 h-8 rounded-xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #00c4a8, #00e5cc)', boxShadow: '0 0 16px rgba(0,229,204,0.3)' }}>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#020408" strokeWidth="2.5" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
-          </div>
-          <span style={{ fontFamily: CINZEL, color: '#00e5cc', letterSpacing: '0.06em', fontWeight: 700, fontSize: '0.95rem' }}>GATEWISE</span>
+        <Link href="/" onClick={() => setMobileOpen(false)}>
+          <BrandLogo size="sm" textClassName="uppercase" />
         </Link>
         <div className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => (
@@ -83,16 +81,39 @@ export default function HomePage() {
   const features = [
     { icon: '\u26a1', title: 'Full Event Control', body: 'Draft, publish, pause or end events at any time. Set visibility, capacity, and attendee requirements exactly how you need.', accent: '#00e5cc' },
     { icon: '🔞', title: 'Age Gates Built-In', body: 'Set minimum age requirements (18, 19, 21+). Attendees verify before seeing event details. Fully compliance-ready.', accent: '#ff3cac' },
-    { icon: '📋', title: 'RSVP & Lead Capture', body: 'Collect store name, brand, position, and certifications from every attendee. Export to CSV at any time.', accent: '#7fff00' },
+    { icon: '📋', title: 'RSVP & Lead Capture', body: 'Collect store name, brand, position, and certifications from every attendee. Export to CSV at any time.', accent: '#00e5cc' },
     { icon: '❓', title: 'Custom Questions', body: 'Add your own RSVP fields — text, dropdowns, or checkboxes. Perfect for dietary needs, product preferences, or compliance checks.', accent: '#00e5cc' },
     { icon: '📧', title: 'Email Blast Invites', body: 'Paste a list of emails and send personalized invites instantly. Track RSVPs directly from your dashboard.', accent: '#00e5cc' },
-    { icon: '👥', title: 'Team Sharing', body: 'Invite team members to co-manage events with view or edit permissions. No extra seats to purchase.', accent: '#7fff00' },
+    { icon: '👥', title: 'Team Sharing', body: 'Invite team members to co-manage events with view or edit permissions. No extra seats to purchase.', accent: '#00e5cc' },
   ];
 
   const steps = [
     { num: '01', title: 'Create Your Event', body: 'Use our 9-step wizard: set name, date, location, age gates, certification requirements, custom RSVP questions, FAQs, ticket tiers, and more.' },
     { num: '02', title: 'Invite & Share', body: 'Blast personalized email invites, share a public link, or keep it invite-only. Full visibility control — always.' },
     { num: '03', title: 'Manage & Grow', body: 'Confirm RSVPs, manage attendees, check compliance, export your lead list, and use real data to grow your brand.' },
+  ];
+
+  const visualShowcase = [
+    {
+      title: 'Immersive Landing Banners',
+      body: 'Hero-grade visuals for launches, summits, and invite-only experiences.',
+      image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=1400&q=80',
+    },
+    {
+      title: 'Branded Room Atmosphere',
+      body: 'Give every event its own mood and energy before guests even RSVP.',
+      image: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1400&q=80',
+    },
+    {
+      title: 'Editorial Product Moments',
+      body: 'Highlight product tables, tasting stations, and spotlight activations.',
+      image: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1400&q=80',
+    },
+    {
+      title: 'Night Programs & VIP',
+      body: 'From private lounges to night sessions, your page can match the venue.',
+      image: 'https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?auto=format&fit=crop&w=1400&q=80',
+    },
   ];
 
   const industries = ['Cannabis Retail', 'Adult Beverage', 'Nightlife & Clubs', 'Trade Shows', 'Dispensary B2B', 'Brand Activation', 'Private Networking', 'Certification Events', 'Product Launches', 'VIP Experiences'];
@@ -102,10 +123,12 @@ export default function HomePage() {
       <Navbar />
 
       {/* ═══ HERO ═══ */}
-      <section className="relative min-h-[92vh] flex items-center justify-center pt-16 overflow-hidden">
+      <section className="relative min-h-[86vh] md:min-h-[90vh] flex items-center justify-center pt-20 md:pt-16 overflow-hidden">
         {/* Decorative orbs */}
-        <div className="orb orb-teal" style={{ width: '700px', height: '700px', top: '-15%', left: '-12%', opacity: 0.7 }} />
-        <div className="orb orb-green" style={{ width: '500px', height: '500px', top: '30%', right: '-10%', opacity: 0.6 }} />
+        <div className="orb orb-teal" style={{ width: '700px', height: '700px', top: '-15%', left: '-12%', opacity: 0.55 }}
+        />
+        <div className="orb orb-teal" style={{ width: '500px', height: '500px', top: '30%', right: '-10%', opacity: 0.25 }}
+        />
         <div className="orb orb-pink" style={{ width: '400px', height: '400px', bottom: '-5%', left: '40%', opacity: 0.5 }} />
         {/* Grid pattern */}
         <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ opacity: 0.025 }} aria-hidden="true">
@@ -171,7 +194,7 @@ export default function HomePage() {
             transition={{ duration: 0.6, delay: 0.35 }}
             className="flex flex-col sm:flex-row items-center justify-center gap-4"
           >
-            <Link href="/register" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 font-bold text-[#020408]" style={{ background: 'linear-gradient(135deg, #00c4a8, #00e5cc)', padding: '14px 32px', borderRadius: '14px', fontSize: '1rem', boxShadow: '0 0 32px rgba(0,229,204,0.3), 0 8px 24px rgba(0,0,0,0.4)', minHeight: '52px' }}>
+            <Link href="/register" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 font-bold text-[#04181d]" style={{ background: 'linear-gradient(135deg, #00d1b3, #00f0d3)', padding: '14px 32px', borderRadius: '14px', fontSize: '1rem', boxShadow: '0 0 32px rgba(0,229,204,0.3), 0 8px 24px rgba(0,0,0,0.4)', minHeight: '52px' }}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
               Create Your First Event
             </Link>
@@ -220,7 +243,7 @@ export default function HomePage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
             {[
               { value: '100%', label: 'Data Ownership', color: '#00e5cc' },
-              { value: '9-Step', label: 'Event Wizard', color: '#7fff00' },
+              { value: '9-Step', label: 'Event Wizard', color: '#00e5cc' },
               { value: 'Free', label: 'Forever to Start', color: '#00e5cc' },
               { value: '🍁', label: 'Canadian Built', color: '#ff3cac' },
             ].map((stat) => (
@@ -228,6 +251,42 @@ export default function HomePage() {
                 <div style={{ fontSize: 'clamp(1.8rem, 4vw, 2.6rem)', fontFamily: CINZEL, fontWeight: 900, color: stat.color, lineHeight: 1.1, marginBottom: '6px' }}>{stat.value}</div>
                 <div style={{ fontSize: '0.7rem', color: '#4d7a90', fontFamily: BEBAS, letterSpacing: '0.14em', textTransform: 'uppercase' }}>{stat.label}</div>
               </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ VISUAL SHOWCASE ═══ */}
+      <section className="py-20 px-6" style={{ background: 'linear-gradient(180deg, rgba(6,13,16,0.88), rgba(2,4,8,0.98))', borderBottom: '1px solid rgba(0,229,204,0.08)' }}>
+        <div className="max-w-6xl mx-auto">
+          <AnimSection className="text-center mb-12">
+            <p style={{ fontFamily: BEBAS, fontSize: '0.88rem', letterSpacing: '0.2em', color: '#00e5cc', textTransform: 'uppercase', marginBottom: '12px' }}>Visual Direction</p>
+            <h2 style={{ fontFamily: CINZEL, fontSize: 'clamp(1.9rem, 4.6vw, 3.4rem)', fontWeight: 800, color: '#e8f4f8', letterSpacing: '0.04em', lineHeight: 1.1, marginBottom: '14px' }}>
+              Picture-First Event
+              <span className="block" style={{ background: 'linear-gradient(135deg, #00c4a8, #00e5cc)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Storytelling</span>
+            </h2>
+            <p style={{ color: '#7aafc4', maxWidth: '560px', margin: '0 auto', fontSize: '1rem', lineHeight: 1.65 }}>
+              Replace generic placeholders with cinematic visuals that feel closer to premium event platforms.
+            </p>
+          </AnimSection>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
+            {visualShowcase.map((item, i) => (
+              <AnimSection key={item.title} delay={i * 0.08}>
+                <motion.div
+                  whileHover={{ y: -4 }}
+                  transition={{ duration: 0.22 }}
+                  className="relative overflow-hidden rounded-[24px] h-[260px] sm:h-[290px]"
+                  style={{ border: '1px solid rgba(0,229,204,0.14)', boxShadow: '0 18px 50px rgba(0,0,0,0.45)' }}
+                >
+                  <div className="absolute inset-0" style={{ backgroundImage: `url(${item.image})`, backgroundSize: 'cover', backgroundPosition: 'center' }} />
+                  <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(2,4,8,0.15), rgba(2,4,8,0.82) 68%, rgba(2,4,8,0.95))' }} />
+                  <div className="absolute left-5 right-5 bottom-5">
+                    <p style={{ fontSize: '0.68rem', letterSpacing: '0.14em', color: '#7aafc4', textTransform: 'uppercase', marginBottom: '8px' }}>Design Kit {String(i + 1).padStart(2, '0')}</p>
+                    <h3 style={{ fontFamily: CINZEL, fontSize: '1.35rem', fontWeight: 800, color: '#e8f4f8', letterSpacing: '0.03em', lineHeight: 1.1, marginBottom: '8px' }}>{item.title}</h3>
+                    <p style={{ fontSize: '0.86rem', color: '#9fc5d3', lineHeight: 1.55, maxWidth: '90%' }}>{item.body}</p>
+                  </div>
+                </motion.div>
+              </AnimSection>
             ))}
           </div>
         </div>
@@ -266,10 +325,10 @@ export default function HomePage() {
       <section id="how-it-works" style={{ padding: '7rem 1.5rem', background: 'linear-gradient(180deg, rgba(4,10,14,0.95) 0%, rgba(2,4,8,0.98) 100%)', borderTop: '1px solid rgba(0,229,204,0.06)', borderBottom: '1px solid rgba(0,229,204,0.06)' }}>
         <div className="max-w-5xl mx-auto">
           <AnimSection className="text-center mb-16">
-            <p style={{ fontFamily: BEBAS, fontSize: '0.88rem', letterSpacing: '0.2em', color: '#7fff00', textTransform: 'uppercase', marginBottom: '12px' }}>How It Works</p>
+            <p style={{ fontFamily: BEBAS, fontSize: '0.88rem', letterSpacing: '0.2em', color: '#00e5cc', textTransform: 'uppercase', marginBottom: '12px' }}>How It Works</p>
             <h2 style={{ fontFamily: CINZEL, fontSize: 'clamp(2rem, 5vw, 3.5rem)', fontWeight: 800, color: '#e8f4f8', letterSpacing: '0.04em', lineHeight: 1.1 }}>
               Up and running in{' '}
-              <span style={{ background: 'linear-gradient(135deg, #7fff00, #00e5cc)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>minutes.</span>
+              <span style={{ background: 'linear-gradient(135deg, #00c4a8, #00e5cc)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>minutes.</span>
             </h2>
           </AnimSection>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -334,11 +393,8 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
-                <div style={{ width: 32, height: 32, borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'linear-gradient(135deg, #00c4a8, #00e5cc)', boxShadow: '0 0 12px rgba(0,229,204,0.2)' }}>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#020408" strokeWidth="2.5" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
-                </div>
-                <span style={{ fontFamily: CINZEL, fontSize: '0.88rem', fontWeight: 700, color: '#00e5cc', letterSpacing: '0.1em' }}>GATEWISE EVENTS</span>
+              <div style={{ marginBottom: '8px' }}>
+                <BrandLogo size="sm" textClassName="uppercase tracking-[0.1em] text-[0.88rem]" />
               </div>
               <p style={{ fontSize: '0.75rem', color: '#2d5268' }}>Your events. Your data. Your rules.</p>
               <p style={{ fontSize: '0.75rem', color: '#2d5268', marginTop: '2px' }}>Built in Canada 🍁</p>

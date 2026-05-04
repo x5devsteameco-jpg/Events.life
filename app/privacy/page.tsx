@@ -70,6 +70,39 @@ export default function PrivacyPage() {
               You may request access to or correction of your personal information, subject to legal and operational limits.
             </p>
           </section>
+
+          <section>
+            <h2 className="text-lg font-bold text-[#00e5cc] mb-2">8. Right to Erasure (PIPEDA)</h2>
+            <p>
+              Under PIPEDA and applicable provincial laws, you have the right to request deletion of your personal information.
+              We will process verified deletion requests within 30 days. Some information may be retained where required by law
+              (for example, financial records, legal audit trails, or information needed to resolve disputes).
+            </p>
+            <p className="mt-2">
+              To submit a deletion request, visit your{' '}
+              <a href="/dashboard/settings" className="text-[#00e5cc] hover:underline">account settings</a>
+              {' '}and use the &quot;Request Data Deletion&quot; option, or contact us at{' '}
+              <a href="mailto:privacy@gatewise.ca" className="text-[#00e5cc] hover:underline">privacy@gatewise.ca</a>.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-lg font-bold text-[#00e5cc] mb-2">9. Data Portability</h2>
+            <p>
+              You may request a copy of your personal data in a structured, machine-readable format by contacting
+              {' '}<a href="mailto:privacy@gatewise.ca" className="text-[#00e5cc] hover:underline">privacy@gatewise.ca</a>.
+              We will respond within 30 days.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-lg font-bold text-[#00e5cc] mb-2">10. Contact Our Privacy Officer</h2>
+            <p>
+              For privacy concerns, questions, or to exercise your rights, contact our Privacy Officer at{' '}
+              <a href="mailto:privacy@gatewise.ca" className="text-[#00e5cc] hover:underline">privacy@gatewise.ca</a>.
+              We respond within 30 days of receiving a complaint as required under PIPEDA.
+            </p>
+          </section>
         </div>
       </div>
     </main>

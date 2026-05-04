@@ -27,12 +27,22 @@ export function EventCard({ event }: EventCardProps) {
 
   return (
     <motion.div
-      whileHover={{ y: -3, scale: 1.005 }}
-      transition={{ duration: 0.2 }}
-      className="rounded-2xl overflow-hidden flex flex-col"
+      whileHover={{ y: -5 }}
+      transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
+      className="rounded-2xl overflow-hidden flex flex-col group"
       style={{
         background: 'rgba(12,26,31,0.7)',
         border: '1px solid rgba(0,229,204,0.1)',
+        boxShadow: '0 8px 32px rgba(0,0,0,0.45)',
+        transition: 'border-color 0.22s ease, box-shadow 0.22s ease',
+      }}
+      onMouseEnter={(e) => {
+        (e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(0,229,204,0.28)';
+        (e.currentTarget as HTMLDivElement).style.boxShadow = '0 16px 56px rgba(0,0,0,0.6), 0 0 0 1px rgba(0,229,204,0.14), 0 0 40px rgba(0,229,204,0.06)';
+      }}
+      onMouseLeave={(e) => {
+        (e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(0,229,204,0.1)';
+        (e.currentTarget as HTMLDivElement).style.boxShadow = '0 8px 32px rgba(0,0,0,0.45)';
       }}
     >
       {/* Banner */}
@@ -45,12 +55,20 @@ export function EventCard({ event }: EventCardProps) {
             className="w-full h-full object-cover"
           />
         ) : (
-          <div className="w-full h-full" style={{ background: bgGradient }}>
-            <div className="absolute inset-0 flex items-center justify-center opacity-20">
-              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#00e5cc" strokeWidth="0.8" aria-hidden="true">
-                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+          <div className="w-full h-full relative overflow-hidden" style={{ background: bgGradient }}>
+            {/* Cinematic grid overlay */}
+            <div className="absolute inset-0 opacity-[0.06]" aria-hidden="true">
+              <svg width="100%" height="100%"><defs><pattern id={`grid-${event.id}`} width="24" height="24" patternUnits="userSpaceOnUse"><path d="M 24 0 L 0 0 0 24" fill="none" stroke="#00e5cc" strokeWidth="0.6"/></pattern></defs><rect width="100%" height="100%" fill={`url(#grid-${event.id})`}/></svg>
+            </div>
+            {/* Brand mark */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <svg width="52" height="52" viewBox="0 0 48 48" fill="none" opacity="0.12" aria-hidden="true">
+                <path d="M24 6L38 13.5V28.5L24 36L10 28.5V13.5L24 6Z" stroke="#00e5cc" strokeWidth="2.2" strokeLinejoin="round"/>
+                <path d="M24 14L30.5 17.8V25.2L24 29L17.5 25.2V17.8L24 14Z" fill="#00e5cc"/>
               </svg>
             </div>
+            {/* Subtle radial glow */}
+            <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 50% 60%, rgba(0,229,204,0.07) 0%, transparent 70%)' }} />
           </div>
         )}
 
@@ -114,7 +132,7 @@ export function EventCard({ event }: EventCardProps) {
         {/* Actions */}
         <div className="flex items-center gap-2 mt-4 pt-3" style={{ borderTop: '1px solid rgba(0,229,204,0.06)' }}>
           <Link
-            href={`/dashboard/events/${event.id}`}
+            href={`/events/${event.id}`}
             className="flex-1 text-center py-1.5 rounded-lg text-xs font-semibold text-[#00e5cc] transition-all hover:bg-[rgba(0,229,204,0.08)]"
             style={{ border: '1px solid rgba(0,229,204,0.15)' }}
           >
@@ -130,7 +148,7 @@ export function EventCard({ event }: EventCardProps) {
             Preview
           </Link>
           <Link
-            href={`/dashboard/events/${event.id}/edit`}
+            href={`/events/${event.id}/edit`}
             className="p-1.5 rounded-lg text-[#4d7a90] hover:text-[#e8f4f8] hover:bg-[rgba(255,255,255,0.04)] transition-colors"
             aria-label="Edit event"
           >

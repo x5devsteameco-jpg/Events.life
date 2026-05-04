@@ -54,7 +54,7 @@ export default function LoginPage() {
       >
         <h1
           className="text-2xl font-black text-[#e8f4f8] mb-1"
-          style={{ fontFamily: 'var(--font-display)' }}
+          style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}
         >
           Welcome back
         </h1>
@@ -115,7 +115,7 @@ export default function LoginPage() {
 
         <p className="text-center text-sm text-[#4d7a90] mt-6">
           Don&apos;t have an account?{' '}
-          <Link href="/register" className="text-[#00e5cc] font-semibold hover:text-[#7fff00] transition-colors">
+          <Link href="/register" className="text-[#00e5cc] font-semibold hover:underline transition-colors">
             Create one free
           </Link>
         </p>

@@ -7,6 +7,10 @@ const profileSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters').max(100),
   company: z.string().max(150).optional().or(z.literal('')),
   position: z.string().max(100).optional().or(z.literal('')),
+  image: z.string().url('Profile image must be a valid URL').optional().or(z.literal('')),
+  bio: z.string().max(500).optional().or(z.literal('')),
+  organizerLogo: z.string().url('Organizer logo must be a valid URL').optional().or(z.literal('')),
+  themePreset: z.enum(['teal', 'violet', 'rose', 'amber', 'sky', 'emerald']).optional(),
 });
 
 export async function PATCH(req: NextRequest) {
@@ -28,8 +32,12 @@ export async function PATCH(req: NextRequest) {
         name: parsed.data.name,
         company: parsed.data.company || null,
         position: parsed.data.position || null,
+        image: parsed.data.image || null,
+        bio: parsed.data.bio || null,
+        organizerLogo: parsed.data.organizerLogo || null,
+        themePreset: parsed.data.themePreset ?? 'teal',
       },
-      select: { id: true, name: true, email: true, company: true, position: true },
+      select: { id: true, name: true, email: true, company: true, position: true, image: true, bio: true, organizerLogo: true, themePreset: true },
     });
 
     return NextResponse.json({ user: updated });

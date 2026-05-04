@@ -136,7 +136,7 @@ export default function RegisterPage() {
               <input type="checkbox" className="mt-0.5" {...register('acceptedTerms')} />
               <span>
                 I agree to the{' '}
-                <Link href="/terms" className="text-[#00e5cc] hover:text-[#7fff00]">Terms of Service</Link>.
+                <Link href="/terms" className="text-[#00e5cc] hover:underline">Terms of Service</Link>.
               </span>
             </label>
             {errors.acceptedTerms?.message && <p className="text-xs text-[#ff3cac]">{errors.acceptedTerms.message}</p>}
@@ -145,7 +145,7 @@ export default function RegisterPage() {
               <input type="checkbox" className="mt-0.5" {...register('acceptedPrivacy')} />
               <span>
                 I agree to the{' '}
-                <Link href="/privacy" className="text-[#00e5cc] hover:text-[#7fff00]">Privacy Policy</Link>.
+                <Link href="/privacy" className="text-[#00e5cc] hover:underline">Privacy Policy</Link>.
               </span>
             </label>
             {errors.acceptedPrivacy?.message && <p className="text-xs text-[#ff3cac]">{errors.acceptedPrivacy.message}</p>}

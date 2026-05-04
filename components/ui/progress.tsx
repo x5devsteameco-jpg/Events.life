@@ -15,13 +15,13 @@ interface ProgressProps {
 
 const variantTrack: Record<string, string> = {
   teal:  'bg-[rgba(0,229,204,0.1)]',
-  green: 'bg-[rgba(127,255,0,0.1)]',
+  green: 'bg-[rgba(245,158,11,0.12)]',
   pink:  'bg-[rgba(255,60,172,0.1)]',
 };
 
 const variantFill: Record<string, string> = {
   teal:  'bg-gradient-to-r from-[#00e5cc] to-[#00b8a3]',
-  green: 'bg-gradient-to-r from-[#7fff00] to-[#5ecc00]',
+  green: 'bg-gradient-to-r from-[#f59e0b] to-[#d97706]',
   pink:  'bg-gradient-to-r from-[#ff3cac] to-[#cc2e89]',
 };
 

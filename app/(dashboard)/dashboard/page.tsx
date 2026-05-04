@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { auth } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { EventCard } from '@/components/events/event-card';
+import { AnimatedStats } from '@/components/dashboard/animated-stats';
 import type { Event } from '@/lib/types';
 
 async function getDashboardData(userId: string) {
@@ -48,7 +49,7 @@ export default async function DashboardPage() {
           <p className="text-sm text-[#4d7a90] mt-1 truncate max-w-xs">Welcome back, {session.user.name || 'Host'}</p>
         </div>
         <Link
-          href="/dashboard/events/new"
+          href="/events/new"
           className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-[#020408] transition-all hover:-translate-y-0.5 hover:shadow-[0_0_24px_rgba(0,229,204,0.3)] flex-shrink-0 whitespace-nowrap"
           style={{ background: 'linear-gradient(135deg, #00c4a8, #00e5cc)' }}
         >
@@ -60,30 +61,7 @@ export default async function DashboardPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        {stats.map((stat) => (
-          <div
-            key={stat.label}
-            className="rounded-2xl p-5 relative overflow-hidden"
-            style={{ background: 'rgba(12,26,31,0.6)', border: '1px solid rgba(0,229,204,0.08)' }}
-          >
-            <div
-              className="absolute top-0 left-0 right-0 h-0.5 rounded-t-2xl"
-              style={{ background: `linear-gradient(90deg, ${stat.color}80, ${stat.color}20)` }}
-            />
-            <div className="flex items-start justify-between mb-3">
-              <div className="text-xl">{stat.icon}</div>
-              <div
-                className="text-2xl font-black leading-none"
-                style={{ fontFamily: 'var(--font-display)', color: stat.color }}
-              >
-                {stat.value}
-              </div>
-            </div>
-            <div className="text-xs font-medium text-[#4d7a90] uppercase tracking-wider">{stat.label}</div>
-          </div>
-        ))}
-      </div>
+      <AnimatedStats stats={stats} />
 
       {/* Events */}
       <div className="flex items-center justify-between mb-5">
@@ -109,7 +87,7 @@ export default async function DashboardPage() {
             Create your first event to start collecting RSVPs and growing your community.
           </p>
           <Link
-            href="/dashboard/events/new"
+            href="/events/new"
             className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-[#020408]"
             style={{ background: 'linear-gradient(135deg, #00c4a8, #00e5cc)' }}
           >
