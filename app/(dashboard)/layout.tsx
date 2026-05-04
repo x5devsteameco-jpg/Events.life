@@ -11,17 +11,18 @@ export default async function DashboardLayout({ children }: { children: React.Re
   }
 
   const user = { name: session.user.name ?? null, email: session.user.email ?? '', image: session.user.image ?? null };
+    const role: string | undefined = session.user.role;
 
   return (
     <div className="flex h-screen bg-[#020408] overflow-hidden">
       {/* Desktop sidebar — hidden on mobile */}
       <div className="hidden lg:flex">
-        <Sidebar user={user} />
+          <Sidebar user={user} isAdmin={role === 'ADMIN'} />
       </div>
 
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Mobile top nav */}
-        <MobileNav user={user} />
+          <MobileNav user={user} isAdmin={role === 'ADMIN'} />
 
         {/* Desktop top bar */}
         <header

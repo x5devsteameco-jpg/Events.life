@@ -4,10 +4,12 @@ import { db } from '@/lib/db';
 import { EventCard } from '@/components/events/event-card';
 import { AnimatedStats } from '@/components/dashboard/animated-stats';
 import { StaggerGrid } from '@/components/dashboard/stagger-grid';
+import { RSVPSparkline } from '@/components/dashboard/rsvp-sparkline';
 import type { Event } from '@/lib/types';
 
 async function getDashboardData(userId: string) {
-  const [events, rsvpCount] = await Promise.all([
+  const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+  const [events, rsvpCount, recentRsvps] = await Promise.all([
     db.event.findMany({
       where: { hostId: userId },
       orderBy: { createdAt: 'desc' },
@@ -17,20 +19,36 @@ async function getDashboardData(userId: string) {
     db.rSVP.count({
       where: { event: { hostId: userId } },
     }),
+    db.rSVP.findMany({
+      where: {
+        event: { hostId: userId },
+        createdAt: { gte: sevenDaysAgo },
+      },
+      select: { createdAt: true },
+    }),
   ]);
 
   const now = new Date();
   const upcoming = events.filter((e) => e.status === 'LIVE' && new Date(e.date) > now).length;
   const drafts = events.filter((e) => e.status === 'DRAFT').length;
 
-  return { events, rsvpCount, upcoming, drafts, total: events.length };
+  // Build daily buckets [day-6, day-5, ..., today]
+  const rsvpTrend = Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(Date.now() - (6 - i) * 24 * 60 * 60 * 1000);
+    return recentRsvps.filter((r) => {
+      const rd = new Date(r.createdAt);
+      return rd.getFullYear() === d.getFullYear() && rd.getMonth() === d.getMonth() && rd.getDate() === d.getDate();
+    }).length;
+  });
+
+  return { events, rsvpCount, upcoming, drafts, total: events.length, rsvpTrend, recentRsvpCount: recentRsvps.length };
 }
 
 export default async function DashboardPage() {
   const session = await auth();
   if (!session?.user?.id) return null;
 
-  const { events, rsvpCount, upcoming, drafts, total } = await getDashboardData(session.user.id);
+  const { events, rsvpCount, upcoming, drafts, total, rsvpTrend, recentRsvpCount } = await getDashboardData(session.user.id);
 
   const stats = [
     { label: 'Total Events', value: total, icon: '📅', color: '#00e5cc' },
@@ -88,6 +106,11 @@ export default async function DashboardPage() {
 
       {/* Stats */}
       <AnimatedStats stats={stats} />
+
+      {/* RSVP Trend Sparkline */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6 mb-2">
+        <RSVPSparkline data={rsvpTrend} label="RSVPs This Week" total={recentRsvpCount} />
+      </div>
 
       {/* Events */}
       <div className="flex items-center justify-between mb-5 mt-8">

@@ -20,7 +20,7 @@ const navItems = [
   { href: '/dashboard/settings', label: 'Settings', emoji: '⚙️' },
 ];
 
-export function MobileNav({ user }: MobileNavProps) {
+export function MobileNav({ user, isAdmin: _isAdmin = false }: MobileNavProps & { isAdmin?: boolean }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
 

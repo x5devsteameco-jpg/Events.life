@@ -500,6 +500,49 @@ input, textarea, select {
 }
 
 /* ============================================================
+   SHIMMER / SKELETON LOADER
+   ============================================================ */
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(12, 26, 31, 0.6) 0%,
+    rgba(0, 229, 204, 0.06) 40%,
+    rgba(12, 26, 31, 0.6) 80%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease infinite;
+}
+
+.skeleton {
+  border-radius: 8px;
+  background: rgba(12, 26, 31, 0.6);
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(0, 229, 204, 0.05) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease infinite;
+}
+
+/* Button glow pulse on focus */
+.btn-glow:focus-visible {
+  box-shadow: 0 0 0 3px rgba(0, 229, 204, 0.35);
+  outline: none;
+}
+
+
+/* ============================================================
    SCAN LINE EFFECT
    ============================================================ */
 

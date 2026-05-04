@@ -16,6 +16,18 @@ interface SidebarProps {
   };
 }
 
+const adminNavItem = {
+  href: '/admin/dashboard',
+  label: 'Admin Portal',
+  icon: (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+    </svg>
+  ),
+  accent: false,
+  admin: true,
+};
+
 const navItems = [
   {
     href: '/dashboard',
@@ -66,7 +78,7 @@ const navItems = [
   },
 ];
 
-export function Sidebar({ user }: SidebarProps) {
+export function Sidebar({ user, isAdmin = false }: SidebarProps & { isAdmin?: boolean }) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
 
@@ -161,6 +173,33 @@ export function Sidebar({ user }: SidebarProps) {
           );
         })}
       </nav>
+
+        {/* Admin link */}
+        {isAdmin && (
+          <div className="px-2 pb-2 flex-shrink-0">
+            <Link
+              href="/admin/dashboard"
+              className={cn(
+                'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all relative',
+                pathname.startsWith('/admin')
+                  ? 'text-[#ff3cac] bg-[rgba(255,60,172,0.1)]'
+                  : 'text-[#7a3560] hover:text-[#ff3cac] hover:bg-[rgba(255,60,172,0.06)]'
+              )}
+              title={collapsed ? 'Admin Portal' : undefined}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+              <AnimatePresence>
+                {!collapsed && (
+                  <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }} className="whitespace-nowrap">
+                    Admin Portal
+                  </motion.span>
+                )}
+              </AnimatePresence>
+            </Link>
+          </div>
+        )}
 
       {/* User section */}
       <div className="p-3 flex-shrink-0" style={{ borderTop: '1px solid rgba(0,229,204,0.06)' }}>

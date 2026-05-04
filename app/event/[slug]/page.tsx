@@ -12,6 +12,7 @@ import { FadeIn } from '@/components/ui/fade-in';
 import type { EventStatus } from '@/lib/types';
 import { FAQAccordion } from '@/components/events/faq-accordion';
 import { RSVPDrawer } from '@/components/events/rsvp-drawer';
+import { PageViewTracker } from '@/components/events/page-view-tracker';
 
 const THEME_ACCENT: Record<string, string> = {
   teal:    '#00e5cc',
@@ -93,6 +94,7 @@ export default async function PublicEventPage({ params }: Props) {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+        <PageViewTracker id={event.id} />
       <div
       className="min-h-screen"
       style={{

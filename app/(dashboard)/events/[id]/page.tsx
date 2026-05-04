@@ -60,6 +60,13 @@ export default async function EventManagePage({ params, searchParams }: Props) {
           >
             View Public Page ↗
           </Link>
+          <Link
+            href={`/dashboard/events/${id}/analytics`}
+            className="px-4 py-2 rounded-xl border text-sm font-medium transition-all hover:bg-white/5"
+            style={{ borderColor: 'rgba(156,107,255,0.25)', color: '#9c6bff' }}
+          >
+            📊 Analytics
+          </Link>
           <DuplicateEventButton eventId={id} />
           <Link
             href={`/events/${id}/edit`}
