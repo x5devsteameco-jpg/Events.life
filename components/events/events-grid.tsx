@@ -19,6 +19,8 @@ interface EventItem {
   category: string | null;
   ageGate: number;
   maxAttendees: number | null;
+  eventTheme: string | null;
+  dressCode: string | null;
   host: { name: string | null; company: string | null };
   _count: { rsvps: number };
 }
@@ -119,6 +121,21 @@ export function EventsGrid({ events }: Props) {
                   <div className="flex items-center gap-1.5 text-xs text-[#4d7a90] mb-3">
                     <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                     {event.isOnline ? 'Online Event' : event.location}
+                  </div>
+                )}
+
+                {(event.eventTheme || event.dressCode) && (
+                  <div className="mb-3 flex flex-wrap gap-2">
+                    {event.eventTheme && (
+                      <span className="rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider" style={{ background: 'rgba(0,229,204,0.08)', border: '1px solid rgba(0,229,204,0.12)', color: '#00e5cc' }}>
+                        {event.eventTheme}
+                      </span>
+                    )}
+                    {event.dressCode && (
+                      <span className="rounded-full px-2.5 py-1 text-[10px] font-semibold" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', color: '#9bc6d8' }}>
+                        {event.dressCode}
+                      </span>
+                    )}
                   </div>
                 )}
 

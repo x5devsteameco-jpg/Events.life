@@ -59,6 +59,7 @@ export default async function DashboardPage() {
 
   const quickActions = [
     { href: '/events/new', label: 'Create Event', icon: '✨', accent: true },
+    { href: '/dashboard/analytics', label: 'Analytics', icon: '📊' },
     { href: '/dashboard/events', label: 'Manage Events', icon: '📋' },
     { href: '/dashboard/attendees', label: 'View Attendees', icon: '👥' },
     { href: '/dashboard/settings', label: 'Edit Profile', icon: '⚙️' },

@@ -20,10 +20,14 @@ interface AnalyticsData {
     waitlisted: number;
     pageViewCount: number;
     conversionRate: string;
+    uniqueVisitors: number;
+    attributedViews: number;
   };
   dailyRsvps: { date: string; count: number }[];
   dailyViews: { date: string; count: number }[];
   topReferers: { source: string; count: number }[];
+  topCampaigns: { campaign: string; count: number }[];
+  topPaths: { path: string; count: number }[];
 }
 
 function MiniLineChart({
@@ -241,13 +245,15 @@ export default function AnalyticsClient({ data }: { data: AnalyticsData }) {
   return (
     <div className="max-w-6xl mx-auto px-4 py-8 space-y-8">
       {/* KPI Row */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
         <StatCard label="Total RSVPs" value={data.stats.total} color="#00e5cc" delay={0} />
         <StatCard label="Confirmed" value={data.stats.confirmed} color="#10b981" delay={0.05} />
         <StatCard label="Pending" value={data.stats.pending} color="#f59e0b" delay={0.1} />
         <StatCard label="Waitlisted" value={data.stats.waitlisted} color="#9c6bff" delay={0.15} />
         <StatCard label="Page Views" value={data.stats.pageViewCount} color="#38bdf8" delay={0.2} />
         <StatCard label="Conversion" value={`${data.stats.conversionRate}%`} sub="views → RSVP" color="#ff3cac" delay={0.25} />
+        <StatCard label="Unique Visitors" value={data.stats.uniqueVisitors} color="#8b5cf6" delay={0.3} />
+        <StatCard label="Attributed" value={data.stats.attributedViews} sub="views with UTM" color="#f97316" delay={0.35} />
       </div>
 
       {/* Chart + Donut row */}
@@ -385,6 +391,61 @@ export default function AnalyticsClient({ data }: { data: AnalyticsData }) {
                   </div>
                 );
               })}
+            </div>
+          )}
+        </motion.div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+          className="rounded-2xl p-5"
+          style={{ background: 'rgba(12,26,31,0.7)', border: '1px solid rgba(0,229,204,0.12)', backdropFilter: 'blur(12px)' }}
+        >
+          <h2 className="font-bold text-[#e8f4f8] mb-5">Campaign Attribution</h2>
+          {data.topCampaigns.length === 0 ? (
+            <p className="text-sm" style={{ color: '#4d7a90' }}>No campaign-tagged traffic yet. Add UTM parameters to event links.</p>
+          ) : (
+            <div className="space-y-3">
+              {data.topCampaigns.map((item, index) => {
+                const maxCount = data.topCampaigns[0].count;
+                const pct = Math.round((item.count / maxCount) * 100);
+                return (
+                  <div key={`${item.campaign}-${index}`}>
+                    <div className="flex justify-between text-xs mb-1 gap-2">
+                      <span className="truncate" style={{ color: '#7aafc4' }}>{item.campaign}</span>
+                      <span style={{ color: '#f97316' }}>{item.count}</span>
+                    </div>
+                    <div className="h-2 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.04)' }}>
+                      <div className="h-full rounded-full" style={{ width: `${pct}%`, background: '#f97316' }} />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.55 }}
+          className="rounded-2xl p-5"
+          style={{ background: 'rgba(12,26,31,0.7)', border: '1px solid rgba(0,229,204,0.12)', backdropFilter: 'blur(12px)' }}
+        >
+          <h2 className="font-bold text-[#e8f4f8] mb-5">Top Landing Paths</h2>
+          {data.topPaths.length === 0 ? (
+            <p className="text-sm" style={{ color: '#4d7a90' }}>No landing path data yet.</p>
+          ) : (
+            <div className="space-y-3">
+              {data.topPaths.map((item, index) => (
+                <div key={`${item.path}-${index}`} className="flex items-center justify-between gap-3 rounded-xl px-3 py-2" style={{ background: 'rgba(255,255,255,0.03)' }}>
+                  <span className="truncate text-sm" style={{ color: '#b9d5df' }}>{item.path}</span>
+                  <span className="text-xs font-bold" style={{ color: '#38bdf8' }}>{item.count}</span>
+                </div>
+              ))}
             </div>
           )}
         </motion.div>

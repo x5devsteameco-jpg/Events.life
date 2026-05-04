@@ -16,6 +16,7 @@ interface WizardData {
   title: string;
   category: string;
   eventType: 'IN_PERSON' | 'ONLINE' | 'HYBRID';
+  eventTheme: 'teal' | 'violet' | 'rose' | 'amber' | 'sky' | 'emerald';
   // Step 2
   description: string;
   bannerImage: string;
@@ -35,10 +36,12 @@ interface WizardData {
   ticketDescription: string;
   ticketQuantity: string;
   ticketUnlimited: boolean;
+  maxTicketsPerPerson: string;
   // Step 6
   ageGate: number;
   requiresCertification: boolean;
   certificationNote: string;
+  dressCode: string;
   customQuestions: CustomQuestion[];
   // Step 7 — FAQ
   faqs: FAQ[];
@@ -51,12 +54,12 @@ interface WizardData {
 }
 
 const INITIAL: WizardData = {
-  title: '', category: '', eventType: 'IN_PERSON',
+  title: '', category: '', eventType: 'IN_PERSON', eventTheme: 'teal',
   description: '', bannerImage: '',
   date: '', endDate: '', timezone: 'America/Toronto',
   location: '', address: '', parkingAvailable: false, parkingNotes: '', onlineLink: '', thingsToKnow: '',
-  ticketName: 'General Admission', ticketDescription: '', ticketQuantity: '', ticketUnlimited: true,
-  ageGate: 0, requiresCertification: false, certificationNote: '', customQuestions: [],
+  ticketName: 'General Admission', ticketDescription: '', ticketQuantity: '', ticketUnlimited: true, maxTicketsPerPerson: '',
+  ageGate: 0, requiresCertification: false, certificationNote: '', dressCode: '', customQuestions: [],
   faqs: [],
   requiredFields: ['guestName', 'guestEmail'],
   emailInviteList: '', visibility: 'PUBLIC', confirmationMessage: '',
@@ -91,6 +94,15 @@ const TIMEZONES = [
   { value: 'America/St_Johns', label: 'Newfoundland (NT)' },
 ];
 
+const EVENT_THEMES = [
+  { value: 'teal', label: 'Teal Pulse' },
+  { value: 'violet', label: 'Violet Luxe' },
+  { value: 'rose', label: 'Rose Night' },
+  { value: 'amber', label: 'Amber Glow' },
+  { value: 'sky', label: 'Sky Signal' },
+  { value: 'emerald', label: 'Emerald Room' },
+];
+
 const BANNER_PRESETS = [
   { id: 'city-neon', label: 'Neon Skyline', url: 'https://images.unsplash.com/photo-1465447142348-e9952c393450?auto=format&fit=crop&w=1400&q=80' },
   { id: 'networking-lounge', label: 'Networking Lounge', url: 'https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=1400&q=80' },
@@ -110,6 +122,25 @@ function Step1({ data, setData }: { data: WizardData; setData: (d: Partial<Wizar
       </div>
       <Input label="Event Name *" placeholder="e.g. Summer Brand Showcase 2025" value={data.title} onChange={(e) => setData({ title: e.target.value })} />
       <Select label="Category *" options={CATEGORIES} placeholder="Select category" value={data.category} onChange={(e) => setData({ category: e.target.value })} />
+      <div>
+        <label className="label-base">Event Theme</label>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          {EVENT_THEMES.map((theme) => {
+            const active = data.eventTheme === theme.value;
+            return (
+              <button
+                key={theme.value}
+                type="button"
+                onClick={() => setData({ eventTheme: theme.value as WizardData['eventTheme'] })}
+                className={cn('rounded-xl border px-4 py-3 text-left transition-all', active ? 'border-[#00e5cc] bg-[rgba(0,229,204,0.1)]' : 'border-[rgba(0,229,204,0.08)] hover:border-[rgba(0,229,204,0.2)]')}
+              >
+                <p className={cn('text-sm font-semibold', active ? 'text-[#00e5cc]' : 'text-[#e8f4f8]')}>{theme.label}</p>
+                <p className="text-xs text-[#4d7a90] mt-1">Theme preset for the public event page</p>
+              </button>
+            );
+          })}
+        </div>
+      </div>
       <div>
         <label className="label-base">Event Type *</label>
         <div className="grid grid-cols-3 gap-3">
@@ -344,6 +375,7 @@ function Step5({ data, setData }: { data: WizardData; setData: (d: Partial<Wizar
           <Input type="number" min="1" placeholder="e.g. 50" value={data.ticketQuantity} onChange={(e) => setData({ ticketQuantity: e.target.value })} hint="Maximum number of RSVPs accepted" />
         )}
       </div>
+      <Input type="number" min="1" placeholder="e.g. 2" label="Max Tickets Per Person" value={data.maxTicketsPerPerson} onChange={(e) => setData({ maxTicketsPerPerson: e.target.value })} hint="Optional limit per guest or buyer" />
     </div>
   );
 }
@@ -406,6 +438,8 @@ function Step6({ data, setData }: { data: WizardData; setData: (d: Partial<Wizar
           <Input placeholder="e.g. CannSell, Smart Serve, Security License, etc." value={data.certificationNote} onChange={(e) => setData({ certificationNote: e.target.value })} hint="Attendees will be asked to provide this certification" />
         )}
       </div>
+
+      <Input label="Dress Code" placeholder="e.g. Cocktail, Smart Casual, All Black" value={data.dressCode} onChange={(e) => setData({ dressCode: e.target.value })} hint="Optional attendee guidance shown on the public event page" />
 
       {/* Custom Questions */}
       <div>
@@ -632,10 +666,13 @@ function Step8({ data, setData, onSubmit, submitting }: { data: WizardData; setD
           { label: 'Title', value: data.title || '—' },
           { label: 'Category', value: data.category || '—' },
           { label: 'Type', value: data.eventType.replace('_', '-') },
+          { label: 'Theme', value: data.eventTheme },
           { label: 'Date', value: data.date ? new Date(data.date).toLocaleDateString('en-CA', { dateStyle: 'full' }) : '—' },
           { label: 'Location', value: data.location || (data.eventType === 'ONLINE' ? 'Online' : '—') },
           { label: 'Capacity', value: data.ticketUnlimited ? 'Unlimited' : (data.ticketQuantity || '—') },
+          { label: 'Per Person Cap', value: data.maxTicketsPerPerson || '—' },
           { label: 'Age Gate', value: data.ageGate > 0 ? `${data.ageGate}+` : 'None' },
+          { label: 'Dress Code', value: data.dressCode || '—' },
           { label: 'Certification', value: data.requiresCertification ? 'Required' : 'Not required' },
         ].map(({ label, value }) => (
           <div key={label} className="flex items-center gap-2 text-sm">
@@ -741,7 +778,8 @@ export default function NewEventPage() {
         isOnline: data.eventType === 'ONLINE' || data.eventType === 'HYBRID',
         maxAttendees: data.ticketUnlimited ? null : parseInt(data.ticketQuantity) || null,
         ticketQuantity: data.ticketUnlimited ? null : parseInt(data.ticketQuantity) || null,
-          customQuestions: data.customQuestions,
+        maxTicketsPerPerson: parseInt(data.maxTicketsPerPerson) || null,
+        customQuestions: data.customQuestions,
         faqs: data.faqs,
       };
 

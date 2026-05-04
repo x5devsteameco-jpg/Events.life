@@ -3,6 +3,7 @@ import './globals.css';
 import { spaceGrotesk, cinzel, bebasNeue } from '@/lib/fonts';
 import { Providers } from '@/components/providers';
 import { ToastProvider } from '@/components/toast';
+import { MobileBottomNav } from '@/components/layout/mobile-bottom-nav';
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -45,10 +46,11 @@ export default function RootLayout({
       lang="en"
       className={`${spaceGrotesk.variable} ${cinzel.variable} ${bebasNeue.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-[#020408] text-[#e8f4f8]">
+      <body className="min-h-full flex flex-col bg-[#020408] pb-24 text-[#e8f4f8] lg:pb-0">
         <Providers>
           <ToastProvider>
             {children}
+            <MobileBottomNav />
           </ToastProvider>
         </Providers>
       </body>

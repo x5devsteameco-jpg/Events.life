@@ -99,9 +99,9 @@ export default async function PublicEventPage({ params }: Props) {
       className="min-h-screen"
       style={{
         background: '#020408',
-        '--theme-accent': THEME_ACCENT[event.host.themePreset ?? 'teal'] ?? '#00e5cc',
-        '--theme-accent-08': `${THEME_ACCENT[event.host.themePreset ?? 'teal'] ?? '#00e5cc'}14`,
-        '--theme-accent-20': `${THEME_ACCENT[event.host.themePreset ?? 'teal'] ?? '#00e5cc'}33`,
+        '--theme-accent': THEME_ACCENT[event.eventTheme ?? event.host.themePreset ?? 'teal'] ?? '#00e5cc',
+        '--theme-accent-08': `${THEME_ACCENT[event.eventTheme ?? event.host.themePreset ?? 'teal'] ?? '#00e5cc'}14`,
+        '--theme-accent-20': `${THEME_ACCENT[event.eventTheme ?? event.host.themePreset ?? 'teal'] ?? '#00e5cc'}33`,
       } as React.CSSProperties}
     >
       {/* Nav */}
@@ -301,6 +301,23 @@ export default async function PublicEventPage({ params }: Props) {
                   <span>🪪</span> Certification Required
                 </h3>
                 <p className="text-sm text-[#6b9bb0]">Attendees must hold a valid {event.certificationNote} to attend this event.</p>
+              </div>
+            )}
+
+            {(event.dressCode || event.maxTicketsPerPerson) && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {event.dressCode && (
+                  <div className="p-4 rounded-xl" style={{ background: 'rgba(12,26,31,0.6)', border: '1px solid rgba(0,229,204,0.08)' }}>
+                    <p className="text-xs text-[#4d7a90] font-medium uppercase tracking-wider">Dress Code</p>
+                    <p className="mt-1 text-sm text-[#e8f4f8] font-semibold">{event.dressCode}</p>
+                  </div>
+                )}
+                {event.maxTicketsPerPerson && (
+                  <div className="p-4 rounded-xl" style={{ background: 'rgba(12,26,31,0.6)', border: '1px solid rgba(0,229,204,0.08)' }}>
+                    <p className="text-xs text-[#4d7a90] font-medium uppercase tracking-wider">Max Tickets Per Person</p>
+                    <p className="mt-1 text-sm text-[#e8f4f8] font-semibold">{event.maxTicketsPerPerson}</p>
+                  </div>
+                )}
               </div>
             )}
 

@@ -115,6 +115,9 @@ export default async function EventManagePage({ params, searchParams }: Props) {
             { label: 'Location', value: event.location ?? (event.isOnline ? 'Online' : '—') },
             ...(event.address ? [{ label: 'Address', value: event.address }] : []),
             { label: 'Age Gate', value: event.ageGate > 0 ? `${event.ageGate}+` : 'None' },
+            { label: 'Theme', value: event.eventTheme ?? 'host preset' },
+            { label: 'Dress Code', value: event.dressCode ?? '—' },
+            { label: 'Per Person Cap', value: event.maxTicketsPerPerson ?? '—' },
             { label: 'Certification', value: event.requiresCertification ? (event.certificationNote ?? 'Required') : 'Not required' },
             { label: 'Visibility', value: event.visibility ?? 'Public' },
           ].map(({ label, value }) => (

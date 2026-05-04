@@ -1,0 +1,61 @@
+{
+  "version": "2.0",
+  "lastUpdated": "2026-05-04",
+  "scoringScale": {
+    "min": 0,
+    "max": 10,
+    "targetFloor": 9.6
+  },
+  "rules": {
+    "globalMinimum": 9.6,
+    "criticalCategoryMinimum": 9.6,
+    "criticalCategories": [
+      "Event Analytics",
+      "Backend Admin Portal",
+      "Visual Design and Brand",
+      "Motion and Micro-interactions"
+    ],
+    "releaseGate": {
+      "allowReleaseOnlyIf": [
+        "everyCategory >= 9.6",
+        "weightedOverall >= 9.6",
+        "noP0GapOpen"
+      ]
+    }
+  },
+  "categories": [
+    { "name": "Visual Design and Brand", "weight": 0.11 },
+    { "name": "Motion and Micro-interactions", "weight": 0.09 },
+    { "name": "Event Creation Depth", "weight": 0.09 },
+    { "name": "Organizer Customization", "weight": 0.08 },
+    { "name": "Attendee Discovery", "weight": 0.08 },
+    { "name": "RSVP and Guest Flow", "weight": 0.08 },
+    { "name": "Dashboard UX", "weight": 0.07 },
+    { "name": "Mobile Responsiveness", "weight": 0.08 },
+    { "name": "Performance and Technical", "weight": 0.07 },
+    { "name": "Compliance and Safety", "weight": 0.06 },
+    { "name": "Event Analytics", "weight": 0.1 },
+    { "name": "Backend Admin Portal", "weight": 0.09 }
+  ],
+  "enhancementLoop": {
+    "triggerIf": [
+      "anyCategory < 9.6",
+      "newCompetitorFeatureDetected == true",
+      "majorUXRegressionDetected == true"
+    ],
+    "phases": [
+      "Research",
+      "Gap Mapping",
+      "Implementation",
+      "Verification",
+      "Re-score"
+    ],
+    "verification": {
+      "required": [
+        "next build passes",
+        "playwright suite passes except allowed flaky list",
+        "manual UX pass desktop and mobile"
+      ]
+    }
+  }
+}

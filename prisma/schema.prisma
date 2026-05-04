@@ -210,6 +210,10 @@ model EventPageView {
   eventId   String
   ipHash    String?
   referer   String?
+  path      String?
+  utmSource String?
+  utmMedium String?
+  utmCampaign String?
   createdAt DateTime @default(now())
 
   event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
@@ -232,4 +236,69 @@ model Announcement {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   createdBy String?
+}
+
+model FeatureFlag {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  label       String
+  description String?
+  enabled     Boolean  @default(false)
+  scope       String   @default("global")
+  updatedAt   DateTime @updatedAt
+  updatedBy   String?
+}
+
+model SiteAsset {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  label       String
+  type        String   @default("image")
+  url         String
+  alt         String?
+  metadata    String?
+  updatedAt   DateTime @updatedAt
+  updatedBy   String?
+}
+
+model AdSlot {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  label       String
+  headline    String?
+  body        String?
+  ctaLabel    String?
+  ctaHref     String?
+  imageUrl    String?
+  active      Boolean  @default(false)
+  priority    Int      @default(0)
+  updatedAt   DateTime @updatedAt
+  updatedBy   String?
+}
+
+model ManagedPageSection {
+  id          String   @id @default(cuid())
+  pageKey     String
+  sectionKey  String
+  label       String
+  variant     String   @default("default")
+  enabled     Boolean  @default(true)
+  sortOrder   Int      @default(0)
+  config      String?
+  updatedAt   DateTime @updatedAt
+  updatedBy   String?
+
+  @@unique([pageKey, sectionKey])
+}
+
+model AdminChangeLog {
+  id             String   @id @default(cuid())
+  actorUserId    String
+  targetType     String
+  targetId       String
+  action         String
+  summary        String
+  payloadBefore  String?
+  payloadAfter   String?
+  createdAt      DateTime @default(now())
 }

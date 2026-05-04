@@ -4,6 +4,7 @@ import React, { useRef } from 'react';
 import Link from 'next/link';
 import { motion, useInView, AnimatePresence } from 'framer-motion';
 import { BrandLogo } from '@/components/brand/logo';
+import { FrontierShowcase } from '@/components/marketing/frontier-showcase';
 
 const CINZEL = "var(--font-heading, 'Cinzel', Georgia, serif)";
 const BEBAS = "var(--font-label, 'Bebas Neue', 'Arial Narrow', sans-serif)";
@@ -236,6 +237,8 @@ export default function HomePage() {
             </motion.div>
           </motion.div>
       </section>
+
+      <FrontierShowcase />
 
       {/* ═══ STATS BAND ═══ */}
       <section style={{ borderTop: '1px solid rgba(0,229,204,0.1)', borderBottom: '1px solid rgba(0,229,204,0.1)', background: 'linear-gradient(180deg, rgba(6,13,16,0.96), rgba(10,20,28,0.98))' }}>

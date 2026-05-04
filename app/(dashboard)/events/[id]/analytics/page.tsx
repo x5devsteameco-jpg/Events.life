@@ -20,7 +20,7 @@ async function getEventAnalytics(eventId: string, hostId: string) {
         orderBy: { createdAt: 'asc' },
       },
       pageViews_: {
-        select: { createdAt: true, referer: true },
+        select: { createdAt: true, referer: true, path: true, utmSource: true, utmMedium: true, utmCampaign: true, ipHash: true },
         orderBy: { createdAt: 'asc' },
       },
     },
@@ -33,6 +33,8 @@ async function getEventAnalytics(eventId: string, hostId: string) {
   const waitlisted = event.rsvps.filter((r) => r.status === 'WAITLISTED').length;
   const total = event.rsvps.length;
   const pageViewCount = event.pageViews + event.pageViews_.length;
+  const uniqueVisitors = new Set(event.pageViews_.map((view) => view.ipHash).filter(Boolean)).size;
+  const attributedViews = event.pageViews_.filter((view) => view.utmSource || view.utmMedium || view.utmCampaign).length;
   const conversionRate = pageViewCount > 0 ? ((total / pageViewCount) * 100).toFixed(1) : '0';
 
   // Build 30-day daily RSVP buckets
@@ -80,12 +82,31 @@ async function getEventAnalytics(eventId: string, hostId: string) {
     .slice(0, 6)
     .map(([source, count]) => ({ source, count }));
 
+  const campaignMap: Record<string, number> = {};
+  const pathMap: Record<string, number> = {};
+  for (const pv of event.pageViews_) {
+    const campaignKey = [pv.utmSource, pv.utmMedium, pv.utmCampaign].filter(Boolean).join(' / ') || 'Direct / Unattributed';
+    campaignMap[campaignKey] = (campaignMap[campaignKey] ?? 0) + 1;
+    const pathKey = pv.path || '/event/' + event.slug;
+    pathMap[pathKey] = (pathMap[pathKey] ?? 0) + 1;
+  }
+  const topCampaigns = Object.entries(campaignMap)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 6)
+    .map(([campaign, count]) => ({ campaign, count }));
+  const topPaths = Object.entries(pathMap)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 5)
+    .map(([path, count]) => ({ path, count }));
+
   return {
     event: { id: event.id, title: event.title, slug: event.slug, date: event.date, status: event.status, maxAttendees: event.maxAttendees },
-    stats: { total, confirmed, pending, cancelled, waitlisted, pageViewCount, conversionRate },
+    stats: { total, confirmed, pending, cancelled, waitlisted, pageViewCount, conversionRate, uniqueVisitors, attributedViews },
     dailyRsvps,
     dailyViews,
     topReferers,
+    topCampaigns,
+    topPaths,
   };
 }
 
