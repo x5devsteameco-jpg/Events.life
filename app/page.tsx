@@ -149,7 +149,7 @@ export default function HomePage() {
               lineHeight: 1.0,
               letterSpacing: '0.05em',
               color: '#e8f4f8',
-              opacity: 0.82,
+                opacity: 0.92,
               marginBottom: '0.7em',
             }}>
               YOUR RULES.
