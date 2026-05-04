@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
     }
 
     const d = parsed.data;
-    const baseSlug = generateEventSlug(d.title);
+    const baseSlug = d.customSlug?.trim() ? d.customSlug.trim() : generateEventSlug(d.title);
 
     // Ensure slug uniqueness
     let slug = baseSlug;

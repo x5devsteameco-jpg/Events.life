@@ -45,12 +45,19 @@ export async function generateMetadata({ params }: Props) {
   const event = await db.event.findUnique({ where: { slug } });
   if (!event) return { title: 'Event Not Found' };
   return {
-    title: event.title,
+    title: `${event.title} | Events.life`,
     description: event.description ?? `RSVP to ${event.title}`,
     openGraph: {
       title: event.title,
-      description: event.description ?? '',
-      images: event.bannerImage ? [event.bannerImage] : [],
+      description: event.description ?? `Join us at ${event.title}`,
+      type: 'website',
+      url: `https://gatewise-events.vercel.app/event/${slug}`,
+      images: event.bannerImage ? [{ url: event.bannerImage, width: 1200, height: 630, alt: event.title }] : [{ url: 'https://gatewise-events.vercel.app/og-default.png', width: 1200, height: 630, alt: event.title }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: event.title,
+      description: event.description ?? `RSVP to ${event.title}`,
     },
   };
 }

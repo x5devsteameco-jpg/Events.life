@@ -27,7 +27,8 @@ export function EventCard({ event }: EventCardProps) {
 
   return (
     <motion.div
-      whileHover={{ y: -5 }}
+      whileHover={{ y: -5, scale: 1.01 }}
+      whileTap={{ scale: 0.98 }}
       transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
       className="rounded-2xl overflow-hidden flex flex-col group"
       style={{

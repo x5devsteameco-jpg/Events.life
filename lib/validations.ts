@@ -62,6 +62,7 @@ export const eventSchema = z.object({
       answer: z.string(),
     })
   ).optional(),
+  customSlug: z.string().regex(/^[a-z0-9-]*$/, 'Slug can only contain lowercase letters, numbers, and hyphens').max(80).optional(),
   emailInviteList: z.string().optional(),
   confirmationMessage: z.string().optional(),
   visibility: z.enum(['PUBLIC', 'PRIVATE']).default('PUBLIC'),

@@ -153,6 +153,13 @@ button {
   border: none;
   background: none;
   font-family: var(--font-display);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+a {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 input, textarea, select {

@@ -5,8 +5,20 @@ import { BrandLogo } from '@/components/brand/logo';
 import { EventsGrid } from '@/components/events/events-grid';
 
 export const metadata = {
-  title: 'Browse Events',
-  description: 'Discover and RSVP to upcoming events on Gatewise Events.',
+  title: 'Browse Events | Events.life',
+  description: 'Discover and RSVP to upcoming networking events, product launches, private gatherings, and more on Events.life.',
+  openGraph: {
+    title: 'Browse Events | Events.life',
+    description: 'Discover and RSVP to upcoming events near you.',
+    type: 'website',
+    url: 'https://gatewise-events.vercel.app/events',
+    images: [{ url: 'https://gatewise-events.vercel.app/og-default.png', width: 1200, height: 630, alt: 'Events.life – Browse Events' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Browse Events | Events.life',
+    description: 'Discover and RSVP to upcoming events near you.',
+  },
 };
 
 export const revalidate = 60; // ISR: regenerate at most once per minute

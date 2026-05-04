@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { BrandLogo } from '@/components/brand/logo';
+import { QRCodeDisplay } from '@/components/events/qr-code-display';
 
 type RSVPStatus = 'CONFIRMED' | 'WAITLISTED' | 'CANCELLED' | 'PENDING';
 
@@ -224,6 +225,16 @@ export default function RSVPManagePage() {
                     <p className="text-sm text-[#4d7a90]">📍 {data.event.location}</p>
                   ) : null}
                 </div>
+
+                {/* QR Code for confirmed attendees */}
+                {data.rsvp.status === 'CONFIRMED' && (
+                  <div className="px-5 pb-5 flex justify-center">
+                    <div className="text-center">
+                      <p className="text-xs text-[#4d7a90] mb-3">Show this at the door</p>
+                      <QRCodeDisplay value={`${typeof window !== 'undefined' ? window.location.origin : ''}/event/${data.event.slug}`} size={140} />
+                    </div>
+                  </div>
+                )}
 
                 {/* Actions */}
                 <div className="px-5 pb-5 space-y-3">

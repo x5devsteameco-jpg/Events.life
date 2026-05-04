@@ -107,6 +107,20 @@ export function SettingsForm({ initialData }: Props) {
     }
   };
 
+  const formValues = watch();
+  const completenessFields = [
+    { key: 'name', label: 'Name' },
+    { key: 'image', label: 'Profile photo' },
+    { key: 'company', label: 'Company' },
+    { key: 'position', label: 'Position' },
+    { key: 'bio', label: 'Bio' },
+    { key: 'organizerLogo', label: 'Logo' },
+    { key: 'instagram', label: 'Instagram' },
+    { key: 'website', label: 'Website' },
+  ] as const;
+  const completedFields = completenessFields.filter((f) => !!formValues[f.key]).length;
+  const completenessScore = Math.round((completedFields / completenessFields.length) * 100);
+
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div>
@@ -138,6 +152,36 @@ export function SettingsForm({ initialData }: Props) {
         </div>
 
         <h2 className="text-sm font-bold text-[#00e5cc] uppercase tracking-wider mb-4">Edit Profile</h2>
+
+        {/* Profile Completeness Bar */}
+        <div className="mb-5 rounded-xl p-3" style={{ background: 'rgba(0,229,204,0.04)', border: '1px solid rgba(0,229,204,0.1)' }}>
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="text-xs font-semibold text-[#7aafc4]">Profile Completeness</span>
+            <span className="text-xs font-black" style={{ color: completenessScore >= 80 ? '#00e5cc' : completenessScore >= 50 ? '#f59e0b' : '#ff3cac' }}>
+              {completenessScore}%
+            </span>
+          </div>
+          <div className="h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.06)' }}>
+            <motion.div
+              className="h-full rounded-full"
+              initial={{ width: 0 }}
+              animate={{ width: `${completenessScore}%` }}
+              transition={{ duration: 0.6, ease: 'easeOut' }}
+              style={{
+                background: completenessScore >= 80
+                  ? 'linear-gradient(to right, #00c4a8, #00e5cc)'
+                  : completenessScore >= 50
+                  ? 'linear-gradient(to right, #d97706, #f59e0b)'
+                  : 'linear-gradient(to right, #be185d, #ff3cac)',
+              }}
+            />
+          </div>
+          {completenessScore < 100 && (
+            <p className="text-[10px] text-[#4d7a90] mt-1.5">
+              Missing: {completenessFields.filter((f) => !formValues[f.key]).map((f) => f.label).join(', ')}
+            </p>
+          )}
+        </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
