@@ -334,7 +334,7 @@ export default async function PublicEventPage({ params }: Props) {
           </div>
 
           {/* Right — RSVP */}
-          <div className="lg:col-span-1">
+          <div className="hidden lg:block lg:col-span-1">
             <div className="sticky top-24">
               {event.ageGate > 0 ? (
                 <AgeGate minAge={event.ageGate}>

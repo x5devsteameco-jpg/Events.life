@@ -168,6 +168,16 @@ export function RSVPForm({ eventId, title, eventDate, eventEndDate, eventLocatio
             </div>
           )}
         </motion.div>
+            {eventSlug && (
+              <div className="mt-3 text-center">
+                <a
+                  href={`/rsvp/manage?email=${encodeURIComponent('')}&slug=${encodeURIComponent(eventSlug)}`}
+                  className="text-xs text-[#2d5268] hover:text-[#4d7a90] underline transition-colors"
+                >
+                  Need to cancel? Manage your RSVP →
+                </a>
+              </div>
+            )}
       </AnimatePresence>
     );
   }
