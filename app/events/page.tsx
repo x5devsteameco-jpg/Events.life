@@ -61,7 +61,7 @@ export default async function BrowseEventsPage({
         </div>
       </nav>
 
-      <div className="max-w-6xl mx-auto px-4">
+      <div className="max-w-6xl mx-auto px-4 pb-20">
         {/* Hero */}
         <div className="py-16 text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold mb-5" style={{ background: 'rgba(0,229,204,0.08)', border: '1px solid rgba(0,229,204,0.2)', color: '#00e5cc' }}>
@@ -144,7 +144,7 @@ export default async function BrowseEventsPage({
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {events.map((event) => {
-              const confirmedCount = event._count?.rsvps ?? 0;
+                const confirmedCount = event._count?.rsvps ?? 0;
               const isFull = event.maxAttendees ? confirmedCount >= event.maxAttendees : false;
 
               return (
@@ -201,10 +201,10 @@ export default async function BrowseEventsPage({
                     )}
 
                     <div className="mt-auto flex items-center justify-between pt-3 border-t" style={{ borderColor: 'rgba(0,229,204,0.06)' }}>
-                      <div className="text-xs text-[#4d7a90]">
+                      <div className="text-xs text-[#4d7a90] min-w-0 truncate mr-2">
                         By <span className="text-[#7aafc4]">{event.host.name ?? event.host.company ?? 'Anonymous'}</span>
                       </div>
-                      <div className="text-xs text-[#4d7a90]">
+                      <div className="text-xs text-[#4d7a90] flex-shrink-0 whitespace-nowrap">
                         {confirmedCount} attending
                       </div>
                     </div>

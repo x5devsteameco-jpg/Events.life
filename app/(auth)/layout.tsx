@@ -2,9 +2,9 @@ import Link from 'next/link';
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-[#020408] flex items-center justify-center p-4" style={{ background: 'radial-gradient(ellipse at 30% 20%, rgba(0,229,204,0.05) 0%, transparent 60%), radial-gradient(ellipse at 70% 80%, rgba(127,255,0,0.04) 0%, transparent 60%), #020408' }}>
+    <div className="min-h-screen flex items-center justify-center p-4" style={{ background: 'radial-gradient(ellipse at 25% 20%, rgba(0,229,204,0.09) 0%, transparent 55%), radial-gradient(ellipse at 75% 80%, rgba(0,180,150,0.07) 0%, transparent 55%), radial-gradient(ellipse at 50% 50%, rgba(0,229,204,0.03) 0%, transparent 70%), #020408' }}>
       {/* Grid bg */}
-      <div className="fixed inset-0 pointer-events-none opacity-[0.025]" aria-hidden="true">
+      <div className="fixed inset-0 pointer-events-none opacity-[0.04]" aria-hidden="true">
         <svg width="100%" height="100%">
           <defs>
             <pattern id="auth-grid" width="50" height="50" patternUnits="userSpaceOnUse">
@@ -15,12 +15,17 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         </svg>
       </div>
 
+      {/* Decorative floating orbs */}
+      <div className="fixed pointer-events-none" style={{ top: '15%', left: '8%', width: '320px', height: '320px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(0,229,204,0.12) 0%, transparent 70%)', filter: 'blur(40px)' }} aria-hidden="true" />
+      <div className="fixed pointer-events-none" style={{ bottom: '20%', right: '8%', width: '280px', height: '280px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(0,180,150,0.1) 0%, transparent 70%)', filter: 'blur(40px)' }} aria-hidden="true" />
+      <div className="fixed pointer-events-none" style={{ top: '60%', left: '30%', width: '200px', height: '200px', borderRadius: '50%', background: 'radial-gradient(circle, rgba(127,255,0,0.05) 0%, transparent 70%)', filter: 'blur(30px)' }} aria-hidden="true" />
+
       <div className="w-full max-w-md relative">
         {/* Logo */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2.5 group">
             <div
-              className="w-9 h-9 rounded-xl flex items-center justify-center transition-all group-hover:shadow-[0_0_20px_rgba(0,229,204,0.4)]"
+              className="w-9 h-9 rounded-xl flex items-center justify-center transition-all group-hover:shadow-[0_0_24px_rgba(0,229,204,0.5)]"
               style={{ background: 'linear-gradient(135deg, #00c4a8, #00e5cc)' }}
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#020408" strokeWidth="2.5" aria-hidden="true">
@@ -37,7 +42,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         </div>
 
         {/* Card */}
-        <div className="glass-strong rounded-2xl overflow-hidden">
+        <div className="rounded-2xl overflow-hidden" style={{ background: 'rgba(8,18,24,0.85)', border: '1px solid rgba(0,229,204,0.15)', backdropFilter: 'blur(24px)', boxShadow: '0 8px 48px rgba(0,0,0,0.6), 0 0 0 1px rgba(0,229,204,0.05), inset 0 1px 0 rgba(0,229,204,0.08)' }}>
           {children}
         </div>
 

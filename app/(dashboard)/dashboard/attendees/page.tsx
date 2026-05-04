@@ -40,7 +40,7 @@ export default async function AttendeesPage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+      <div className="grid grid-cols-3 md:grid-cols-5 gap-3">
         {[
           { label: 'Total RSVPs', value: stats.total, color: '#00e5cc' },
           { label: 'Confirmed', value: stats.confirmed, color: '#7fff00' },

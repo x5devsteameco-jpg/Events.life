@@ -137,7 +137,7 @@ export default function MyEventsPage() {
         </div>
         <Link
           href="/events/new"
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-[#020408] hover:-translate-y-0.5 transition-transform"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-[#020408] hover:-translate-y-0.5 transition-transform flex-shrink-0 whitespace-nowrap"
           style={{ background: 'linear-gradient(135deg, #00c4a8, #00e5cc)' }}
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
@@ -191,7 +191,8 @@ export default function MyEventsPage() {
           )}
         </div>
       ) : (
-        <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid rgba(0,229,204,0.08)' }}>
+        <div className="rounded-2xl overflow-x-auto" style={{ border: '1px solid rgba(0,229,204,0.08)' }}>
+          <div className="min-w-[580px]">
           {/* Header row */}
           <div className="grid grid-cols-[1fr_100px_90px_80px_120px] gap-4 px-5 py-3 text-[10px] font-bold uppercase tracking-wider text-[#2d5268]" style={{ background: 'rgba(6,13,16,0.8)' }}>
             <span>Event</span>
@@ -252,7 +253,8 @@ export default function MyEventsPage() {
               </motion.div>
             ))}
           </div>
-        </div>
+            </div>
+          </div>
       )}
     </div>
   );

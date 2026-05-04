@@ -102,7 +102,7 @@ export default function HomePage() {
       <Navbar />
 
       {/* ═══ HERO ═══ */}
-      <section className="relative min-h-screen flex items-center justify-center pt-16 overflow-hidden">
+      <section className="relative min-h-[92vh] flex items-center justify-center pt-16 overflow-hidden">
         {/* Decorative orbs */}
         <div className="orb orb-teal" style={{ width: '700px', height: '700px', top: '-15%', left: '-12%', opacity: 0.7 }} />
         <div className="orb orb-green" style={{ width: '500px', height: '500px', top: '30%', right: '-10%', opacity: 0.6 }} />
@@ -196,6 +196,22 @@ export default function HomePage() {
             ))}
           </motion.div>
         </div>
+
+          {/* Scroll indicator */}
+          <motion.div
+            className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.2, duration: 0.6 }}
+          >
+            <span style={{ fontSize: '0.6rem', letterSpacing: '0.18em', color: '#2d5268', textTransform: 'uppercase' }}>Scroll</span>
+            <motion.div
+              animate={{ y: [0, 6, 0] }}
+              transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2d5268" strokeWidth="2" aria-hidden="true"><path d="M12 5v14M5 15l7 7 7-7"/></svg>
+            </motion.div>
+          </motion.div>
       </section>
 
       {/* ═══ STATS BAND ═══ */}

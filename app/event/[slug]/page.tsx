@@ -91,7 +91,9 @@ export default async function PublicEventPage({ params }: Props) {
               <div className="p-4 rounded-xl space-y-1" style={{ background: 'rgba(12,26,31,0.6)', border: '1px solid rgba(0,229,204,0.08)' }}>
                 <p className="text-xs text-[#4d7a90] font-medium uppercase tracking-wider">Date & Time</p>
                 <p className="text-sm text-[#e8f4f8] font-semibold">{formatDate(event.date)}</p>
-                {event.endDate && <p className="text-xs text-[#4d7a90]">Until {formatDate(event.endDate)}</p>}
+                  {event.endDate && new Date(event.endDate).toDateString() !== new Date(event.date).toDateString() && (
+                    <p className="text-xs text-[#4d7a90]">Until {formatDate(event.endDate)}</p>
+                  )}
               </div>
 
               <div className="p-4 rounded-xl space-y-1" style={{ background: 'rgba(12,26,31,0.6)', border: '1px solid rgba(0,229,204,0.08)' }}>
