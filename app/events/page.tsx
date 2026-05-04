@@ -5,7 +5,7 @@ import { Badge, statusToBadgeVariant } from '@/components/ui/badge';
 import type { EventStatus } from '@/lib/types';
 
 export const metadata = {
-  title: 'Browse Events | Gatewise Events',
+  title: 'Browse Events',
   description: 'Discover and RSVP to upcoming events on Gatewise Events.',
 };
 

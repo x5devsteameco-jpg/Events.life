@@ -697,7 +697,7 @@ export default function NewEventPage() {
               key={s.num}
               type="button"
               onClick={() => { if (s.num < step) { setDirection(s.num < step ? -1 : 1); setStep(s.num); } }}
-              className={cn('flex-1 h-1.5 rounded-full transition-all duration-300', s.num < step ? 'bg-[#00e5cc] cursor-pointer' : s.num === step ? 'bg-[#7fff00]' : 'bg-[rgba(0,229,204,0.1)]')}
+              className={cn('flex-1 h-2 rounded-full transition-all duration-300', s.num < step ? 'bg-[#00e5cc] cursor-pointer' : s.num === step ? 'bg-[#00e5cc] opacity-55' : 'bg-[rgba(0,229,204,0.08)]')}
               aria-label={`Step ${s.num}: ${s.label}`}
             />
           ))}

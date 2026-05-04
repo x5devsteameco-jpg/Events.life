@@ -4,7 +4,7 @@ import { db } from '@/lib/db';
 import { SettingsForm } from '@/components/dashboard/settings-form';
 
 export const metadata = {
-  title: 'Settings | Gatewise Events',
+  title: 'Settings',
 };
 
 export default async function SettingsPage() {

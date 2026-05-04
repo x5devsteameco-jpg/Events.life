@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: Props) {
   const event = await db.event.findUnique({ where: { slug } });
   if (!event) return { title: 'Event Not Found' };
   return {
-    title: `${event.title} | Gatewise Events`,
+    title: event.title,
     description: event.description ?? `RSVP to ${event.title}`,
     openGraph: {
       title: event.title,
