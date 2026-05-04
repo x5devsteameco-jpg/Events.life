@@ -1,8 +1,15 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { spaceGrotesk, cinzel, bebasNeue } from '@/lib/fonts';
 import { Providers } from '@/components/providers';
 import { ToastProvider } from '@/components/toast';
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+  themeColor: '#020408',
+};
 
 export const metadata: Metadata = {
   title: {

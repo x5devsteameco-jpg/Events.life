@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useDropzone } from 'react-dropzone';
@@ -649,6 +649,8 @@ function Step8({ data, setData, onSubmit, submitting }: { data: WizardData; setD
 }
 
 // ─── Wizard Shell ─────────────────────────────────────────────────────────────
+const DRAFT_KEY = 'events-life:event-draft';
+
 export default function NewEventPage() {
   const router = useRouter();
   const { toast } = useToast();
@@ -656,6 +658,51 @@ export default function NewEventPage() {
   const [direction, setDirection] = useState(1);
   const [data, setDataState] = useState<WizardData>(INITIAL);
   const [submitting, setSubmitting] = useState(false);
+  const [showDraftBanner, setShowDraftBanner] = useState(false);
+  const draftLoadedRef = useRef(false);
+
+  // On mount, check for a saved draft
+  useEffect(() => {
+    if (draftLoadedRef.current) return;
+    draftLoadedRef.current = true;
+    try {
+      const saved = localStorage.getItem(DRAFT_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved) as WizardData;
+        if (parsed.title?.trim()) setShowDraftBanner(true);
+      }
+    } catch { /* ignore */ }
+  }, []);
+
+  // Autosave on every data change (debounced via useEffect)
+  useEffect(() => {
+    if (!draftLoadedRef.current) return;
+    const id = setTimeout(() => {
+      try { localStorage.setItem(DRAFT_KEY, JSON.stringify(data)); } catch { /* ignore */ }
+    }, 800);
+    return () => clearTimeout(id);
+  }, [data]);
+
+  const restoreDraft = () => {
+    try {
+      const saved = localStorage.getItem(DRAFT_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved) as WizardData;
+        setDataState(parsed);
+        toast('Draft restored!', 'success');
+      }
+    } catch { /* ignore */ }
+    setShowDraftBanner(false);
+  };
+
+  const discardDraft = () => {
+    try { localStorage.removeItem(DRAFT_KEY); } catch { /* ignore */ }
+    setShowDraftBanner(false);
+  };
+
+  const clearDraftOnSuccess = () => {
+    try { localStorage.removeItem(DRAFT_KEY); } catch { /* ignore */ }
+  };
 
   const setData = useCallback((updates: Partial<WizardData>) => {
     setDataState((prev) => ({ ...prev, ...updates }));
@@ -702,6 +749,7 @@ export default function NewEventPage() {
       }
 
       toast(status === 'LIVE' ? '🚀 Event launched!' : '📝 Saved as draft', 'success');
+      clearDraftOnSuccess();
       if (status === 'LIVE' && json.data?.slug) {
         router.push(`/event/${json.data.slug}?launched=1`);
       } else {
@@ -728,6 +776,17 @@ export default function NewEventPage() {
 
   return (
     <div className="max-w-2xl mx-auto">
+      {/* Draft restore banner */}
+      {showDraftBanner && (
+        <div className="mb-6 flex items-center justify-between gap-3 px-5 py-3.5 rounded-2xl text-sm" style={{ background: 'rgba(0,229,204,0.08)', border: '1px solid rgba(0,229,204,0.25)' }}>
+          <p className="text-[#7aafc4]">📝 You have an unsaved draft. Continue where you left off?</p>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <button type="button" onClick={restoreDraft} className="px-3 py-1.5 rounded-lg text-xs font-bold text-[#020408]" style={{ background: 'linear-gradient(135deg, #00c4a8, #00e5cc)' }}>Restore</button>
+            <button type="button" onClick={discardDraft} className="px-3 py-1.5 rounded-lg text-xs font-semibold text-[#4d7a90] hover:text-[#ff3cac] transition-colors">Discard</button>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-2xl font-black text-[#e8f4f8]" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>Create Event</h1>
