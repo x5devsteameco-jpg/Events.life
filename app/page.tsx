@@ -51,8 +51,8 @@ function Navbar() {
           ))}
         </div>
         <div className="flex items-center gap-3">
-          <Link href="/login" className="hidden sm:block text-sm font-medium px-4 py-2 rounded-xl" style={{ color: '#7aafc4', border: '1px solid rgba(0,229,204,0.12)' }}>Sign In</Link>
-          <Link href="/register" className="hidden sm:block text-sm font-bold px-5 py-2.5 rounded-xl text-[#020408]" style={{ background: 'linear-gradient(135deg, #00c4a8, #00e5cc)', boxShadow: '0 0 20px rgba(0,229,204,0.25)' }}>Get Started</Link>
+          <Link href="/login" className="hidden md:block text-sm font-medium px-4 py-2 rounded-xl" style={{ color: '#7aafc4', border: '1px solid rgba(0,229,204,0.12)' }}>Sign In</Link>
+          <Link href="/register" className="hidden md:block text-sm font-bold px-5 py-2.5 rounded-xl text-[#020408]" style={{ background: 'linear-gradient(135deg, #00c4a8, #00e5cc)', boxShadow: '0 0 20px rgba(0,229,204,0.25)' }}>Get Started</Link>
           <button type="button" className="md:hidden p-2 rounded-xl" style={{ color: '#7aafc4', border: '1px solid rgba(0,229,204,0.12)' }} onClick={() => setMobileOpen(!mobileOpen)} aria-label="Toggle menu">
             {mobileOpen
               ? <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>

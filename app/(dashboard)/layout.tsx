@@ -39,7 +39,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
         </header>
 
         {/* Main content */}
-        <main className="flex-1 overflow-y-auto p-8 pt-10" style={{ backgroundImage: 'radial-gradient(circle at 80% 20%, rgba(0,229,204,0.03) 0%, transparent 50%), radial-gradient(circle at 20% 80%, rgba(0,180,150,0.02) 0%, transparent 50%)' }}>
+        <main className="flex-1 overflow-y-auto" style={{ padding: '2.5rem 2rem 2rem', backgroundImage: 'radial-gradient(circle at 80% 20%, rgba(0,229,204,0.03) 0%, transparent 50%), radial-gradient(circle at 20% 80%, rgba(0,180,150,0.02) 0%, transparent 50%)' }}>
           {children}
         </main>
       </div>

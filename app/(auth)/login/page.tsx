@@ -109,7 +109,7 @@ export default function LoginPage() {
             loading={isSubmitting}
             className="w-full mt-2"
           >
-            {isSubmitting ? 'Signing in…' : 'Sign In'}
+              {isSubmitting ? 'Signing in…' : 'Sign In'}
           </Button>
         </form>
 
