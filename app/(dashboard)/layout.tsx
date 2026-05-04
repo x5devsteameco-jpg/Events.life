@@ -15,8 +15,8 @@ export default async function DashboardLayout({ children }: { children: React.Re
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Top bar */}
         <header
-          className="h-14 flex items-center justify-between px-6 flex-shrink-0"
-          style={{ borderBottom: '1px solid rgba(0,229,204,0.08)', background: 'rgba(6,13,16,0.8)', backdropFilter: 'blur(12px)' }}
+          className="h-11 flex items-center justify-between px-5 flex-shrink-0"
+          style={{ borderBottom: '1px solid rgba(0,229,204,0.05)', background: 'rgba(6,13,16,0.6)', backdropFilter: 'blur(12px)' }}
         >
           <div className="flex items-center gap-2 md:hidden">
             <span className="text-sm font-bold gradient-text-static" style={{ fontFamily: 'var(--font-display)' }}>

@@ -45,8 +45,7 @@ export default async function DashboardPage() {
           <h1 className="text-2xl font-black text-[#e8f4f8]" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>
             Dashboard
           </h1>
-          <p className="text-sm text-[#4d7a90] mt-1">Welcome back, {session.user.name || 'Host'}</p>
-                  <p className="text-sm text-[#4d7a90] mt-1 truncate max-w-xs">Welcome back, {session.user.name || 'Host'}</p>
+          <p className="text-sm text-[#4d7a90] mt-1 truncate max-w-xs">Welcome back, {session.user.name || 'Host'}</p>
         </div>
         <Link
           href="/dashboard/events/new"
