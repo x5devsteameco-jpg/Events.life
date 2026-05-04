@@ -99,6 +99,25 @@ async function getEventAnalytics(eventId: string, hostId: string) {
     .slice(0, 5)
     .map(([path, count]) => ({ path, count }));
 
+  const recentViews = dailyViews.slice(-7).reduce((sum, day) => sum + day.count, 0);
+  const previousViews = dailyViews.slice(-14, -7).reduce((sum, day) => sum + day.count, 0);
+  const recentRsvps = dailyRsvps.slice(-7).reduce((sum, day) => sum + day.count, 0);
+  const previousRsvps = dailyRsvps.slice(-14, -7).reduce((sum, day) => sum + day.count, 0);
+
+  const viewsTrendPct = previousViews > 0
+    ? Math.round(((recentViews - previousViews) / previousViews) * 100)
+    : recentViews > 0
+      ? 100
+      : 0;
+  const rsvpTrendPct = previousRsvps > 0
+    ? Math.round(((recentRsvps - previousRsvps) / previousRsvps) * 100)
+    : recentRsvps > 0
+      ? 100
+      : 0;
+  const attributionRate = pageViewCount > 0
+    ? Math.round((attributedViews / pageViewCount) * 100)
+    : 0;
+
   return {
     event: { id: event.id, title: event.title, slug: event.slug, date: event.date, status: event.status, maxAttendees: event.maxAttendees },
     stats: { total, confirmed, pending, cancelled, waitlisted, pageViewCount, conversionRate, uniqueVisitors, attributedViews },
@@ -107,6 +126,13 @@ async function getEventAnalytics(eventId: string, hostId: string) {
     topReferers,
     topCampaigns,
     topPaths,
+    quality: {
+      recentViews,
+      recentRsvps,
+      viewsTrendPct,
+      rsvpTrendPct,
+      attributionRate,
+    },
   };
 }
 

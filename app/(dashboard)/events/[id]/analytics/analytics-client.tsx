@@ -28,6 +28,13 @@ interface AnalyticsData {
   topReferers: { source: string; count: number }[];
   topCampaigns: { campaign: string; count: number }[];
   topPaths: { path: string; count: number }[];
+  quality: {
+    recentViews: number;
+    recentRsvps: number;
+    viewsTrendPct: number;
+    rsvpTrendPct: number;
+    attributionRate: number;
+  };
 }
 
 function MiniLineChart({
@@ -230,6 +237,12 @@ function exportToCSV(data: AnalyticsData) {
 export default function AnalyticsClient({ data }: { data: AnalyticsData }) {
   const [chartTab, setChartTab] = useState<'rsvps' | 'views'>('rsvps');
 
+  const trendTone = (value: number) => {
+    if (value > 0) return '#10b981';
+    if (value < 0) return '#ff3cac';
+    return '#4d7a90';
+  };
+
   const donutSegments = [
     { label: 'Confirmed', value: data.stats.confirmed, color: '#00e5cc' },
     { label: 'Pending', value: data.stats.pending, color: '#f59e0b' },
@@ -254,6 +267,84 @@ export default function AnalyticsClient({ data }: { data: AnalyticsData }) {
         <StatCard label="Conversion" value={`${data.stats.conversionRate}%`} sub="views → RSVP" color="#ff3cac" delay={0.25} />
         <StatCard label="Unique Visitors" value={data.stats.uniqueVisitors} color="#8b5cf6" delay={0.3} />
         <StatCard label="Attributed" value={data.stats.attributedViews} sub="views with UTM" color="#f97316" delay={0.35} />
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.38 }}
+          className="rounded-2xl p-5"
+          style={{ background: 'rgba(12,26,31,0.7)', border: '1px solid rgba(0,229,204,0.12)', backdropFilter: 'blur(12px)' }}
+        >
+          <h2 className="font-bold text-[#e8f4f8] mb-3">Signal Health</h2>
+          <div className="space-y-3 text-sm">
+            <div className="flex items-center justify-between">
+              <span style={{ color: '#7aafc4' }}>Views (7d)</span>
+              <span className="font-semibold" style={{ color: '#38bdf8' }}>{data.quality.recentViews}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span style={{ color: '#7aafc4' }}>RSVPs (7d)</span>
+              <span className="font-semibold" style={{ color: '#00e5cc' }}>{data.quality.recentRsvps}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span style={{ color: '#7aafc4' }}>Views Trend</span>
+              <span className="font-semibold" style={{ color: trendTone(data.quality.viewsTrendPct) }}>{data.quality.viewsTrendPct}%</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span style={{ color: '#7aafc4' }}>RSVP Trend</span>
+              <span className="font-semibold" style={{ color: trendTone(data.quality.rsvpTrendPct) }}>{data.quality.rsvpTrendPct}%</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span style={{ color: '#7aafc4' }}>Attribution Coverage</span>
+              <span className="font-semibold" style={{ color: data.quality.attributionRate >= 50 ? '#10b981' : '#f59e0b' }}>{data.quality.attributionRate}%</span>
+            </div>
+          </div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.42 }}
+          className="rounded-2xl p-5 lg:col-span-2"
+          style={{ background: 'rgba(12,26,31,0.7)', border: '1px solid rgba(0,229,204,0.12)', backdropFilter: 'blur(12px)' }}
+        >
+          <h2 className="font-bold text-[#e8f4f8] mb-3">Actionable Insights</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            <div className="rounded-xl p-3" style={{ background: 'rgba(255,255,255,0.03)' }}>
+              <p className="font-semibold mb-1" style={{ color: '#7aafc4' }}>Traffic Momentum</p>
+              <p style={{ color: '#b9d5df' }}>
+                {data.quality.viewsTrendPct >= 0
+                  ? 'Traffic is stable or rising versus the previous week.'
+                  : 'Traffic is softer week-over-week; increase distribution and ad-slot coverage.'}
+              </p>
+            </div>
+            <div className="rounded-xl p-3" style={{ background: 'rgba(255,255,255,0.03)' }}>
+              <p className="font-semibold mb-1" style={{ color: '#7aafc4' }}>RSVP Momentum</p>
+              <p style={{ color: '#b9d5df' }}>
+                {data.quality.rsvpTrendPct >= 0
+                  ? 'RSVP conversion is holding or improving this week.'
+                  : 'RSVPs are slipping; review funnel copy and confirmation flow friction.'}
+              </p>
+            </div>
+            <div className="rounded-xl p-3" style={{ background: 'rgba(255,255,255,0.03)' }}>
+              <p className="font-semibold mb-1" style={{ color: '#7aafc4' }}>Attribution Quality</p>
+              <p style={{ color: '#b9d5df' }}>
+                {data.quality.attributionRate >= 60
+                  ? 'Attribution quality is strong for campaign-level optimization.'
+                  : 'Add UTM tags consistently to improve campaign attribution confidence.'}
+              </p>
+            </div>
+            <div className="rounded-xl p-3" style={{ background: 'rgba(255,255,255,0.03)' }}>
+              <p className="font-semibold mb-1" style={{ color: '#7aafc4' }}>Signal Confidence</p>
+              <p style={{ color: '#b9d5df' }}>
+                {data.stats.uniqueVisitors >= 25
+                  ? 'Visitor volume is high enough for reliable weekly comparison.'
+                  : 'Small sample size; treat week-over-week changes as directional only.'}
+              </p>
+            </div>
+          </div>
+        </motion.div>
       </div>
 
       {/* Chart + Donut row */}
