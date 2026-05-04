@@ -107,6 +107,7 @@ export default async function EventManagePage({ params, searchParams }: Props) {
             ...(event.address ? [{ label: 'Address', value: event.address }] : []),
             { label: 'Age Gate', value: event.ageGate > 0 ? `${event.ageGate}+` : 'None' },
             { label: 'Certification', value: event.requiresCertification ? (event.certificationNote ?? 'Required') : 'Not required' },
+            { label: 'Visibility', value: event.visibility ?? 'Public' },
           ].map(({ label, value }) => (
             <div key={label} className="p-4 rounded-xl" style={{ background: 'rgba(12,26,31,0.5)', border: '1px solid rgba(0,229,204,0.06)' }}>
               <p className="text-xs text-[#4d7a90] mb-1">{label}</p>
