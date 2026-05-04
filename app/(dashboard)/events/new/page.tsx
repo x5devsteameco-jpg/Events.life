@@ -112,6 +112,82 @@ const BANNER_PRESETS = [
   { id: 'minimal-studio', label: 'Studio Editorial', url: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1400&q=80' },
 ];
 
+const EVENT_TEMPLATES: { id: string; label: string; emoji: string; desc: string; preset: Partial<WizardData> }[] = [
+  {
+    id: 'networking',
+    label: 'Networking Mixer',
+    emoji: '🤝',
+    desc: 'Industry meetup, drinks & conversations',
+    preset: {
+      category: 'Networking',
+      eventTheme: 'teal',
+      eventType: 'IN_PERSON',
+      ticketName: 'General Admission',
+      ticketUnlimited: true,
+      dressCode: 'Business Casual',
+      requiredFields: ['guestName', 'guestEmail', 'company'],
+      confirmationMessage: 'Your spot is confirmed! We look forward to meeting you. Check in at the door with your name.',
+    },
+  },
+  {
+    id: 'product-demo',
+    label: 'Product Demo',
+    emoji: '🚀',
+    desc: 'Brand showcase or product launch',
+    preset: {
+      category: 'Product Demo',
+      eventTheme: 'violet',
+      eventType: 'IN_PERSON',
+      ticketName: 'Demo Seat',
+      ticketUnlimited: false,
+      ticketQuantity: '50',
+      maxTicketsPerPerson: '2',
+      requiredFields: ['guestName', 'guestEmail', 'company'],
+      confirmationMessage: 'You\'re registered for the demo! We\'ll follow up with a calendar invite and product brief.',
+    },
+  },
+  {
+    id: 'private-gathering',
+    label: 'Private Gathering',
+    emoji: '🥂',
+    desc: 'Exclusive invite-only event',
+    preset: {
+      category: 'Private Gathering',
+      eventTheme: 'rose',
+      eventType: 'IN_PERSON',
+      visibility: 'PRIVATE',
+      ageGate: 19,
+      ticketName: 'Exclusive Pass',
+      ticketUnlimited: false,
+      ticketQuantity: '30',
+      dressCode: 'Smart Casual',
+      confirmationMessage: 'You\'re on the exclusive guest list. Please do not share this invite.',
+    },
+  },
+  {
+    id: 'webinar',
+    label: 'Online Webinar',
+    emoji: '💻',
+    desc: 'Virtual presentation or workshop',
+    preset: {
+      category: 'Industry Event',
+      eventTheme: 'sky',
+      eventType: 'ONLINE',
+      ticketName: 'Virtual Ticket',
+      ticketUnlimited: true,
+      requiredFields: ['guestName', 'guestEmail'],
+      confirmationMessage: 'You\'re registered! The Zoom link will be emailed 24 hours before the event.',
+    },
+  },
+  {
+    id: 'blank',
+    label: 'Start from Scratch',
+    emoji: '✏️',
+    desc: 'Build a fully custom event',
+    preset: {},
+  },
+];
+
 // ─── Step 1 ───────────────────────────────────────────────────────────────────
 function Step1({ data, setData }: { data: WizardData; setData: (d: Partial<WizardData>) => void }) {
   return (
@@ -706,6 +782,7 @@ export default function NewEventPage() {
   const [data, setDataState] = useState<WizardData>(INITIAL);
   const [submitting, setSubmitting] = useState(false);
   const [showDraftBanner, setShowDraftBanner] = useState(false);
+  const [showTemplates, setShowTemplates] = useState(true);
   const draftLoadedRef = useRef(false);
 
   // On mount, check for a saved draft
@@ -716,7 +793,7 @@ export default function NewEventPage() {
       const saved = localStorage.getItem(DRAFT_KEY);
       if (saved) {
         const parsed = JSON.parse(saved) as WizardData;
-        if (parsed.title?.trim()) setShowDraftBanner(true);
+        if (parsed.title?.trim()) { setShowDraftBanner(true); setShowTemplates(false); }
       }
     } catch { /* ignore */ }
   }, []);
@@ -824,6 +901,40 @@ export default function NewEventPage() {
 
   return (
     <div className="max-w-2xl mx-auto">
+      {/* Template picker — shown before wizard starts */}
+      {showTemplates && (
+        <div className="mb-8">
+          <div className="mb-6">
+            <h1 className="text-2xl font-black text-[#e8f4f8]" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>Create Event</h1>
+            <p className="text-sm text-[#4d7a90] mt-1">Choose a template to get started, or build from scratch.</p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {EVENT_TEMPLATES.map((tmpl) => (
+              <motion.button
+                key={tmpl.id}
+                type="button"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => {
+                  setDataState((prev) => ({ ...prev, ...tmpl.preset }));
+                  setShowTemplates(false);
+                }}
+                className="flex items-start gap-4 p-5 rounded-2xl text-left transition-all"
+                style={{ background: 'rgba(12,26,31,0.7)', border: '1px solid rgba(0,229,204,0.12)' }}
+              >
+                <span className="text-3xl flex-shrink-0">{tmpl.emoji}</span>
+                <div>
+                  <p className="text-sm font-bold text-[#e8f4f8]">{tmpl.label}</p>
+                  <p className="text-xs text-[#4d7a90] mt-0.5">{tmpl.desc}</p>
+                </div>
+              </motion.button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {!showTemplates && (
+        <>
       {/* Draft restore banner */}
       {showDraftBanner && (
         <div className="mb-6 flex items-center justify-between gap-3 px-5 py-3.5 rounded-2xl text-sm" style={{ background: 'rgba(0,229,204,0.08)', border: '1px solid rgba(0,229,204,0.25)' }}>
@@ -893,6 +1004,8 @@ export default function NewEventPage() {
           <Button type="button" variant="ghost" onClick={goPrev}>← Back</Button>
           <span className="text-xs text-[#2d5268]">{step} / {STEPS.length}</span>
         </div>
+      )}
+        </>
       )}
     </div>
   );

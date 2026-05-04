@@ -26,6 +26,7 @@ const profileSchema = z.object({
   image: z.string().url('Profile image must be a valid URL').optional().or(z.literal('')),
   bio: z.string().max(500).optional().or(z.literal('')),
   organizerLogo: z.string().url('Must be a valid URL').optional().or(z.literal('')),
+  bannerUrl: z.string().url('Must be a valid URL').optional().or(z.literal('')),
   themePreset: z.enum(['teal', 'violet', 'rose', 'amber', 'sky', 'emerald']).optional(),
   instagram: z.string().max(100).optional().or(z.literal('')),
   linkedin: z.string().max(200).optional().or(z.literal('')),
@@ -43,6 +44,7 @@ interface Props {
     position: string | null;
     bio: string | null;
     organizerLogo: string | null;
+    bannerUrl: string | null;
     themePreset: string | null;
     instagram: string | null;
     linkedin: string | null;
@@ -76,6 +78,7 @@ export function SettingsForm({ initialData }: Props) {
       image: initialData.image ?? '',
       bio: initialData.bio ?? '',
       organizerLogo: initialData.organizerLogo ?? '',
+      bannerUrl: initialData.bannerUrl ?? '',
       themePreset: (initialData.themePreset as ThemePreset) ?? 'teal',
       instagram: initialData.instagram ?? '',
       linkedin: initialData.linkedin ?? '',
@@ -189,6 +192,16 @@ export function SettingsForm({ initialData }: Props) {
             />
             <div className="text-right text-[10px] text-[#2d5268] mt-0.5">{watch('bio')?.length ?? 0}/500</div>
           </div>
+
+          {/* Banner image */}
+          <Input
+            label="Profile Banner URL"
+            type="url"
+            placeholder="https://cdn.example.com/banner.jpg"
+            {...register('bannerUrl')}
+            error={errors.bannerUrl?.message}
+            hint="Wide banner shown at the top of your organizer profile page"
+          />
 
           {/* Organizer logo */}
           <div className="space-y-2">

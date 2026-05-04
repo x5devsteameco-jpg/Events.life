@@ -9,6 +9,47 @@ import { FrontierShowcase } from '@/components/marketing/frontier-showcase';
 const CINZEL = "var(--font-heading, 'Cinzel', Georgia, serif)";
 const BEBAS = "var(--font-label, 'Bebas Neue', 'Arial Narrow', sans-serif)";
 
+// Floating particle animation particles
+const PARTICLES = Array.from({ length: 18 }, (_, i) => ({
+  id: i,
+  size: 2 + (i % 3),
+  x: (i * 37 + 11) % 100,
+  y: (i * 53 + 7) % 100,
+  delay: (i * 0.37) % 3.5,
+  duration: 5 + (i % 4) * 1.5,
+}));
+
+function HeroParticles() {
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
+      {PARTICLES.map((p) => (
+        <motion.div
+          key={p.id}
+          className="absolute rounded-full"
+          style={{
+            width: p.size,
+            height: p.size,
+            left: `${p.x}%`,
+            top: `${p.y}%`,
+            background: p.id % 3 === 0 ? '#00e5cc' : p.id % 3 === 1 ? '#9c6bff' : '#ff3cac',
+            opacity: 0.35,
+          }}
+          animate={{
+            y: [-12, 12, -12],
+            opacity: [0.2, 0.5, 0.2],
+          }}
+          transition={{
+            duration: p.duration,
+            delay: p.delay,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
 function AnimSection({ children, className, delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: '-60px' });
@@ -125,6 +166,8 @@ export default function HomePage() {
 
       {/* ═══ HERO ═══ */}
       <section className="relative min-h-[86vh] md:min-h-[90vh] flex items-center justify-center pt-20 md:pt-16 overflow-hidden">
+        {/* Floating particles */}
+        <HeroParticles />
         {/* Decorative orbs */}
         <div className="orb orb-teal" style={{ width: '700px', height: '700px', top: '-15%', left: '-12%', opacity: 0.55 }}
         />
@@ -195,14 +238,18 @@ export default function HomePage() {
             transition={{ duration: 0.6, delay: 0.35 }}
             className="flex flex-col sm:flex-row items-center justify-center gap-4"
           >
-            <Link href="/register" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 font-bold text-[#04181d]" style={{ background: 'linear-gradient(135deg, #00d1b3, #00f0d3)', padding: '14px 32px', borderRadius: '14px', fontSize: '1rem', boxShadow: '0 0 32px rgba(0,229,204,0.3), 0 8px 24px rgba(0,0,0,0.4)', minHeight: '52px' }}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
-              Create Your First Event
-            </Link>
-            <Link href="/events" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 font-bold" style={{ color: '#00e5cc', border: '1px solid rgba(0,229,204,0.45)', padding: '14px 32px', borderRadius: '14px', fontSize: '1rem', background: 'rgba(0,229,204,0.06)', minHeight: '52px' }}>
-              Browse Events
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
-            </Link>
+            <motion.div whileHover={{ scale: 1.04, y: -2 }} whileTap={{ scale: 0.97 }} transition={{ type: 'spring', stiffness: 400, damping: 17 }}>
+              <Link href="/register" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 font-bold text-[#04181d]" style={{ background: 'linear-gradient(135deg, #00d1b3, #00f0d3)', padding: '14px 32px', borderRadius: '14px', fontSize: '1rem', boxShadow: '0 0 32px rgba(0,229,204,0.3), 0 8px 24px rgba(0,0,0,0.4)', minHeight: '52px' }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
+                Create Your First Event
+              </Link>
+            </motion.div>
+            <motion.div whileHover={{ scale: 1.04, y: -2 }} whileTap={{ scale: 0.97 }} transition={{ type: 'spring', stiffness: 400, damping: 17 }}>
+              <Link href="/events" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 font-bold" style={{ color: '#00e5cc', border: '1px solid rgba(0,229,204,0.45)', padding: '14px 32px', borderRadius: '14px', fontSize: '1rem', background: 'rgba(0,229,204,0.06)', minHeight: '52px' }}>
+                Browse Events
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
+              </Link>
+            </motion.div>
           </motion.div>
 
           <motion.div

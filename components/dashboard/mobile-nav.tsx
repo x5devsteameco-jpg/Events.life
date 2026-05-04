@@ -17,6 +17,7 @@ const navItems = [
   { href: '/dashboard/events', label: 'My Events', emoji: '📅' },
   { href: '/events/new', label: 'Create Event', emoji: '✨', accent: true },
   { href: '/dashboard/attendees', label: 'Attendees', emoji: '👥' },
+  { href: '/dashboard/saved', label: 'Saved Events', emoji: '🔖' },
   { href: '/dashboard/settings', label: 'Settings', emoji: '⚙️' },
 ];
 

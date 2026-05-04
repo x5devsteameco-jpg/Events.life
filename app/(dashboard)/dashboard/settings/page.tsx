@@ -22,6 +22,7 @@ export default async function SettingsPage() {
       position: true,
       bio: true,
       organizerLogo: true,
+      bannerUrl: true,
       themePreset: true,
       instagram: true,
       linkedin: true,

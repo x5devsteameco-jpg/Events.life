@@ -101,6 +101,11 @@ export function EventsGrid({ events }: Props) {
                     SOLD OUT
                   </div>
                 )}
+                {!isFull && event.maxAttendees && event.maxAttendees - confirmedCount <= 10 && event.maxAttendees - confirmedCount > 0 && (
+                  <div className="absolute bottom-3 right-3 px-2 py-0.5 rounded-full text-[10px] font-bold" style={{ background: 'rgba(245,158,11,0.85)', color: '#020408' }}>
+                    {event.maxAttendees - confirmedCount} spot{event.maxAttendees - confirmedCount === 1 ? '' : 's'} left
+                  </div>
+                )}
               </div>
 
               {/* Content */}

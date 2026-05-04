@@ -2,11 +2,15 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { db } from '@/lib/db';
+import { auth } from '@/lib/auth';
 import { formatDate } from '@/lib/utils';
 import { Badge, statusToBadgeVariant } from '@/components/ui/badge';
 import { BrandLogo } from '@/components/brand/logo';
 import { FadeIn } from '@/components/ui/fade-in';
+import { FollowOrganizerButton } from '@/components/events/follow-organizer-button';
 import type { EventStatus } from '@/lib/types';
+
+export const revalidate = 60; // ISR
 
 const THEME_ACCENT: Record<string, string> = {
   teal:    '#00e5cc',
@@ -28,38 +32,49 @@ export async function generateMetadata({ params }: Props) {
 
 export default async function OrganizerProfilePage({ params }: Props) {
   const { id } = await params;
+  const session = await auth();
 
-  const organizer = await db.user.findUnique({
-    where: { id },
-    select: {
-      id: true,
-      name: true,
-      company: true,
-      position: true,
-      bio: true,
-      image: true,
-      organizerLogo: true,
-      themePreset: true,
-      instagram: true,
-      linkedin: true,
-      website: true,
-      twitter: true,
-      hostedEvents: {
-        where: { status: { in: ['LIVE'] }, visibility: 'PUBLIC' },
-        orderBy: { date: 'asc' },
-        take: 20,
-        include: {
-          _count: { select: { rsvps: true } },
+  const [organizer, followerCount, isFollowing] = await Promise.all([
+    db.user.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        name: true,
+        company: true,
+        position: true,
+        bio: true,
+        image: true,
+        organizerLogo: true,
+        bannerUrl: true,
+        themePreset: true,
+        instagram: true,
+        linkedin: true,
+        website: true,
+        twitter: true,
+        createdAt: true,
+        hostedEvents: {
+          where: { status: { in: ['LIVE'] }, visibility: 'PUBLIC' },
+          orderBy: { date: 'asc' },
+          take: 20,
+          include: { _count: { select: { rsvps: true } } },
         },
       },
-    },
-  });
+    }),
+    db.organizerFollow.count({ where: { organizerId: id } }),
+    session?.user?.id
+      ? db.organizerFollow.findUnique({
+          where: { followerId_organizerId: { followerId: session.user.id, organizerId: id } },
+        }).then(Boolean)
+      : Promise.resolve(false),
+  ]);
 
   if (!organizer) notFound();
 
   const accent = THEME_ACCENT[organizer.themePreset ?? 'teal'] ?? '#00e5cc';
   const accent08 = `${accent}14`;
   const accent20 = `${accent}33`;
+  const isSelf = session?.user?.id === id;
+  const totalRsvps = organizer.hostedEvents.reduce((sum, e) => sum + e._count.rsvps, 0);
 
   return (
     <div
@@ -85,10 +100,24 @@ export default async function OrganizerProfilePage({ params }: Props) {
         </Link>
       </nav>
 
-      {/* Organizer Hero */}
-      <div className="relative overflow-hidden" style={{ minHeight: '200px', background: `linear-gradient(135deg, ${accent}0d 0%, rgba(2,4,8,0) 60%)` }}>
+      {/* Organizer Hero Banner */}
+      <div className="relative overflow-hidden" style={{ minHeight: '240px' }}>
+        {organizer.bannerUrl ? (
+          <div className="absolute inset-0">
+            <Image src={organizer.bannerUrl} alt="Organizer banner" fill className="object-cover" sizes="100vw" />
+            <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(2,4,8,0.2) 0%, rgba(2,4,8,0.85) 100%)' }} />
+          </div>
+        ) : (
+          <div className="absolute inset-0">
+            <div className="absolute inset-0" style={{ background: `linear-gradient(135deg, ${accent}12 0%, rgba(2,4,8,0) 70%)` }} />
+            <div className="absolute inset-0 opacity-[0.04]" aria-hidden="true">
+              <svg width="100%" height="100%"><defs><pattern id="org-grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M 32 0 L 0 0 0 32" fill="none" stroke={accent} strokeWidth="0.6"/></pattern></defs><rect width="100%" height="100%" fill="url(#org-grid)"/></svg>
+            </div>
+          </div>
+        )}
         <div className="max-w-3xl mx-auto px-6 py-12">
           <FadeIn>
+            <div className="flex items-end gap-5 flex-wrap justify-between">
             <div className="flex items-center gap-5 flex-wrap">
               {organizer.organizerLogo ? (
                 // eslint-disable-next-line @next/next/no-img-element
@@ -123,6 +152,29 @@ export default async function OrganizerProfilePage({ params }: Props) {
                   </p>
                 )}
               </div>
+            </div>
+
+            {/* Follow / Edit button */}
+            {!isSelf && (
+              <div className="flex-shrink-0 mb-1">
+                <FollowOrganizerButton organizerId={id} initialFollowing={isFollowing} initialCount={followerCount} />
+              </div>
+            )}
+            {isSelf && (
+              <Link href="/dashboard/settings"
+                className="px-4 py-2 rounded-full text-sm font-semibold text-[#4d7a90] border transition-colors mb-1"
+                style={{ border: `1px solid ${accent20}` }}>
+                Edit Profile
+              </Link>
+            )}
+            </div>
+
+            {/* Stats row */}
+            <div className="flex items-center gap-4 mt-3 flex-wrap">
+              <span className="text-xs text-[#4d7a90]"><span className="font-bold text-[#7db3c4]">{organizer.hostedEvents.length}</span> events</span>
+              <span className="text-xs text-[#4d7a90]"><span className="font-bold text-[#7db3c4]">{totalRsvps}</span> total attendees</span>
+              <span className="text-xs text-[#4d7a90]"><span className="font-bold text-[#7db3c4]">{followerCount}</span> followers</span>
+              <span className="text-xs text-[#4d7a90]">Member since {new Date(organizer.createdAt).getFullYear()}</span>
             </div>
             {organizer.bio && (
               <p className="mt-5 text-sm text-[#7aafc4] leading-relaxed max-w-2xl border-t pt-5" style={{ borderColor: accent20 }}>

@@ -9,6 +9,8 @@ export const metadata = {
   description: 'Discover and RSVP to upcoming events on Gatewise Events.',
 };
 
+export const revalidate = 60; // ISR: regenerate at most once per minute
+
 const CANADIAN_CITIES = [
   'Calgary', 'Edmonton', 'Vancouver', 'Toronto', 'Ottawa', 'Montréal',
   'Winnipeg', 'Quebec City', 'Hamilton', 'Kitchener', 'London', 'Victoria',
@@ -47,12 +49,27 @@ async function getTrendingEvents() {
   });
 }
 
-async function getPublicEvents(search?: string, category?: string, dateFrom?: string, city?: string, sort?: string) {
+function getWeekendRange() {
+  const now = new Date();
+  const day = now.getDay(); // 0=Sun, 6=Sat
+  const daysToSat = ((6 - day) + 7) % 7 || 7;
+  const sat = new Date(now);
+  sat.setDate(now.getDate() + daysToSat);
+  sat.setHours(0, 0, 0, 0);
+  const sun = new Date(sat);
+  sun.setDate(sat.getDate() + 1);
+  sun.setHours(23, 59, 59, 999);
+  return { sat, sun };
+}
+
+async function getPublicEvents(search?: string, category?: string, dateFrom?: string, city?: string, sort?: string, online?: string, weekend?: string) {
   const orderBy = sort === 'popular'
     ? { rsvps: { _count: 'desc' as const } }
     : sort === 'newest'
     ? { createdAt: 'desc' as const }
     : { date: 'asc' as const };
+
+  const weekendRange = weekend === '1' ? getWeekendRange() : null;
 
   return db.event.findMany({
     where: {
@@ -62,6 +79,8 @@ async function getPublicEvents(search?: string, category?: string, dateFrom?: st
       ...(category ? { category } : {}),
       ...(dateFrom ? { date: { gte: new Date(dateFrom) } } : {}),
       ...(city ? { location: { contains: city, mode: 'insensitive' } } : {}),
+      ...(online === '1' ? { isOnline: true } : {}),
+      ...(weekendRange ? { date: { gte: weekendRange.sat, lte: weekendRange.sun } } : {}),
     },
     orderBy,
     take: 60,
@@ -88,14 +107,14 @@ async function getPublicEvents(search?: string, category?: string, dateFrom?: st
 export default async function BrowseEventsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ search?: string; category?: string; dateFrom?: string; city?: string; sort?: string }>;
+  searchParams: Promise<{ search?: string; category?: string; dateFrom?: string; city?: string; sort?: string; online?: string; weekend?: string }>;
 }) {
-  const { search, category, dateFrom, city, sort } = await searchParams;
+  const { search, category, dateFrom, city, sort, online, weekend } = await searchParams;
   const [events, trendingEvents] = await Promise.all([
-    getPublicEvents(search, category, dateFrom, city, sort),
+    getPublicEvents(search, category, dateFrom, city, sort, online, weekend),
     getTrendingEvents(),
   ]);
-  const hasFilter = !!(search || category || city || dateFrom);
+  const hasFilter = !!(search || category || city || dateFrom || online || weekend);
 
   return (
     <div className="min-h-screen" style={{ background: '#020408' }}>
@@ -115,7 +134,7 @@ export default async function BrowseEventsPage({
         </div>
       </nav>
 
-      <div className="max-w-6xl mx-auto px-4 pb-20">
+      <div className="max-w-6xl mx-auto px-4 pb-20" id="main-content" role="main">
         {/* Hero */}
         <div className="py-16 text-center">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold mb-5" style={{ background: 'rgba(0,229,204,0.08)', border: '1px solid rgba(0,229,204,0.2)', color: '#00e5cc' }}>
@@ -230,6 +249,16 @@ export default async function BrowseEventsPage({
                 📍 {city}
               </span>
             )}
+            {online === '1' && (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ background: 'rgba(56,189,248,0.08)', border: '1px solid rgba(56,189,248,0.18)', color: '#38bdf8' }}>
+                🌐 Online Only
+              </span>
+            )}
+            {weekend === '1' && (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.18)', color: '#f59e0b' }}>
+                📅 This Weekend
+              </span>
+            )}
           </div>
         )}
 
@@ -250,24 +279,24 @@ export default async function BrowseEventsPage({
                   <div className="h-px flex-1" style={{ background: 'linear-gradient(to left, rgba(0,229,204,0.0), rgba(0,229,204,0.15))' }} />
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  {trendingEvents.map((ev) => (
+                  {trendingEvents.map((ev, i) => (
                     <Link
                       key={ev.id}
                       href={`/event/${ev.slug}`}
-                      className="group flex gap-3 p-4 rounded-2xl transition-all hover:-translate-y-0.5"
-                      style={{ background: 'rgba(12,26,31,0.7)', border: '1px solid rgba(0,229,204,0.1)' }}
+                      className="group flex gap-3 p-4 rounded-2xl transition-all hover:-translate-y-1 hover:shadow-[0_8px_32px_rgba(0,0,0,0.5)]"
+                      style={{ background: 'rgba(12,26,31,0.7)', border: '1px solid rgba(0,229,204,0.12)' }}
                     >
                       <div
-                        className="flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center text-xl"
-                        style={{ background: 'rgba(0,229,204,0.06)' }}
+                        className="flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center text-xl font-black text-[#020408]"
+                        style={{ background: `linear-gradient(135deg, rgba(0,229,204,${0.6 + i * 0.15}), rgba(0,180,150,0.8))` }}
                       >
-                        🎪
+                        {i + 1}
                       </div>
                       <div className="min-w-0">
                         <p className="text-sm font-semibold text-[#e8f4f8] truncate group-hover:text-[#00e5cc] transition-colors">{ev.title}</p>
                         <p className="text-xs text-[#4d7a90] mt-0.5">{formatDate(ev.date)}</p>
-                        <p className="text-xs text-[#00e5cc] mt-1">
-                          {ev._count.rsvps} RSVP{ev._count.rsvps !== 1 ? 's' : ''}
+                        <p className="text-xs font-bold mt-1" style={{ color: '#00e5cc' }}>
+                          {ev._count.rsvps} going
                         </p>
                       </div>
                     </Link>
@@ -277,17 +306,43 @@ export default async function BrowseEventsPage({
             )}
 
             {/* Category quick-filter chips */}
-            <div className="flex gap-2 flex-wrap justify-center mb-8">
-              {CATEGORIES.map((cat) => (
-                <a
-                  key={cat}
-                  href={`/events?category=${encodeURIComponent(cat)}`}
-                  className="px-4 py-2 rounded-full text-xs font-semibold transition-all hover:text-[#00e5cc]"
-                  style={{ background: 'rgba(12,26,31,0.6)', border: '1px solid rgba(0,229,204,0.1)', color: '#4d7a90' }}
-                >
-                  {cat}
-                </a>
-              ))}
+            <div className="flex gap-2 flex-wrap justify-center mb-4">
+              {CATEGORIES.map((cat, i) => {
+                const catColors = ['#00e5cc', '#9c6bff', '#ff3cac', '#f59e0b', '#38bdf8'];
+                const color = catColors[i % catColors.length];
+                return (
+                  <a
+                    key={cat}
+                    href={`/events?category=${encodeURIComponent(cat)}`}
+                    className="px-4 py-2 rounded-full text-xs font-bold transition-all hover:-translate-y-0.5 hover:shadow-lg"
+                    style={{
+                      background: `${color}10`,
+                      border: `1px solid ${color}28`,
+                      color,
+                    }}
+                  >
+                    {cat}
+                  </a>
+                );
+              })}
+            </div>
+
+            {/* Quick-access power filters */}
+            <div className="flex gap-3 justify-center mb-8 flex-wrap">
+              <a
+                href="/events?online=1"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold transition-all hover:-translate-y-0.5 hover:shadow-lg"
+                style={{ background: 'rgba(56,189,248,0.1)', border: '1px solid rgba(56,189,248,0.28)', color: '#38bdf8' }}
+              >
+                🌐 Online Events Only
+              </a>
+              <a
+                href="/events?weekend=1"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold transition-all hover:-translate-y-0.5 hover:shadow-lg"
+                style={{ background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.28)', color: '#f59e0b' }}
+              >
+                📅 This Weekend
+              </a>
             </div>
           </>
         )}

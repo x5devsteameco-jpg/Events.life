@@ -4,6 +4,7 @@ import { spaceGrotesk, cinzel, bebasNeue } from '@/lib/fonts';
 import { Providers } from '@/components/providers';
 import { ToastProvider } from '@/components/toast';
 import { MobileBottomNav } from '@/components/layout/mobile-bottom-nav';
+import { CookieConsentBanner } from '@/components/layout/cookie-consent-banner';
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -47,10 +48,18 @@ export default function RootLayout({
       className={`${spaceGrotesk.variable} ${cinzel.variable} ${bebasNeue.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-[#020408] pb-24 text-[#e8f4f8] lg:pb-0">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[9999] focus:px-4 focus:py-2 focus:rounded-lg focus:text-sm focus:font-bold focus:text-[#020408]"
+          style={{ background: '#00e5cc' }}
+        >
+          Skip to main content
+        </a>
         <Providers>
           <ToastProvider>
             {children}
             <MobileBottomNav />
+            <CookieConsentBanner />
           </ToastProvider>
         </Providers>
       </body>

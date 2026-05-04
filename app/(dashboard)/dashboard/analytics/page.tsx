@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { auth } from '@/lib/auth';
 import { db } from '@/lib/db';
+import { PageTransition } from '@/components/ui/page-transition';
 
 async function getPortfolioAnalytics(userId: string) {
   const events = await db.event.findMany({
@@ -34,6 +35,7 @@ export default async function PortfolioAnalyticsPage() {
   const { events, totals } = await getPortfolioAnalytics(session.user.id);
 
   return (
+    <PageTransition>
     <div className="mx-auto max-w-6xl space-y-6">
       <div className="flex items-center justify-between gap-4">
         <div>
@@ -80,5 +82,6 @@ export default async function PortfolioAnalyticsPage() {
         {events.length === 0 && <p className="px-5 py-10 text-center text-sm text-[#4d7a90]">Create events to unlock portfolio analytics.</p>}
       </div>
     </div>
+    </PageTransition>
   );
 }

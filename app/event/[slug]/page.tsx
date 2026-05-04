@@ -13,6 +13,11 @@ import type { EventStatus } from '@/lib/types';
 import { FAQAccordion } from '@/components/events/faq-accordion';
 import { RSVPDrawer } from '@/components/events/rsvp-drawer';
 import { PageViewTracker } from '@/components/events/page-view-tracker';
+import { EventCountdownTimer } from '@/components/events/event-countdown-timer';
+import { SaveEventButton } from '@/components/events/save-event-button';
+import { auth } from '@/lib/auth';
+
+export const revalidate = 60; // ISR: regenerate at most once per minute
 
 const THEME_ACCENT: Record<string, string> = {
   teal:    '#00e5cc',
@@ -52,6 +57,7 @@ export async function generateMetadata({ params }: Props) {
 
 export default async function PublicEventPage({ params }: Props) {
   const { slug } = await params;
+  const session = await auth();
 
   const event = await db.event.findUnique({
     where: { slug },
@@ -63,7 +69,14 @@ export default async function PublicEventPage({ params }: Props) {
 
   if (!event || event.status === 'DRAFT') notFound();
 
-  const confirmedCount = await db.rSVP.count({ where: { eventId: event.id, status: 'CONFIRMED' } });
+  const [confirmedCount, isSaved] = await Promise.all([
+    db.rSVP.count({ where: { eventId: event.id, status: 'CONFIRMED' } }),
+    session?.user?.id
+      ? db.savedEvent.findUnique({
+          where: { userId_eventId: { userId: session.user.id, eventId: event.id } },
+        }).then(Boolean)
+      : Promise.resolve(false),
+  ]);
   const isFull = event.maxAttendees ? confirmedCount >= event.maxAttendees : false;
   const isAccepting = event.status === 'LIVE' && !isFull;
 
@@ -110,6 +123,7 @@ export default async function PublicEventPage({ params }: Props) {
           <BrandLogo size="sm" textClassName="text-sm" />
         </Link>
         <div className="flex items-center gap-3">
+          <SaveEventButton eventId={event.id} initialSaved={isSaved} size="sm" />
           <ShareButton title={event.title} />
           <Badge variant={statusToBadgeVariant(event.status as EventStatus)}>{event.status}</Badge>
         </div>
@@ -276,6 +290,15 @@ export default async function PublicEventPage({ params }: Props) {
             {event.description && (
               <FadeIn delay={0.15}>
                 <div className="space-y-2">
+                {/* Countdown timer — only show if event is in the future */}
+                {event.status === 'LIVE' && new Date(event.date) > new Date() && (
+                  <FadeIn delay={0.08}>
+                    <EventCountdownTimer
+                      eventDate={event.date.toISOString()}
+                      accent={THEME_ACCENT[event.eventTheme ?? event.host.themePreset ?? 'teal'] ?? '#00e5cc'}
+                    />
+                  </FadeIn>
+                )}
                 <h2 className="text-sm font-bold text-[#e8f4f8] uppercase tracking-wider">About This Event</h2>
                 <p className="text-sm text-[#6b9bb0] leading-relaxed whitespace-pre-line">{event.description}</p>
                 </div>

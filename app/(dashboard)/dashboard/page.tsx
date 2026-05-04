@@ -5,6 +5,7 @@ import { EventCard } from '@/components/events/event-card';
 import { AnimatedStats } from '@/components/dashboard/animated-stats';
 import { StaggerGrid } from '@/components/dashboard/stagger-grid';
 import { RSVPSparkline } from '@/components/dashboard/rsvp-sparkline';
+import { PageTransition } from '@/components/ui/page-transition';
 import type { Event } from '@/lib/types';
 
 async function getDashboardData(userId: string) {
@@ -66,6 +67,7 @@ export default async function DashboardPage() {
   ];
 
   return (
+    <PageTransition>
     <div className="max-w-6xl mx-auto">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
@@ -152,5 +154,6 @@ export default async function DashboardPage() {
         </StaggerGrid>
       )}
     </div>
+    </PageTransition>
   );
 }

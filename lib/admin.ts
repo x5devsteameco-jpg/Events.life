@@ -4,6 +4,8 @@ import { db } from '@/lib/db';
 export const ADMIN_NAV_LINKS = [
   { href: '/admin/dashboard', label: 'Overview', icon: '◈' },
   { href: '/admin/events', label: 'Events', icon: '◉' },
+  { href: '/admin/users', label: 'Users', icon: '◎' },
+  { href: '/admin/reports', label: 'Reports', icon: '⚑' },
   { href: '/admin/content', label: 'Site Content', icon: '✦' },
   { href: '/admin/assets', label: 'Assets', icon: '▣' },
   { href: '/admin/sections', label: 'Sections', icon: '▤' },

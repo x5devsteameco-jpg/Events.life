@@ -44,6 +44,8 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
         {/* Main content — responsive padding */}
         <main
+          id="main-content"
+          role="main"
           className="flex-1 overflow-y-auto"
           style={{
             padding: 'clamp(1rem, 4vw, 2.5rem) clamp(1rem, 3vw, 2rem) 2rem',

@@ -10,6 +10,7 @@ const profileSchema = z.object({
   image: z.string().url('Profile image must be a valid URL').optional().or(z.literal('')),
   bio: z.string().max(500).optional().or(z.literal('')),
   organizerLogo: z.string().url('Organizer logo must be a valid URL').optional().or(z.literal('')),
+  bannerUrl: z.string().url('Banner must be a valid URL').optional().or(z.literal('')),
   themePreset: z.enum(['teal', 'violet', 'rose', 'amber', 'sky', 'emerald']).optional(),
   instagram: z.string().max(100).optional().or(z.literal('')),
   linkedin: z.string().max(200).optional().or(z.literal('')),
@@ -39,13 +40,14 @@ export async function PATCH(req: NextRequest) {
         image: parsed.data.image || null,
         bio: parsed.data.bio || null,
         organizerLogo: parsed.data.organizerLogo || null,
+        bannerUrl: parsed.data.bannerUrl || null,
         themePreset: parsed.data.themePreset ?? 'teal',
         instagram: parsed.data.instagram || null,
         linkedin: parsed.data.linkedin || null,
         website: parsed.data.website || null,
         twitter: parsed.data.twitter || null,
       },
-      select: { id: true, name: true, email: true, company: true, position: true, image: true, bio: true, organizerLogo: true, themePreset: true, instagram: true, linkedin: true, website: true, twitter: true },
+      select: { id: true, name: true, email: true, company: true, position: true, image: true, bio: true, organizerLogo: true, bannerUrl: true, themePreset: true, instagram: true, linkedin: true, website: true, twitter: true },
     });
 
     return NextResponse.json({ user: updated });
