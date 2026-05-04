@@ -1,17 +1,17 @@
 {
   "date": "2026-05-04",
   "scores": {
-    "Visual Design and Brand": 9.7,
-    "Motion and Micro-interactions": 9.7,
-    "Event Creation Depth": 9.7,
-    "Organizer Customization": 9.7,
-    "Attendee Discovery": 9.7,
-    "RSVP and Guest Flow": 9.7,
-    "Dashboard UX": 9.7,
-    "Mobile Responsiveness": 9.7,
-    "Performance and Technical": 9.7,
-    "Compliance and Safety": 9.7,
-    "Event Analytics": 9.7,
-    "Backend Admin Portal": 9.7
+    "Visual Design and Brand": 8.8,
+    "Motion and Micro-interactions": 8.6,
+    "Event Creation Depth": 8.9,
+    "Organizer Customization": 8.5,
+    "Attendee Discovery": 8.9,
+    "RSVP and Guest Flow": 8.7,
+    "Dashboard UX": 9.0,
+    "Mobile Responsiveness": 8.5,
+    "Performance and Technical": 8.6,
+    "Compliance and Safety": 8.9,
+    "Event Analytics": 8.8,
+    "Backend Admin Portal": 9.3
   }
 }

@@ -10,6 +10,7 @@ import { Input, Textarea } from '@/components/ui/input';
 import { useToast } from '@/components/toast';
 import { Confetti } from '@/components/events/confetti';
 import { generateICS, downloadICS, googleCalendarUrl } from '@/lib/calendar';
+import { QRCodeDisplay } from '@/components/events/qr-code-display';
 import type { CustomQuestion } from '@/lib/types';
 
 const schema = z.object({
@@ -142,6 +143,11 @@ export function RSVPForm({ eventId, title, eventDate, eventEndDate, eventLocatio
               ? (confirmationMessage || `Your RSVP for ${title} is confirmed. Check your email for details.`)
               : "We'll notify you if a spot opens up."}
           </p>
+          {rsvpStatus === 'CONFIRMED' && eventSlug && (
+            <div className="mt-5">
+              <QRCodeDisplay value={typeof window !== 'undefined' ? `${window.location.origin}/event/${eventSlug}` : `/event/${eventSlug}`} size={140} />
+            </div>
+          )}
           {rsvpStatus === 'CONFIRMED' && (
             <div className="mt-5 space-y-2">
               <p className="text-xs text-[#4d7a90] mb-3">Add to your calendar so you don&apos;t miss it</p>

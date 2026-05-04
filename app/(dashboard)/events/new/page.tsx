@@ -11,6 +11,16 @@ import { cn } from '@/lib/utils';
 import type { CustomQuestion, FAQ } from '@/lib/types';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
+interface TicketTier {
+  id: string;
+  name: string;
+  description: string;
+  isFree: boolean;
+  price: string;
+  quantity: string;
+  unlimited: boolean;
+}
+
 interface WizardData {
   // Step 1
   title: string;
@@ -37,6 +47,7 @@ interface WizardData {
   ticketQuantity: string;
   ticketUnlimited: boolean;
   maxTicketsPerPerson: string;
+  ticketTiers: TicketTier[];
   // Step 6
   ageGate: number;
   requiresCertification: boolean;
@@ -59,6 +70,7 @@ const INITIAL: WizardData = {
   date: '', endDate: '', timezone: 'America/Toronto',
   location: '', address: '', parkingAvailable: false, parkingNotes: '', onlineLink: '', thingsToKnow: '',
   ticketName: 'General Admission', ticketDescription: '', ticketQuantity: '', ticketUnlimited: true, maxTicketsPerPerson: '',
+  ticketTiers: [{ id: '1', name: 'General Admission', description: '', isFree: true, price: '', quantity: '', unlimited: true }],
   ageGate: 0, requiresCertification: false, certificationNote: '', dressCode: '', customQuestions: [],
   faqs: [],
   requiredFields: ['guestName', 'guestEmail'],
@@ -422,36 +434,143 @@ function Step4({ data, setData }: { data: WizardData; setData: (d: Partial<Wizar
 
 // ─── Step 5 ───────────────────────────────────────────────────────────────────
 function Step5({ data, setData }: { data: WizardData; setData: (d: Partial<WizardData>) => void }) {
+  const tiers = data.ticketTiers ?? [{ id: '1', name: 'General Admission', description: '', isFree: true, price: '', quantity: '', unlimited: true }];
+
+  const setTiers = (updated: TicketTier[]) => setData({ ticketTiers: updated });
+
+  const addTier = () => {
+    const newTier: TicketTier = {
+      id: Math.random().toString(36).slice(2),
+      name: '',
+      description: '',
+      isFree: true,
+      price: '',
+      quantity: '',
+      unlimited: true,
+    };
+    setTiers([...tiers, newTier]);
+  };
+
+  const updateTier = (id: string, patch: Partial<TicketTier>) => {
+    setTiers(tiers.map((t) => t.id === id ? { ...t, ...patch } : t));
+  };
+
+  const removeTier = (id: string) => {
+    if (tiers.length <= 1) return; // always keep at least one
+    setTiers(tiers.filter((t) => t.id !== id));
+  };
+
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-black text-[#e8f4f8] mb-1" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>Tickets</h2>
-        <p className="text-sm text-[#4d7a90]">All events are free to attend. Paid tickets coming soon.</p>
+        <h2 className="text-xl font-black text-[#e8f4f8] mb-1" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>Ticket Tiers</h2>
+        <p className="text-sm text-[#4d7a90]">Configure one or more ticket types for your event.</p>
       </div>
-      <div className="p-4 rounded-xl flex items-center gap-3" style={{ background: 'rgba(0,229,204,0.06)', border: '1px solid rgba(0,229,204,0.15)' }}>
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00e5cc" strokeWidth="2" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" /><line x1="7" y1="7" x2="7.01" y2="7" /></svg>
-        <div>
-          <p className="text-sm font-semibold text-[#00e5cc]">Free Event</p>
-          <p className="text-xs text-[#4d7a90]">Attendees RSVP at no cost</p>
-        </div>
+
+      <div className="space-y-4">
+        {tiers.map((tier, idx) => (
+          <div key={tier.id} className="rounded-xl p-4 space-y-3" style={{ background: 'rgba(12,26,31,0.8)', border: '1px solid rgba(0,229,204,0.12)' }}>
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold uppercase tracking-widest text-[#00e5cc]">Tier {idx + 1}</span>
+              {tiers.length > 1 && (
+                <button type="button" onClick={() => removeTier(tier.id)} className="text-xs text-[#4d7a90] hover:text-[#ff3cac] transition-colors px-2 py-1 rounded">
+                  Remove
+                </button>
+              )}
+            </div>
+
+            <Input
+              label="Ticket Name"
+              value={tier.name}
+              onChange={(e) => updateTier(tier.id, { name: e.target.value })}
+              placeholder="e.g. General Admission, VIP, Early Bird"
+            />
+            <Input
+              label="Description (optional)"
+              value={tier.description}
+              onChange={(e) => updateTier(tier.id, { description: e.target.value })}
+              placeholder="What does this ticket include?"
+            />
+
+            {/* Free / Paid toggle */}
+            <div>
+              <label className="label-base">Pricing</label>
+              <div className="flex gap-2 mb-2">
+                {[{ val: true, label: 'Free' }, { val: false, label: 'Paid' }].map(({ val, label }) => (
+                  <button
+                    key={String(val)}
+                    type="button"
+                    onClick={() => updateTier(tier.id, { isFree: val })}
+                    className={cn('px-4 py-2 rounded-xl border text-sm font-medium transition-all', tier.isFree === val ? 'border-[#00e5cc] bg-[rgba(0,229,204,0.1)] text-[#00e5cc]' : 'border-[rgba(0,229,204,0.08)] text-[#4d7a90] hover:border-[rgba(0,229,204,0.2)]')}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+              {!tier.isFree && (
+                <Input
+                  type="number"
+                  min="0.01"
+                  step="0.01"
+                  placeholder="e.g. 25.00"
+                  label="Price (CAD $)"
+                  value={tier.price}
+                  onChange={(e) => updateTier(tier.id, { price: e.target.value })}
+                  hint="Paid ticketing via Stripe coming soon — set price for planning purposes"
+                />
+              )}
+            </div>
+
+            {/* Capacity */}
+            <div>
+              <label className="label-base">Capacity</label>
+              <div className="flex gap-2 mb-2">
+                {[{ val: true, label: 'Unlimited' }, { val: false, label: 'Limited' }].map(({ val, label }) => (
+                  <button
+                    key={String(val)}
+                    type="button"
+                    onClick={() => updateTier(tier.id, { unlimited: val })}
+                    className={cn('px-4 py-2 rounded-xl border text-sm font-medium transition-all', tier.unlimited === val ? 'border-[#00e5cc] bg-[rgba(0,229,204,0.1)] text-[#00e5cc]' : 'border-[rgba(0,229,204,0.08)] text-[#4d7a90] hover:border-[rgba(0,229,204,0.2)]')}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+              {!tier.unlimited && (
+                <Input
+                  type="number"
+                  min="1"
+                  placeholder="e.g. 50"
+                  value={tier.quantity}
+                  onChange={(e) => updateTier(tier.id, { quantity: e.target.value })}
+                  hint="Max RSVPs for this tier"
+                />
+              )}
+            </div>
+          </div>
+        ))}
       </div>
-      <Input label="Ticket Name" value={data.ticketName} onChange={(e) => setData({ ticketName: e.target.value })} placeholder="General Admission" />
-      <Textarea label="Ticket Description (optional)" rows={3} value={data.ticketDescription} onChange={(e) => setData({ ticketDescription: e.target.value })} placeholder="What does this ticket include?" />
-      <div>
-        <label className="label-base">Capacity</label>
-        <div className="flex gap-3 mb-3">
-          {[{ val: true, label: 'Unlimited' }, { val: false, label: 'Set a limit' }].map(({ val, label }) => (
-            <button key={String(val)} type="button" onClick={() => setData({ ticketUnlimited: val })}
-              className={cn('px-5 py-2 rounded-xl border text-sm font-medium transition-all', data.ticketUnlimited === val ? 'border-[#00e5cc] bg-[rgba(0,229,204,0.1)] text-[#00e5cc]' : 'border-[rgba(0,229,204,0.08)] text-[#4d7a90] hover:border-[rgba(0,229,204,0.2)]')}>
-              {label}
-            </button>
-          ))}
-        </div>
-        {!data.ticketUnlimited && (
-          <Input type="number" min="1" placeholder="e.g. 50" value={data.ticketQuantity} onChange={(e) => setData({ ticketQuantity: e.target.value })} hint="Maximum number of RSVPs accepted" />
-        )}
-      </div>
-      <Input type="number" min="1" placeholder="e.g. 2" label="Max Tickets Per Person" value={data.maxTicketsPerPerson} onChange={(e) => setData({ maxTicketsPerPerson: e.target.value })} hint="Optional limit per guest or buyer" />
+
+      {tiers.length < 5 && (
+        <button
+          type="button"
+          onClick={addTier}
+          className="w-full py-3 rounded-xl border-dashed border text-sm font-semibold text-[#4d7a90] hover:text-[#00e5cc] hover:border-[rgba(0,229,204,0.4)] transition-all"
+          style={{ border: '1px dashed rgba(0,229,204,0.2)' }}
+        >
+          + Add Another Tier (VIP, Early Bird, etc.)
+        </button>
+      )}
+
+      <Input
+        type="number"
+        min="1"
+        placeholder="e.g. 2"
+        label="Max Tickets Per Person"
+        value={data.maxTicketsPerPerson}
+        onChange={(e) => setData({ maxTicketsPerPerson: e.target.value })}
+        hint="Optional limit per guest"
+      />
     </div>
   );
 }

@@ -62,7 +62,7 @@ function getWeekendRange() {
   return { sat, sun };
 }
 
-async function getPublicEvents(search?: string, category?: string, dateFrom?: string, city?: string, sort?: string, online?: string, weekend?: string) {
+async function getPublicEvents(search?: string, category?: string, dateFrom?: string, city?: string, sort?: string, online?: string, weekend?: string, dateTo?: string) {
   const orderBy = sort === 'popular'
     ? { rsvps: { _count: 'desc' as const } }
     : sort === 'newest'
@@ -71,16 +71,27 @@ async function getPublicEvents(search?: string, category?: string, dateFrom?: st
 
   const weekendRange = weekend === '1' ? getWeekendRange() : null;
 
+  // Build date filter: dateTo sets end-of-day boundary
+  let dateFilter: Record<string, Date> = {};
+  if (weekendRange) {
+    dateFilter = { gte: weekendRange.sat, lte: weekendRange.sun };
+  } else if (dateFrom && dateTo) {
+    const end = new Date(dateTo);
+    end.setHours(23, 59, 59, 999);
+    dateFilter = { gte: new Date(dateFrom), lte: end };
+  } else if (dateFrom) {
+    dateFilter = { gte: new Date(dateFrom) };
+  }
+
   return db.event.findMany({
     where: {
       status: { in: ['LIVE'] },
       visibility: 'PUBLIC',
       ...(search ? { title: { contains: search, mode: 'insensitive' } } : {}),
       ...(category ? { category } : {}),
-      ...(dateFrom ? { date: { gte: new Date(dateFrom) } } : {}),
+      ...(Object.keys(dateFilter).length > 0 ? { date: dateFilter } : {}),
       ...(city ? { location: { contains: city, mode: 'insensitive' } } : {}),
       ...(online === '1' ? { isOnline: true } : {}),
-      ...(weekendRange ? { date: { gte: weekendRange.sat, lte: weekendRange.sun } } : {}),
     },
     orderBy,
     take: 60,
@@ -107,14 +118,14 @@ async function getPublicEvents(search?: string, category?: string, dateFrom?: st
 export default async function BrowseEventsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ search?: string; category?: string; dateFrom?: string; city?: string; sort?: string; online?: string; weekend?: string }>;
+  searchParams: Promise<{ search?: string; category?: string; dateFrom?: string; dateTo?: string; city?: string; sort?: string; online?: string; weekend?: string }>;
 }) {
-  const { search, category, dateFrom, city, sort, online, weekend } = await searchParams;
+  const { search, category, dateFrom, dateTo, city, sort, online, weekend } = await searchParams;
   const [events, trendingEvents] = await Promise.all([
-    getPublicEvents(search, category, dateFrom, city, sort, online, weekend),
+    getPublicEvents(search, category, dateFrom, city, sort, online, weekend, dateTo),
     getTrendingEvents(),
   ]);
-  const hasFilter = !!(search || category || city || dateFrom || online || weekend);
+  const hasFilter = !!(search || category || city || dateFrom || dateTo || online || weekend);
 
   return (
     <div className="min-h-screen" style={{ background: '#020408' }}>
@@ -342,6 +353,13 @@ export default async function BrowseEventsPage({
                 style={{ background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.28)', color: '#f59e0b' }}
               >
                 📅 This Weekend
+              </a>
+              <a
+                href={`/events?dateFrom=${new Date().toISOString().slice(0, 10)}&dateTo=${new Date().toISOString().slice(0, 10)}`}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold transition-all hover:-translate-y-0.5 hover:shadow-lg"
+                style={{ background: 'rgba(0,229,204,0.08)', border: '1px solid rgba(0,229,204,0.22)', color: '#00e5cc' }}
+              >
+                ⚡ Happening Today
               </a>
             </div>
           </>

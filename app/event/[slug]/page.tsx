@@ -80,6 +80,32 @@ export default async function PublicEventPage({ params }: Props) {
   const isFull = event.maxAttendees ? confirmedCount >= event.maxAttendees : false;
   const isAccepting = event.status === 'LIVE' && !isFull;
 
+  // Fetch similar events (same category, exclude current)
+  const similarEvents = event.category
+    ? await db.event.findMany({
+        where: {
+          status: 'LIVE',
+          visibility: 'PUBLIC',
+          category: event.category,
+          id: { not: event.id },
+          date: { gte: new Date() },
+        },
+        orderBy: { date: 'asc' },
+        take: 3,
+        select: {
+          id: true,
+          slug: true,
+          title: true,
+          date: true,
+          location: true,
+          isOnline: true,
+          bannerImage: true,
+          eventTheme: true,
+          _count: { select: { rsvps: true } },
+        },
+      })
+    : [];
+
   const parsedQuestions = (() => {
     try { return event.customQuestions ? JSON.parse(event.customQuestions as string) : []; }
     catch { return []; }
@@ -416,6 +442,44 @@ export default async function PublicEventPage({ params }: Props) {
         </div>
       </div>
     </div>
+
+    {/* Similar Events */}
+    {similarEvents.length > 0 && (
+      <div className="max-w-6xl mx-auto px-4 pb-16">
+        <h2 className="text-lg font-black text-[#e8f4f8] mb-4" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)", letterSpacing: '0.05em' }}>
+          YOU MAY ALSO LIKE
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          {similarEvents.map((sim) => {
+            const accentColor = THEME_ACCENT[sim.eventTheme ?? 'teal'] ?? '#00e5cc';
+            return (
+              <Link
+                key={sim.id}
+                href={`/event/${sim.slug}`}
+                className="group rounded-2xl overflow-hidden transition-all hover:-translate-y-1 hover:shadow-xl"
+                style={{ background: 'rgba(12,26,31,0.8)', border: `1px solid ${accentColor}18` }}
+              >
+                {sim.bannerImage ? (
+                  <div className="relative h-36 overflow-hidden">
+                    <Image src={sim.bannerImage} alt={sim.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
+                    <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(2,4,8,0.7), transparent)' }} />
+                  </div>
+                ) : (
+                  <div className="h-36 flex items-center justify-center" style={{ background: `linear-gradient(135deg, ${accentColor}18, ${accentColor}08)` }}>
+                    <span className="text-3xl">🎉</span>
+                  </div>
+                )}
+                <div className="p-3">
+                  <p className="text-sm font-bold text-[#e8f4f8] line-clamp-2 leading-snug">{sim.title}</p>
+                  <p className="text-xs text-[#4d7a90] mt-1">{formatDate(sim.date)} · {sim.isOnline ? 'Online' : (sim.location ?? 'TBD')}</p>
+                  <p className="text-xs mt-1" style={{ color: accentColor }}>{sim._count.rsvps} RSVPs</p>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+    )}
     </>
   );
 }
