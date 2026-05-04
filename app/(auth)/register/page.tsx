@@ -170,16 +170,9 @@ export default function RegisterPage() {
           </Button>
         </form>
 
-        <p className="text-center text-xs text-[#2d5268] mt-4 leading-relaxed">
-          By creating an account you agree to our{' '}
-          <Link href="/terms" className="text-[#4d7a90] hover:text-[#00e5cc]">Terms</Link>
-          {' '}and{' '}
-          <Link href="/privacy" className="text-[#4d7a90] hover:text-[#00e5cc]">Privacy Policy</Link>.
-        </p>
-
         <p className="text-center text-sm text-[#4d7a90] mt-4">
           Already have an account?{' '}
-          <Link href="/login" className="text-[#00e5cc] font-semibold hover:text-[#7fff00] transition-colors">
+          <Link href="/login" className="text-[#00e5cc] font-semibold hover:underline transition-colors">
             Sign in
           </Link>
         </p>
