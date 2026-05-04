@@ -49,6 +49,10 @@ model User {
   bio           String?
   organizerLogo String?
   themePreset   String?  @default("teal")
+  instagram     String?
+  linkedin      String?
+  website       String?
+  twitter       String?
   termsAcceptedAt DateTime?
   privacyAcceptedAt DateTime?
   hostResponsibilityAcceptedAt DateTime?

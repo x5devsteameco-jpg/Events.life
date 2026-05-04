@@ -40,6 +40,10 @@ export default async function OrganizerProfilePage({ params }: Props) {
       image: true,
       organizerLogo: true,
       themePreset: true,
+      instagram: true,
+      linkedin: true,
+      website: true,
+      twitter: true,
       hostedEvents: {
         where: { status: { in: ['LIVE'] }, visibility: 'PUBLIC' },
         orderBy: { date: 'asc' },
@@ -124,6 +128,44 @@ export default async function OrganizerProfilePage({ params }: Props) {
               <p className="mt-5 text-sm text-[#7aafc4] leading-relaxed max-w-2xl border-t pt-5" style={{ borderColor: accent20 }}>
                 {organizer.bio}
               </p>
+            )}
+
+            {/* Social links */}
+            {(organizer.instagram || organizer.twitter || organizer.linkedin || organizer.website) && (
+              <div className="flex flex-wrap gap-3 mt-4">
+                {organizer.instagram && (
+                  <a href={`https://instagram.com/${organizer.instagram.replace(/^@/, '')}`} target="_blank" rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-all hover:scale-105"
+                    style={{ background: `${accent}12`, border: `1px solid ${accent}28`, color: accent }}>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"/></svg>
+                    @{organizer.instagram.replace(/^@/, '')}
+                  </a>
+                )}
+                {organizer.twitter && (
+                  <a href={`https://x.com/${organizer.twitter.replace(/^@/, '')}`} target="_blank" rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-all hover:scale-105"
+                    style={{ background: `${accent}12`, border: `1px solid ${accent}28`, color: accent }}>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.259 5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    @{organizer.twitter.replace(/^@/, '')}
+                  </a>
+                )}
+                {organizer.linkedin && (
+                  <a href={organizer.linkedin} target="_blank" rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-all hover:scale-105"
+                    style={{ background: `${accent}12`, border: `1px solid ${accent}28`, color: accent }}>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                    LinkedIn
+                  </a>
+                )}
+                {organizer.website && (
+                  <a href={organizer.website} target="_blank" rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-all hover:scale-105"
+                    style={{ background: `${accent}12`, border: `1px solid ${accent}28`, color: accent }}>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                    Website
+                  </a>
+                )}
+              </div>
             )}
           </FadeIn>
         </div>

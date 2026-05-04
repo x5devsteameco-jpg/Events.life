@@ -3,6 +3,7 @@ import { auth } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { EventCard } from '@/components/events/event-card';
 import { AnimatedStats } from '@/components/dashboard/animated-stats';
+import { StaggerGrid } from '@/components/dashboard/stagger-grid';
 import type { Event } from '@/lib/types';
 
 async function getDashboardData(userId: string) {
@@ -38,6 +39,13 @@ export default async function DashboardPage() {
     { label: 'Drafts', value: drafts, icon: '📝', color: '#4d7a90' },
   ];
 
+  const quickActions = [
+    { href: '/events/new', label: 'Create Event', icon: '✨', accent: true },
+    { href: '/dashboard/events', label: 'Manage Events', icon: '📋' },
+    { href: '/dashboard/attendees', label: 'View Attendees', icon: '👥' },
+    { href: '/dashboard/settings', label: 'Edit Profile', icon: '⚙️' },
+  ];
+
   return (
     <div className="max-w-6xl mx-auto">
       {/* Header */}
@@ -50,7 +58,7 @@ export default async function DashboardPage() {
         </div>
         <Link
           href="/events/new"
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-[#020408] transition-all hover:-translate-y-0.5 hover:shadow-[0_0_24px_rgba(0,229,204,0.3)] flex-shrink-0 whitespace-nowrap"
+          className="hidden sm:inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-[#020408] transition-all hover:-translate-y-0.5 hover:shadow-[0_0_24px_rgba(0,229,204,0.3)] flex-shrink-0 whitespace-nowrap"
           style={{ background: 'linear-gradient(135deg, #00c4a8, #00e5cc)' }}
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
@@ -60,11 +68,29 @@ export default async function DashboardPage() {
         </Link>
       </div>
 
+      {/* Quick Actions (mobile prominent) */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8 sm:hidden">
+        {quickActions.map((action) => (
+          <Link
+            key={action.href}
+            href={action.href}
+            className="flex flex-col items-center gap-2 p-3 rounded-2xl text-center text-xs font-semibold min-h-[72px] justify-center transition-all active:scale-95"
+            style={action.accent
+              ? { background: 'linear-gradient(135deg, #00c4a8, #00e5cc)', color: '#020408' }
+              : { background: 'rgba(12,26,31,0.7)', border: '1px solid rgba(0,229,204,0.1)', color: '#7aafc4' }
+            }
+          >
+            <span className="text-xl">{action.icon}</span>
+            {action.label}
+          </Link>
+        ))}
+      </div>
+
       {/* Stats */}
       <AnimatedStats stats={stats} />
 
       {/* Events */}
-      <div className="flex items-center justify-between mb-5">
+      <div className="flex items-center justify-between mb-5 mt-8">
         <h2 className="text-lg font-bold text-[#e8f4f8]" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>
           Recent Events
         </h2>
@@ -95,11 +121,11 @@ export default async function DashboardPage() {
           </Link>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <StaggerGrid>
           {events.map((event) => (
             <EventCard key={event.id} event={event as unknown as Event & { _count: { rsvps: number } }} />
           ))}
-        </div>
+        </StaggerGrid>
       )}
     </div>
   );

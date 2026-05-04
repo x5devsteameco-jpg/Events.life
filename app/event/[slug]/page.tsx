@@ -71,8 +71,29 @@ export default async function PublicEventPage({ params }: Props) {
     catch { return []; }
   })();
 
+  // JSON-LD structured data for SEO
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Event',
+    name: event.title,
+    description: event.description ?? undefined,
+    startDate: event.date.toISOString(),
+    endDate: event.endDate?.toISOString() ?? undefined,
+    eventStatus: event.status === 'LIVE' ? 'https://schema.org/EventScheduled' : 'https://schema.org/EventCancelled',
+    eventAttendanceMode: event.isOnline
+      ? 'https://schema.org/OnlineEventAttendanceMode'
+      : 'https://schema.org/OfflineEventAttendanceMode',
+    location: event.isOnline
+      ? { '@type': 'VirtualLocation', url: event.onlineLink ?? undefined }
+      : { '@type': 'Place', name: event.location ?? 'TBD', address: event.location ?? undefined },
+    organizer: { '@type': 'Organization', name: event.host.name ?? event.host.company ?? 'Event Organizer' },
+    image: event.bannerImage ? [event.bannerImage] : undefined,
+  };
+
   return (
-    <div
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <div
       className="min-h-screen"
       style={{
         background: '#020408',
@@ -350,6 +371,7 @@ export default async function PublicEventPage({ params }: Props) {
         </div>
       </div>
     </div>
+    </>
   );
 }
 

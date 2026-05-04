@@ -4,10 +4,41 @@ import { rsvpSchema } from '@/lib/validations';
 import { sendRSVPConfirmation } from '@/lib/email';
 import { auth } from '@/lib/auth';
 
+// ── In-process rate limiter (per IP, resets on server restart) ─────────────
+// For production use Upstash Redis or similar distributed store
+const RATE_LIMIT_WINDOW_MS = 60_000; // 1 minute
+const RATE_LIMIT_MAX = 5; // max 5 RSVPs per IP per minute
+const ipBucket = new Map<string, { count: number; reset: number }>();
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const entry = ipBucket.get(ip);
+  if (!entry || entry.reset < now) {
+    ipBucket.set(ip, { count: 1, reset: now + RATE_LIMIT_WINDOW_MS });
+    return false;
+  }
+  entry.count += 1;
+  return entry.count > RATE_LIMIT_MAX;
+}
+
+// Prune old entries every 5 minutes to avoid memory leaks
+setInterval(() => {
+  const now = Date.now();
+  for (const [key, val] of ipBucket.entries()) {
+    if (val.reset < now) ipBucket.delete(key);
+  }
+}, 5 * 60_000);
+
 type RouteContext = { params: Promise<{ id: string }> };
 
 export async function POST(req: NextRequest, { params }: RouteContext) {
   const { id } = await params;
+
+  // Rate limit by IP
+  const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? req.headers.get('x-real-ip') ?? 'unknown';
+  if (isRateLimited(ip)) {
+    return NextResponse.json({ error: 'Too many requests. Please wait a moment and try again.' }, { status: 429 });
+  }
 
   try {
     const event = await db.event.findUnique({ where: { id } });

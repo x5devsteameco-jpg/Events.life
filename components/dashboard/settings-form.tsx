@@ -27,6 +27,10 @@ const profileSchema = z.object({
   bio: z.string().max(500).optional().or(z.literal('')),
   organizerLogo: z.string().url('Must be a valid URL').optional().or(z.literal('')),
   themePreset: z.enum(['teal', 'violet', 'rose', 'amber', 'sky', 'emerald']).optional(),
+  instagram: z.string().max(100).optional().or(z.literal('')),
+  linkedin: z.string().max(200).optional().or(z.literal('')),
+  website: z.string().url('Must be a valid URL').optional().or(z.literal('')),
+  twitter: z.string().max(100).optional().or(z.literal('')),
 });
 type ProfileForm = z.infer<typeof profileSchema>;
 
@@ -40,6 +44,10 @@ interface Props {
     bio: string | null;
     organizerLogo: string | null;
     themePreset: string | null;
+    instagram: string | null;
+    linkedin: string | null;
+    website: string | null;
+    twitter: string | null;
     role: string;
     policyVersion: string | null;
     termsAcceptedAt: Date | null;
@@ -69,6 +77,10 @@ export function SettingsForm({ initialData }: Props) {
       bio: initialData.bio ?? '',
       organizerLogo: initialData.organizerLogo ?? '',
       themePreset: (initialData.themePreset as ThemePreset) ?? 'teal',
+      instagram: initialData.instagram ?? '',
+      linkedin: initialData.linkedin ?? '',
+      website: initialData.website ?? '',
+      twitter: initialData.twitter ?? '',
     },
   });
 
@@ -226,6 +238,64 @@ export function SettingsForm({ initialData }: Props) {
             </div>
             <input type="hidden" {...register('themePreset')} />
           </div>
+
+          {/* Social Links */}
+          <div>
+            <h3 className="text-xs font-bold text-[#00e5cc] uppercase tracking-wider mb-3">Social Links <span className="text-[#2d5268] normal-case font-normal">— displayed on your organizer profile</span></h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Input
+                label="Instagram"
+                placeholder="@yourhandle"
+                {...register('instagram')}
+                error={errors.instagram?.message}
+              />
+              <Input
+                label="Twitter / X"
+                placeholder="@yourhandle"
+                {...register('twitter')}
+                error={errors.twitter?.message}
+              />
+              <Input
+                label="LinkedIn URL"
+                type="url"
+                placeholder="https://linkedin.com/in/yourname"
+                {...register('linkedin')}
+                error={errors.linkedin?.message}
+              />
+              <Input
+                label="Website"
+                type="url"
+                placeholder="https://yoursite.com"
+                {...register('website')}
+                error={errors.website?.message}
+              />
+            </div>
+          </div>
+
+          {/* Profile Completeness Meter */}
+          {(() => {
+            const vals = watch();
+            const fields = [vals.name, vals.company, vals.position, vals.bio, vals.image, vals.organizerLogo, vals.instagram || vals.twitter || vals.linkedin || vals.website];
+            const filled = fields.filter(Boolean).length;
+            const pct = Math.round((filled / fields.length) * 100);
+            const color = pct >= 85 ? '#00e5cc' : pct >= 50 ? '#f59e0b' : '#ff3cac';
+            return (
+              <div className="rounded-xl p-4" style={{ background: 'rgba(6,13,16,0.6)', border: '1px solid rgba(0,229,204,0.06)' }}>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs font-semibold text-[#7aafc4]">Profile Completeness</span>
+                  <span className="text-xs font-bold" style={{ color }}>{pct}%</span>
+                </div>
+                <div className="h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(0,229,204,0.08)' }}>
+                  <div className="h-full rounded-full transition-all duration-500" style={{ width: `${pct}%`, background: `linear-gradient(90deg, ${color}, ${color}cc)` }} />
+                </div>
+                {pct < 100 && (
+                  <p className="text-[10px] text-[#2d5268] mt-1.5">
+                    {pct < 50 ? 'Add your bio, logo and social links to build trust with attendees.' : 'Almost there — complete your profile for maximum visibility.'}
+                  </p>
+                )}
+              </div>
+            );
+          })()}
 
           <div className="flex items-center gap-3 pt-2">
             <Button type="submit" variant="primary" loading={isSubmitting} disabled={!isDirty && !isSubmitting}>
