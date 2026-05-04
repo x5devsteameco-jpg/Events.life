@@ -124,7 +124,7 @@ export default async function BrowseEventsPage({
               </span>
             )}
             {category && (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ background: 'rgba(127,255,0,0.06)', border: '1px solid rgba(127,255,0,0.15)', color: '#7fff00' }}>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ background: 'rgba(0,229,204,0.06)', border: '1px solid rgba(0,229,204,0.15)', color: '#00e5cc' }}>
                 {category}
               </span>
             )}

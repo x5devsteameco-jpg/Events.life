@@ -9,7 +9,7 @@ type Props = { params: Promise<{ id: string }> };
 
 const rsvpStatusColor: Record<string, string> = {
   CONFIRMED: '#00e5cc',
-  WAITLISTED: '#7fff00',
+  WAITLISTED: '#f59e0b',
   PENDING: '#4d7a90',
   CANCELLED: '#ff3cac',
 };
@@ -62,7 +62,7 @@ export default async function EventRSVPsPage({ params }: Props) {
         {[
           { label: 'Total RSVPs', value: event._count.rsvps, color: '#00e5cc' },
           { label: 'Confirmed', value: confirmed, color: '#00e5cc' },
-          { label: 'Waitlisted', value: waitlisted, color: '#7fff00' },
+          { label: 'Waitlisted', value: waitlisted, color: '#f59e0b' },
           { label: 'Cancelled', value: cancelled, color: '#ff3cac' },
         ].map((stat) => (
           <div key={stat.label} className="rounded-xl p-4 text-center" style={{ background: 'rgba(12,26,31,0.6)', border: '1px solid rgba(0,229,204,0.08)' }}>
@@ -84,7 +84,7 @@ export default async function EventRSVPsPage({ params }: Props) {
               className="h-full rounded-full transition-all"
               style={{
                 width: `${Math.min(100, (confirmed / event.maxAttendees) * 100)}%`,
-                background: confirmed >= event.maxAttendees ? '#ff3cac' : 'linear-gradient(90deg, #00e5cc, #7fff00)',
+                background: confirmed >= event.maxAttendees ? '#ff3cac' : 'linear-gradient(90deg, #00e5cc, #00c4a8)',
               }}
             />
           </div>
@@ -121,7 +121,7 @@ export default async function EventRSVPsPage({ params }: Props) {
                     <p className="font-semibold text-sm text-[#e8f4f8] truncate">{rsvp.guestName}</p>
                     {rsvp.position && <p className="text-xs text-[#4d7a90] truncate">{rsvp.position}</p>}
                     {rsvp.certificationUrl && (
-                      <a href={rsvp.certificationUrl} target="_blank" rel="noopener noreferrer" className="text-[10px] text-[#7fff00] hover:underline">
+                      <a href={rsvp.certificationUrl} target="_blank" rel="noopener noreferrer" className="text-[10px] text-[#00e5cc] hover:underline">
                         📎 Certification
                       </a>
                     )}

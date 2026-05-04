@@ -365,7 +365,7 @@ function Step6({ data, setData }: { data: WizardData; setData: (d: Partial<Wizar
       <div>
         <div className="flex items-center justify-between mb-3">
           <label className="label-base mb-0">Custom RSVP Questions</label>
-          <button type="button" onClick={addQuestion} className="text-xs font-semibold text-[#00e5cc] hover:text-[#7fff00] transition-colors flex items-center gap-1">
+          <button type="button" onClick={addQuestion} className="text-xs font-semibold text-[#00e5cc] hover:text-[#7aafc4] transition-colors flex items-center gap-1">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
             Add Question
           </button>

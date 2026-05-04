@@ -73,8 +73,8 @@ export default async function EventManagePage({ params, searchParams }: Props) {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {[
           { label: 'Confirmed', value: confirmed, color: '#00e5cc' },
-          { label: 'Waitlisted', value: waitlisted, color: '#ff3cac' },
-          { label: 'Capacity', value: event.maxAttendees ? `${confirmed}/${event.maxAttendees}` : '∞', color: '#7fff00' },
+          { label: 'Waitlisted', value: waitlisted, color: waitlisted > 0 ? '#ff3cac' : '#4d7a90' },
+          { label: 'Capacity', value: event.maxAttendees ? `${confirmed}/${event.maxAttendees}` : '∞', color: '#00e5cc' },
           { label: 'Total RSVPs', value: event._count.rsvps, color: '#e8f4f8' },
         ].map(({ label, value, color }) => (
           <div key={label} className="p-4 rounded-xl" style={{ background: 'rgba(12,26,31,0.6)', border: '1px solid rgba(0,229,204,0.08)' }}>

@@ -31,7 +31,7 @@ function StatusMenu({ eventId, currentStatus, onUpdate }: { eventId: string; cur
   const { toast } = useToast();
   const options: { status: EventStatus; label: string; color: string }[] = ([
     { status: 'LIVE', label: '🚀 Publish Live', color: '#00e5cc' },
-    { status: 'PRIVATE', label: '🔒 Set Private', color: '#7fff00' },
+    { status: 'PRIVATE', label: '🔒 Set Private', color: '#9dd8ea' },
     { status: 'DRAFT', label: '📝 Move to Draft', color: '#4d7a90' },
     { status: 'ENDED', label: '🏁 Mark Ended', color: '#4d7a90' },
     { status: 'CANCELLED', label: '❌ Cancel', color: '#ff3cac' },
@@ -239,7 +239,7 @@ export default function MyEventsPage() {
 
                 {/* Actions */}
                 <div className="flex items-center justify-end gap-1">
-                  <Link href={`/dashboard/events/${event.id}/rsvps`} className="p-1.5 rounded-lg text-[#4d7a90] hover:text-[#7fff00] hover:bg-[rgba(127,255,0,0.08)] transition-all" title="View RSVPs">
+                  <Link href={`/dashboard/events/${event.id}/rsvps`} className="p-1.5 rounded-lg text-[#4d7a90] hover:text-[#00e5cc] hover:bg-[rgba(0,229,204,0.08)] transition-all" title="View RSVPs">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                   </Link>
                   <button onClick={() => copyLink(event.slug)} className="p-1.5 rounded-lg text-[#4d7a90] hover:text-[#00e5cc] hover:bg-[rgba(0,229,204,0.08)] transition-all" title="Copy share link">

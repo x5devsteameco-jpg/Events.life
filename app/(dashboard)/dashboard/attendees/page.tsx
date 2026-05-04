@@ -43,7 +43,7 @@ export default async function AttendeesPage() {
       <div className="grid grid-cols-3 md:grid-cols-5 gap-3">
         {[
           { label: 'Total RSVPs', value: stats.total, color: '#00e5cc' },
-          { label: 'Confirmed', value: stats.confirmed, color: '#7fff00' },
+          { label: 'Confirmed', value: stats.confirmed, color: '#00e5cc' },
           { label: 'Waitlisted', value: stats.waitlisted, color: '#ffb347' },
           { label: 'Cancelled', value: stats.cancelled, color: '#ff3cac' },
           { label: 'Events', value: stats.events, color: '#9dd8ea' },
