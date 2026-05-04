@@ -47,6 +47,7 @@ interface WizardData {
   // Step 9
   emailInviteList: string;
   visibility: 'PUBLIC' | 'PRIVATE';
+  confirmationMessage: string;
 }
 
 const INITIAL: WizardData = {
@@ -58,7 +59,7 @@ const INITIAL: WizardData = {
   ageGate: 0, requiresCertification: false, certificationNote: '', customQuestions: [],
   faqs: [],
   requiredFields: ['guestName', 'guestEmail'],
-  emailInviteList: '', visibility: 'PUBLIC',
+  emailInviteList: '', visibility: 'PUBLIC', confirmationMessage: '',
 };
 
 const STEPS = [
@@ -613,6 +614,15 @@ function Step8({ data, setData, onSubmit, submitting }: { data: WizardData; setD
         value={data.emailInviteList}
         onChange={(e) => setData({ emailInviteList: e.target.value })}
         hint="One email per line, or comma-separated. Invites sent after launch."
+      />
+
+      <Textarea
+        label="Custom RSVP Confirmation Message (optional)"
+        placeholder="e.g. Thanks for RSVPing! Please bring your government-issued ID and business card. Doors open at 6:30 PM. See you there!"
+        rows={4}
+        value={data.confirmationMessage}
+        onChange={(e) => setData({ confirmationMessage: e.target.value })}
+        hint="This message will appear on the RSVP confirmation screen after a guest submits their RSVP."
       />
 
       {/* Summary */}

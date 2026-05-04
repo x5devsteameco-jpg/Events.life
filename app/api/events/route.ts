@@ -55,6 +55,7 @@ export async function POST(req: NextRequest) {
         parkingNotes: d.parkingNotes,
         hostId: session.user.id,
         emailInviteList: d.emailInviteList,
+        confirmationMessage: d.confirmationMessage || null,
         publishedAt: d.status === 'LIVE' ? new Date() : null,
       },
     });

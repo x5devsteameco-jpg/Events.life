@@ -196,6 +196,7 @@ export default async function PublicEventPage({ params }: Props) {
         requiresCertification={event.requiresCertification}
         certificationNote={event.certificationNote ?? ''}
         customQuestions={parsedQuestions}
+        confirmationMessage={event.confirmationMessage ?? undefined}
       />
 
       <div className="max-w-4xl mx-auto px-4 pt-6 pb-24 lg:pb-10">
@@ -349,6 +350,7 @@ export default async function PublicEventPage({ params }: Props) {
                     requiresCertification={event.requiresCertification}
                     certificationNote={event.certificationNote ?? ''}
                     customQuestions={parsedQuestions}
+                    confirmationMessage={event.confirmationMessage ?? undefined}
                   />
                 </AgeGate>
               ) : (
@@ -364,6 +366,7 @@ export default async function PublicEventPage({ params }: Props) {
                   requiresCertification={event.requiresCertification}
                   certificationNote={event.certificationNote ?? ''}
                   customQuestions={parsedQuestions}
+                  confirmationMessage={event.confirmationMessage ?? undefined}
                 />
               )}
             </div>
@@ -387,6 +390,7 @@ function RSVPFormWrapper(props: {
   requiresCertification: boolean;
   certificationNote: string;
   customQuestions: import('@/lib/types').CustomQuestion[];
+  confirmationMessage?: string;
 }) {
   if (props.isFull) {
     return (
@@ -406,6 +410,6 @@ function RSVPFormWrapper(props: {
       </div>
     );
   }
-  return <RSVPForm eventId={props.eventId} title={props.title} eventDate={props.eventDate} eventEndDate={props.eventEndDate} eventLocation={props.eventLocation} eventSlug={props.eventSlug} requiresCertification={props.requiresCertification} certificationNote={props.certificationNote} customQuestions={props.customQuestions} />;
+  return <RSVPForm eventId={props.eventId} title={props.title} eventDate={props.eventDate} eventEndDate={props.eventEndDate} eventLocation={props.eventLocation} eventSlug={props.eventSlug} requiresCertification={props.requiresCertification} certificationNote={props.certificationNote} customQuestions={props.customQuestions} confirmationMessage={props.confirmationMessage} />;
 
 }

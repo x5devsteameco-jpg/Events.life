@@ -34,9 +34,10 @@ interface Props {
   requiresCertification: boolean;
   certificationNote: string;
   customQuestions: CustomQuestion[];
+  confirmationMessage?: string;
 }
 
-export function RSVPForm({ eventId, title, eventDate, eventEndDate, eventLocation, eventSlug, requiresCertification, certificationNote, customQuestions }: Props) {
+export function RSVPForm({ eventId, title, eventDate, eventEndDate, eventLocation, eventSlug, requiresCertification, certificationNote, customQuestions, confirmationMessage }: Props) {
   const { toast } = useToast();
   const [submitted, setSubmitted] = useState(false);
   const [rsvpStatus, setRsvpStatus] = useState<'CONFIRMED' | 'WAITLISTED' | null>(null);
@@ -138,7 +139,7 @@ export function RSVPForm({ eventId, title, eventDate, eventEndDate, eventLocatio
           </h3>
           <p className="text-sm text-[#4d7a90]">
             {rsvpStatus === 'CONFIRMED'
-              ? `Your RSVP for ${title} is confirmed. Check your email for details.`
+              ? (confirmationMessage || `Your RSVP for ${title} is confirmed. Check your email for details.`)
               : "We'll notify you if a spot opens up."}
           </p>
           {rsvpStatus === 'CONFIRMED' && (

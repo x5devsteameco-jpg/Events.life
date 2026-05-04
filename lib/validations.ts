@@ -60,6 +60,7 @@ export const eventSchema = z.object({
     })
   ).optional(),
   emailInviteList: z.string().optional(),
+  confirmationMessage: z.string().optional(),
   visibility: z.enum(['PUBLIC', 'PRIVATE']).default('PUBLIC'),
   status: z.enum(['DRAFT', 'LIVE', 'PRIVATE', 'CANCELLED', 'ENDED']).default('DRAFT'),
   ticketName: z.string().default('General Admission'),

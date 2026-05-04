@@ -17,6 +17,7 @@ interface Props {
   customQuestions: CustomQuestion[];
   isAccepting: boolean;
   isFull: boolean;
+  confirmationMessage?: string;
 }
 
 export function RSVPDrawer({
