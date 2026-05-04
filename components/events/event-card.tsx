@@ -99,7 +99,7 @@ export function EventCard({ event }: EventCardProps) {
         {/* RSVP progress */}
         <div className="mt-auto">
           <div className="flex items-center justify-between text-xs mb-1.5">
-            <span className="text-[#4d7a90]">{rsvpCount} RSVPs</span>
+            <span className="text-[#4d7a90]">{rsvpCount} {rsvpCount === 1 ? 'RSVP' : 'RSVPs'}</span>
             {capacity && (
               <span className="text-[#4d7a90]">
                 {capacity - rsvpCount} spots left

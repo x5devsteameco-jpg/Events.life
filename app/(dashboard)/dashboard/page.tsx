@@ -46,6 +46,7 @@ export default async function DashboardPage() {
             Dashboard
           </h1>
           <p className="text-sm text-[#4d7a90] mt-1">Welcome back, {session.user.name || 'Host'}</p>
+                  <p className="text-sm text-[#4d7a90] mt-1 truncate max-w-xs">Welcome back, {session.user.name || 'Host'}</p>
         </div>
         <Link
           href="/dashboard/events/new"

@@ -92,6 +92,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           className
         )}
         {...props}
+        style={variant === 'primary' ? { ...(props.style ?? {}), background: 'linear-gradient(135deg, #00c4a8, #00e5cc)', color: '#020408' } : variant === 'danger' ? { ...(props.style ?? {}), background: 'linear-gradient(135deg, #ff3cac, #cc2e89)', color: '#fff' } : props.style}
       >
         {loading ? (
           <Spinner size={size === 'sm' ? 14 : size === 'lg' ? 18 : 16} />
