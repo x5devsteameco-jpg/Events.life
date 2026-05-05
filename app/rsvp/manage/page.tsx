@@ -9,7 +9,7 @@ import { QRCodeDisplay } from '@/components/events/qr-code-display';
 type RSVPStatus = 'CONFIRMED' | 'WAITLISTED' | 'CANCELLED' | 'PENDING';
 
 interface RSVPData {
-  rsvp: { id: string; guestName: string; status: RSVPStatus; createdAt: string };
+  rsvp: { id: string; guestName: string; status: RSVPStatus; createdAt: string; waitlistPosition?: number | null };
   event: { title: string; date: string; slug: string; location: string | null; isOnline: boolean };
 }
 
@@ -213,6 +213,15 @@ export default function RSVPManagePage() {
 
                 {/* Event details */}
                 <div className="p-5 space-y-2">
+                  {data.rsvp.status === 'WAITLISTED' && data.rsvp.waitlistPosition != null && (
+                    <div className="rounded-xl p-3 mb-2" style={{ background: 'rgba(157,216,234,0.06)', border: '1px solid rgba(157,216,234,0.15)' }}>
+                      <p className="text-xs text-[#7aafc4] mb-0.5">Your position in the waitlist</p>
+                      <div className="flex items-baseline gap-1.5">
+                        <span className="text-3xl font-black" style={{ color: '#9dd8ea' }}>#{data.rsvp.waitlistPosition}</span>
+                        <span className="text-xs text-[#4d7a90]">You&apos;ll be notified if a spot opens up.</span>
+                      </div>
+                    </div>
+                  )}
                   <p className="font-semibold text-[#e8f4f8]">{data.event.title}</p>
                   <p className="text-sm text-[#4d7a90]">
                     {eventDate?.toLocaleDateString('en-CA', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}

@@ -87,7 +87,7 @@ export default function AdminUsersClient({ users, actorId }: { users: User[]; ac
             >
               {/* User info */}
               <div className="min-w-0">
-                <p className="text-sm font-semibold text-[#e8f4f8] truncate">{user.name ?? '—'}</p>
+                <a href={`/admin/users/${user.id}`} className="text-sm font-semibold text-[#e8f4f8] hover:text-[#00e5cc] transition-colors truncate block">{user.name ?? '—'}</a>
                 <p className="text-xs text-[#4d7a90] truncate">{user.email}</p>
                 {user.company && <p className="text-xs text-[#2d5268] truncate">{user.company}</p>}
                 <p className="text-[10px] text-[#1e3d4f] mt-0.5">

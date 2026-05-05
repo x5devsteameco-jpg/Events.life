@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import { auth } from '@/lib/auth';
 import { Sidebar } from '@/components/dashboard/sidebar';
 import { MobileNav } from '@/components/dashboard/mobile-nav';
+import { KeyboardShortcuts } from '@/components/dashboard/keyboard-shortcuts';
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
@@ -50,12 +51,13 @@ export default async function DashboardLayout({ children }: { children: React.Re
           style={{
             padding: 'clamp(1rem, 4vw, 2.5rem) clamp(1rem, 3vw, 2rem) 2rem',
             backgroundImage: 'radial-gradient(circle at 80% 20%, rgba(0,229,204,0.03) 0%, transparent 50%), radial-gradient(circle at 20% 80%, rgba(0,180,150,0.02) 0%, transparent 50%)',
-            paddingBottom: 'max(2rem, env(safe-area-inset-bottom))',
+            paddingBottom: 'max(5rem, calc(env(safe-area-inset-bottom) + 4rem))',
           }}
         >
           {children}
         </main>
       </div>
+      <KeyboardShortcuts />
     </div>
   );
 }

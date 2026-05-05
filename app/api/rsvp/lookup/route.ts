@@ -36,9 +36,22 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'No RSVP found for this email and event' }, { status: 404 });
     }
 
+    // Calculate waitlist position if waitlisted
+    let waitlistPosition: number | null = null;
+    if (rsvp.status === 'WAITLISTED') {
+      const earlier = await db.rSVP.count({
+        where: {
+          eventId: event.id,
+          status: 'WAITLISTED',
+          createdAt: { lt: rsvp.createdAt },
+        },
+      });
+      waitlistPosition = earlier + 1;
+    }
+
     return NextResponse.json({
       data: {
-        rsvp: { id: rsvp.id, guestName: rsvp.guestName, status: rsvp.status, createdAt: rsvp.createdAt },
+        rsvp: { id: rsvp.id, guestName: rsvp.guestName, status: rsvp.status, createdAt: rsvp.createdAt, waitlistPosition },
         event: { title: event.title, date: event.date, slug: event.slug, location: event.location, isOnline: event.isOnline },
       },
     });

@@ -9,7 +9,7 @@ import type { RSVP } from '@/lib/types';
 const STATUS_OPTIONS = ['ALL', 'CONFIRMED', 'WAITLISTED', 'CANCELLED'];
 
 function exportCSV(rsvps: RSVP[], eventTitle: string) {
-  const headers = ['Name', 'Email', 'Store', 'Store Address', 'Brand', 'Position', 'Status', 'Date'];
+  const headers = ['Name', 'Email', 'Store', 'Store Address', 'Brand', 'Position', 'Status', 'Checked In', 'Date'];
   const rows = rsvps.map((r) => [
     r.guestName,
     r.guestEmail,
@@ -18,6 +18,7 @@ function exportCSV(rsvps: RSVP[], eventTitle: string) {
     r.brand ?? '',
     r.position ?? '',
     r.status,
+    r.checkedIn ? 'Yes' : 'No',
     new Date(r.createdAt).toLocaleDateString('en-CA'),
   ]);
   const csv = [headers, ...rows].map((row) => row.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n');
@@ -33,13 +34,18 @@ function exportCSV(rsvps: RSVP[], eventTitle: string) {
 interface Props {
   rsvps: RSVP[];
   eventTitle: string;
+  eventId?: string;
 }
 
-export function AttendeeTable({ rsvps, eventTitle }: Props) {
+export function AttendeeTable({ rsvps, eventTitle, eventId }: Props) {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [sortField, setSortField] = useState<keyof RSVP>('createdAt');
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
+  const [checkingIn, setCheckingIn] = useState<string | null>(null);
+  const [localCheckedIn, setLocalCheckedIn] = useState<Record<string, boolean>>(() =>
+    Object.fromEntries(rsvps.map((r) => [r.id, r.checkedIn ?? false]))
+  );
 
   const handleSort = (field: keyof RSVP) => {
     if (sortField === field) {
@@ -47,6 +53,22 @@ export function AttendeeTable({ rsvps, eventTitle }: Props) {
     } else {
       setSortField(field);
       setSortDir('asc');
+    }
+  };
+
+  const handleCheckIn = async (rsvpId: string) => {
+    if (!eventId || checkingIn) return;
+    const newValue = !localCheckedIn[rsvpId];
+    setCheckingIn(rsvpId);
+    try {
+      const res = await fetch(`/api/events/${eventId}/rsvp`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ rsvpId, checkedIn: newValue }),
+      });
+      if (res.ok) setLocalCheckedIn((prev) => ({ ...prev, [rsvpId]: newValue }));
+    } finally {
+      setCheckingIn(null);
     }
   };
 
@@ -136,6 +158,11 @@ export function AttendeeTable({ rsvps, eventTitle }: Props) {
                       {label}<SortIcon field={key as keyof RSVP} />
                     </th>
                   ))}
+                  {eventId && (
+                    <th className="px-4 py-3 text-left text-xs font-semibold text-[#4d7a90] uppercase tracking-wider select-none">
+                      Check-In
+                    </th>
+                  )}
                 </tr>
               </thead>
               <tbody>
@@ -159,6 +186,26 @@ export function AttendeeTable({ rsvps, eventTitle }: Props) {
                     <td className="px-4 py-3 text-[#4d7a90] text-xs">
                       {new Date(rsvp.createdAt).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric' })}
                     </td>
+                    {eventId && (
+                      <td className="px-4 py-3">
+                        {rsvp.status === 'CONFIRMED' ? (
+                          <button
+                            type="button"
+                            onClick={() => handleCheckIn(rsvp.id)}
+                            disabled={checkingIn === rsvp.id}
+                            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all border ${
+                              localCheckedIn[rsvp.id]
+                                ? 'border-[rgba(0,229,204,0.4)] bg-[rgba(0,229,204,0.12)] text-[#00e5cc]'
+                                : 'border-[rgba(255,255,255,0.08)] text-[#4d7a90] hover:border-[rgba(0,229,204,0.2)] hover:text-[#e8f4f8]'
+                            }`}
+                          >
+                            {checkingIn === rsvp.id ? '…' : localCheckedIn[rsvp.id] ? '✓ In' : 'Check In'}
+                          </button>
+                        ) : (
+                          <span className="text-xs text-[#2d5268]">—</span>
+                        )}
+                      </td>
+                    )}
                   </motion.tr>
                 ))}
               </tbody>

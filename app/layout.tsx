@@ -9,8 +9,12 @@ import { CookieConsentBanner } from '@/components/layout/cookie-consent-banner';
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
+  maximumScale: 5,
   viewportFit: 'cover',
-  themeColor: '#020408',
+  themeColor: [
+    { media: '(prefers-color-scheme: dark)', color: '#020408' },
+    { media: '(prefers-color-scheme: light)', color: '#020408' },
+  ],
 };
 
 export const metadata: Metadata = {
@@ -35,6 +39,12 @@ export const metadata: Metadata = {
     description: 'Your Events. Your Rules.',
   },
   robots: { index: true, follow: true },
+  manifest: '/manifest.webmanifest',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'Gatewise',
+  },
 };
 
 export default function RootLayout({

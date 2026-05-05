@@ -89,6 +89,44 @@ export async function sendEventInvite(email: string, event: Event, hostName: str
   });
 }
 
+export async function sendAnnouncement({
+  to,
+  name,
+  subject,
+  message,
+  eventTitle,
+  eventSlug,
+  organizerName,
+}: {
+  to: string;
+  name: string;
+  subject: string;
+  message: string;
+  eventTitle: string;
+  eventSlug: string;
+  organizerName: string;
+}): Promise<void> {
+  const eventUrl = `${BASE_URL}/event/${eventSlug}`;
+
+  const html = emailFrame(
+    subject,
+    `
+      <h1 style="margin:0 0 6px;font-size:20px;">${subject}</h1>
+      <p style="margin:0 0 4px;font-size:13px;color:#4d7a90;">From ${organizerName} · Re: ${eventTitle}</p>
+      <div style="margin:16px 0;padding:16px;background:#132530;border-radius:10px;border-left:3px solid #00e5cc;white-space:pre-wrap;font-size:14px;line-height:1.6;color:#e8f4f8;">${message.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
+      <a href="${eventUrl}" style="display:inline-block;padding:12px 18px;border-radius:10px;background:linear-gradient(135deg,#00c4a8,#00e5cc);color:#020408;text-decoration:none;font-weight:700;">View Event</a>
+      <p style="margin-top:18px;font-size:12px;color:#4d7a90;">Hi ${name}, you're receiving this because you RSVP'd to ${eventTitle} on Gatewise Events. To manage your RSVP, visit the event page.</p>
+    `
+  );
+
+  await sendEmail({
+    from: FROM_EMAIL,
+    to,
+    subject,
+    html,
+  });
+}
+
 export async function sendEventUpdate(rsvp: RSVP, event: Event, updateMessage: string): Promise<void> {
   const eventUrl = `${BASE_URL}/event/${event.slug}`;
 

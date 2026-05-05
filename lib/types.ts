@@ -46,6 +46,8 @@ export interface Event {
   tags: string | null;
   customQuestions: string | null;
   faqs: string | null;
+  speakers?: string | null;
+  agenda?: string | null;
   emailInviteList: string | null;
   publishedAt: Date | null;
   createdAt: Date;
@@ -67,6 +69,8 @@ export interface RSVP {
   position: string | null;
   certificationUrl: string | null;
   status: RSVPStatus;
+  checkedIn?: boolean;
+  checkedInAt?: Date | null;
   answers: string | null;
   createdAt: Date;
   event?: Event;
@@ -100,6 +104,25 @@ export interface FAQ {
   id: string;
   question: string;
   answer: string;
+}
+
+export interface Speaker {
+  id: string;
+  name: string;
+  title: string;
+  bio: string;
+  photoUrl: string;
+  linkedin: string;
+  twitter: string;
+}
+
+export interface AgendaItem {
+  id: string;
+  time: string;
+  title: string;
+  description: string;
+  speakerId: string;
+  duration: string;
 }
 
 // ─── API Response Types ──────────────────────────────────────────────────────

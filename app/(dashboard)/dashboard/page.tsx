@@ -6,11 +6,19 @@ import { AnimatedStats } from '@/components/dashboard/animated-stats';
 import { StaggerGrid } from '@/components/dashboard/stagger-grid';
 import { RSVPSparkline } from '@/components/dashboard/rsvp-sparkline';
 import { PageTransition } from '@/components/ui/page-transition';
+import { formatDate } from '@/lib/utils';
 import type { Event } from '@/lib/types';
+
+const STATUS_COLOR: Record<string, string> = {
+  CONFIRMED:  '#00e5cc',
+  WAITLISTED: '#f59e0b',
+  CANCELLED:  '#ff3cac',
+  PENDING:    '#9c6bff',
+};
 
 async function getDashboardData(userId: string) {
   const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-  const [events, rsvpCount, recentRsvps] = await Promise.all([
+  const [events, rsvpCount, recentRsvps, activityFeed] = await Promise.all([
     db.event.findMany({
       where: { hostId: userId },
       orderBy: { createdAt: 'desc' },
@@ -27,13 +35,24 @@ async function getDashboardData(userId: string) {
       },
       select: { createdAt: true },
     }),
+    db.rSVP.findMany({
+      where: { event: { hostId: userId } },
+      orderBy: { createdAt: 'desc' },
+      take: 8,
+      select: {
+        id: true,
+        guestName: true,
+        status: true,
+        createdAt: true,
+        event: { select: { title: true, slug: true } },
+      },
+    }),
   ]);
 
   const now = new Date();
   const upcoming = events.filter((e) => e.status === 'LIVE' && new Date(e.date) > now).length;
   const drafts = events.filter((e) => e.status === 'DRAFT').length;
 
-  // Build daily buckets [day-6, day-5, ..., today]
   const rsvpTrend = Array.from({ length: 7 }, (_, i) => {
     const d = new Date(Date.now() - (6 - i) * 24 * 60 * 60 * 1000);
     return recentRsvps.filter((r) => {
@@ -42,14 +61,14 @@ async function getDashboardData(userId: string) {
     }).length;
   });
 
-  return { events, rsvpCount, upcoming, drafts, total: events.length, rsvpTrend, recentRsvpCount: recentRsvps.length };
+  return { events, rsvpCount, upcoming, drafts, total: events.length, rsvpTrend, recentRsvpCount: recentRsvps.length, activityFeed };
 }
 
 export default async function DashboardPage() {
   const session = await auth();
   if (!session?.user?.id) return null;
 
-  const { events, rsvpCount, upcoming, drafts, total, rsvpTrend, recentRsvpCount } = await getDashboardData(session.user.id);
+  const { events, rsvpCount, upcoming, drafts, total, rsvpTrend, recentRsvpCount, activityFeed } = await getDashboardData(session.user.id);
 
   const stats = [
     { label: 'Total Events', value: total, icon: '📅', color: '#00e5cc' },
@@ -110,9 +129,40 @@ export default async function DashboardPage() {
       {/* Stats */}
       <AnimatedStats stats={stats} />
 
-      {/* RSVP Trend Sparkline */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6 mb-2">
+      {/* RSVP Trend Sparkline + Activity Feed */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-6 mb-2">
         <RSVPSparkline data={rsvpTrend} label="RSVPs This Week" total={recentRsvpCount} />
+
+        {/* Recent Activity Feed */}
+        <div
+          className="lg:col-span-2 rounded-2xl p-4"
+          style={{ background: 'rgba(12,26,31,0.7)', border: '1px solid rgba(0,229,204,0.1)' }}
+        >
+          <h3 className="text-xs font-semibold uppercase tracking-[0.14em] text-[#4d7a90] mb-3">Recent Activity</h3>
+          {activityFeed.length === 0 ? (
+            <p className="text-sm text-[#4d7a90] py-4 text-center">No RSVPs yet — share your first event to get started.</p>
+          ) : (
+            <ul className="space-y-2">
+              {activityFeed.map((item) => (
+                <li key={item.id} className="flex items-center gap-3 text-sm py-1">
+                  <span
+                    className="w-2 h-2 rounded-full flex-shrink-0"
+                    style={{ background: STATUS_COLOR[item.status] ?? '#7aafc4' }}
+                    aria-hidden="true"
+                  />
+                  <span className="text-[#e8f4f8] font-medium truncate flex-1">{item.guestName}</span>
+                  <span className="text-[#4d7a90] truncate hidden sm:block max-w-[160px]">{item.event.title}</span>
+                  <span className="text-xs flex-shrink-0" style={{ color: STATUS_COLOR[item.status] ?? '#7aafc4' }}>
+                    {item.status}
+                  </span>
+                  <span className="text-xs text-[#4d7a90] flex-shrink-0">
+                    {new Date(item.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       </div>
 
       {/* Events */}

@@ -135,6 +135,9 @@ model Event {
   tags                 String?
   customQuestions      String?
   faqs                 String?
+  speakers             String?
+  agenda               String?
+  promoCodes           String?
   emailInviteList      String?
   confirmationMessage  String?
   dressCode            String?
@@ -165,6 +168,8 @@ model RSVP {
   position         String?
   certificationUrl String?
   status           RSVPStatus @default(PENDING)
+  checkedIn        Boolean    @default(false)
+  checkedInAt      DateTime?
   answers          String?
   createdAt        DateTime   @default(now())
 

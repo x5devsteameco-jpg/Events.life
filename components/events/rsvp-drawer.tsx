@@ -18,6 +18,7 @@ interface Props {
   isAccepting: boolean;
   isFull: boolean;
   confirmationMessage?: string;
+  promoCodes?: { id: string; code: string; discountType: 'percent' | 'flat'; discountValue: string; usageLimit: string; unlimited: boolean }[];
 }
 
 export function RSVPDrawer({

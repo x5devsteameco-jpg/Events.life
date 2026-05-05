@@ -62,6 +62,27 @@ export const eventSchema = z.object({
       answer: z.string(),
     })
   ).optional(),
+  speakers: z.array(
+    z.object({
+      id: z.string(),
+      name: z.string(),
+      title: z.string().optional().default(''),
+      bio: z.string().optional().default(''),
+      photoUrl: z.string().optional().default(''),
+      linkedin: z.string().optional().default(''),
+      twitter: z.string().optional().default(''),
+    })
+  ).optional(),
+  agenda: z.array(
+    z.object({
+      id: z.string(),
+      time: z.string(),
+      title: z.string(),
+      description: z.string().optional().default(''),
+      speakerId: z.string().optional().default(''),
+      duration: z.string().optional().default(''),
+    })
+  ).optional(),
   customSlug: z.string().regex(/^[a-z0-9-]*$/, 'Slug can only contain lowercase letters, numbers, and hyphens').max(80).optional(),
   emailInviteList: z.string().optional(),
   confirmationMessage: z.string().optional(),
@@ -71,6 +92,23 @@ export const eventSchema = z.object({
   ticketDescription: z.string().optional(),
   ticketQuantity: z.number().int().positive().optional().nullable(),
   ticketUnlimited: z.boolean().default(false),
+  ticketTiers: z.array(z.object({
+    id: z.string(),
+    name: z.string(),
+    description: z.string().optional(),
+    price: z.union([z.string(), z.number()]).optional(),
+    isFree: z.boolean().optional(),
+    quantity: z.union([z.string(), z.number()]).optional(),
+    unlimited: z.boolean().optional(),
+  })).optional(),
+  promoCodes: z.array(z.object({
+    id: z.string(),
+    code: z.string(),
+    discountType: z.enum(['percent', 'flat']),
+    discountValue: z.string(),
+    usageLimit: z.string().optional().default(''),
+    unlimited: z.boolean().optional().default(true),
+  })).optional(),
 });
 
 export const rsvpSchema = z.object({

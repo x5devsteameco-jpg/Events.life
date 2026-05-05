@@ -1,7 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import Image from 'next/image';
+import { motion, useReducedMotion } from 'framer-motion';
 import { Badge, statusToBadgeVariant } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { formatDateTime } from '@/lib/utils';
@@ -12,6 +13,7 @@ interface EventCardProps {
 }
 
 export function EventCard({ event }: EventCardProps) {
+  const shouldReduceMotion = useReducedMotion();
   const rsvpCount = event._count?.rsvps ?? 0;
   const capacity = event.maxAttendees;
 
@@ -27,8 +29,8 @@ export function EventCard({ event }: EventCardProps) {
 
   return (
     <motion.div
-      whileHover={{ y: -5, scale: 1.01 }}
-      whileTap={{ scale: 0.98 }}
+      whileHover={shouldReduceMotion ? {} : { y: -5, scale: 1.01 }}
+      whileTap={shouldReduceMotion ? {} : { scale: 0.98 }}
       transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
       className="rounded-2xl overflow-hidden flex flex-col group"
       style={{
@@ -49,11 +51,12 @@ export function EventCard({ event }: EventCardProps) {
       {/* Banner */}
       <div className="h-40 relative overflow-hidden flex-shrink-0">
         {event.bannerImage ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <Image
             src={event.bannerImage}
             alt={event.title}
-            className="w-full h-full object-cover"
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="object-cover"
           />
         ) : (
           <div className="w-full h-full relative overflow-hidden" style={{ background: bgGradient }}>

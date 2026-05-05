@@ -7,6 +7,8 @@ import { Badge, statusToBadgeVariant } from '@/components/ui/badge';
 import { AttendeeTable } from '@/components/events/attendee-table';
 import type { EventStatus } from '@/lib/types';
 import { DuplicateEventButton } from '@/components/events/duplicate-event-button';
+import { PromoteWaitlistButton } from '@/components/events/promote-waitlist-button';
+import { AnnouncePanel } from '@/components/events/announce-panel';
 
 type Props = { params: Promise<{ id: string }>; searchParams: Promise<{ tab?: string }> };
 
@@ -34,6 +36,7 @@ export default async function EventManagePage({ params, searchParams }: Props) {
     { key: 'overview', label: 'Overview' },
     { key: 'attendees', label: `Attendees (${confirmed})` },
     { key: 'waitlist', label: `Waitlist (${waitlisted})` },
+    { key: 'message', label: 'Message Attendees' },
     { key: 'share', label: 'Share & Invite' },
   ];
 
@@ -139,14 +142,31 @@ export default async function EventManagePage({ params, searchParams }: Props) {
         <AttendeeTable
           rsvps={event.rsvps.filter((r) => r.status === 'CONFIRMED') as import('@/lib/types').RSVP[]}
           eventTitle={event.title}
+          eventId={id}
         />
       )}
 
       {tab === 'waitlist' && (
-        <AttendeeTable
-          rsvps={event.rsvps.filter((r) => r.status === 'WAITLISTED') as import('@/lib/types').RSVP[]}
-          eventTitle={event.title}
-        />
+        <div className="space-y-4">
+          {waitlisted > 0 && (
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-[#4d7a90]">{waitlisted} attendee{waitlisted !== 1 ? 's' : ''} on waitlist</p>
+              <PromoteWaitlistButton
+                eventId={id}
+                waitlistedIds={event.rsvps.filter((r) => r.status === 'WAITLISTED').map((r) => r.id)}
+              />
+            </div>
+          )}
+          <AttendeeTable
+            rsvps={event.rsvps.filter((r) => r.status === 'WAITLISTED') as import('@/lib/types').RSVP[]}
+            eventTitle={event.title}
+            eventId={id}
+          />
+        </div>
+      )}
+
+      {tab === 'message' && (
+        <AnnouncePanel eventId={id} confirmedCount={confirmed} />
       )}
 
       {tab === 'share' && (

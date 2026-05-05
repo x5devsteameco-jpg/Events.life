@@ -16,7 +16,7 @@ async function getEventAnalytics(eventId: string, hostId: string) {
       pageViews: true,
       maxAttendees: true,
       rsvps: {
-        select: { status: true, createdAt: true },
+        select: { status: true, createdAt: true, checkedIn: true },
         orderBy: { createdAt: 'asc' },
       },
       pageViews_: {
@@ -31,6 +31,8 @@ async function getEventAnalytics(eventId: string, hostId: string) {
   const pending = event.rsvps.filter((r) => r.status === 'PENDING').length;
   const cancelled = event.rsvps.filter((r) => r.status === 'CANCELLED').length;
   const waitlisted = event.rsvps.filter((r) => r.status === 'WAITLISTED').length;
+  const checkedInCount = event.rsvps.filter((r) => r.checkedIn).length;
+  const attendanceRate = confirmed > 0 ? Math.round((checkedInCount / confirmed) * 100) : 0;
   const total = event.rsvps.length;
   const pageViewCount = event.pageViews + event.pageViews_.length;
   const uniqueVisitors = new Set(event.pageViews_.map((view) => view.ipHash).filter(Boolean)).size;
@@ -120,7 +122,7 @@ async function getEventAnalytics(eventId: string, hostId: string) {
 
   return {
     event: { id: event.id, title: event.title, slug: event.slug, date: event.date, status: event.status, maxAttendees: event.maxAttendees },
-    stats: { total, confirmed, pending, cancelled, waitlisted, pageViewCount, conversionRate, uniqueVisitors, attributedViews },
+    stats: { total, confirmed, pending, cancelled, waitlisted, checkedInCount, attendanceRate, pageViewCount, conversionRate, uniqueVisitors, attributedViews },
     dailyRsvps,
     dailyViews,
     topReferers,

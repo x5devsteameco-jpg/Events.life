@@ -54,12 +54,28 @@ export async function POST(req: NextRequest) {
         maxTicketsPerPerson: d.maxTicketsPerPerson,
         customQuestions: d.customQuestions ? JSON.stringify(d.customQuestions) : null,
         faqs: d.faqs ? JSON.stringify(d.faqs) : null,
+        speakers: d.speakers ? JSON.stringify(d.speakers) : null,
+        agenda: d.agenda ? JSON.stringify(d.agenda) : null,
+        promoCodes: d.promoCodes && d.promoCodes.length > 0 ? JSON.stringify(d.promoCodes) : null,
         parkingAvailable: d.parkingAvailable ?? false,
         parkingNotes: d.parkingNotes,
         hostId: session.user.id,
         emailInviteList: d.emailInviteList,
         confirmationMessage: d.confirmationMessage || null,
         publishedAt: d.status === 'LIVE' ? new Date() : null,
+        tickets: d.ticketTiers?.length
+          ? {
+              create: d.ticketTiers.map((t: { name: string; description?: string; price?: string | number; isFree?: boolean; quantity?: string | number; unlimited?: boolean }) => ({
+                name: t.name || 'General Admission',
+                description: t.description ?? null,
+                price: t.isFree ? 0 : parseFloat(String(t.price ?? 0)) || 0,
+                isFree: t.isFree ?? true,
+                quantity: t.unlimited ? null : (parseInt(String(t.quantity ?? '')) || null),
+                quantitySold: 0,
+                isVisible: true,
+              })),
+            }
+          : undefined,
       },
     });
 

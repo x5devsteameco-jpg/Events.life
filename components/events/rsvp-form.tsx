@@ -36,9 +36,10 @@ interface Props {
   certificationNote: string;
   customQuestions: CustomQuestion[];
   confirmationMessage?: string;
+  promoCodes?: { id: string; code: string; discountType: 'percent' | 'flat'; discountValue: string; usageLimit: string; unlimited: boolean }[];
 }
 
-export function RSVPForm({ eventId, title, eventDate, eventEndDate, eventLocation, eventSlug, requiresCertification, certificationNote, customQuestions, confirmationMessage }: Props) {
+export function RSVPForm({ eventId, title, eventDate, eventEndDate, eventLocation, eventSlug, requiresCertification, certificationNote, customQuestions, confirmationMessage, promoCodes }: Props) {
   const { toast } = useToast();
   const [submitted, setSubmitted] = useState(false);
   const [rsvpStatus, setRsvpStatus] = useState<'CONFIRMED' | 'WAITLISTED' | null>(null);
@@ -47,7 +48,20 @@ export function RSVPForm({ eventId, title, eventDate, eventEndDate, eventLocatio
   const [certFile, setCertFile] = useState<File | null>(null);
   const [certUploading, setCertUploading] = useState(false);
   const [marketingConsent, setMarketingConsent] = useState(false);
+  const [promoCodeInput, setPromoCodeInput] = useState('');
+  const [promoApplied, setPromoApplied] = useState<{ code: string; discountType: string; discountValue: string } | null>(null);
+  const [promoError, setPromoError] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const applyPromoCode = () => {
+    const code = promoCodeInput.trim().toUpperCase();
+    if (!code) { setPromoError('Enter a promo code'); return; }
+    const found = (promoCodes ?? []).find((pc) => pc.code.toUpperCase() === code);
+    if (!found) { setPromoError('Code not found'); setPromoApplied(null); return; }
+    setPromoApplied({ code: found.code, discountType: found.discountType, discountValue: found.discountValue });
+    setPromoError('');
+    toast(`Promo code applied: ${found.discountType === 'percent' ? found.discountValue + '% off' : '$' + found.discountValue + ' off'}`, 'success');
+  };
 
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -84,7 +98,7 @@ export function RSVPForm({ eventId, title, eventDate, eventEndDate, eventLocatio
       const res = await fetch(`/api/events/${eventId}/rsvp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...values, customAnswers, certificationUrl, marketingConsent }),
+        body: JSON.stringify({ ...values, customAnswers, certificationUrl, marketingConsent, promoCode: promoApplied?.code }),
       });
 
       const json = await res.json();
@@ -187,6 +201,16 @@ export function RSVPForm({ eventId, title, eventDate, eventEndDate, eventLocatio
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
                     Share Event
                   </button>
+                )}
+                {eventSlug && typeof window !== 'undefined' && (
+                  <a
+                    href={`mailto:?subject=${encodeURIComponent(`Join me at ${title}`)}&body=${encodeURIComponent(`Hey! I just RSVP'd to "${title}" and think you'd love it too. Check it out:\n\n${window.location.origin}/event/${eventSlug}`)}`}
+                    className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold text-[#10b981] transition-all hover:bg-[rgba(16,185,129,0.08)] active:scale-95"
+                    style={{ border: '1px solid rgba(16,185,129,0.2)', background: 'rgba(16,185,129,0.04)' }}
+                  >
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    Invite a Friend
+                  </a>
                 )}
               </div>
             </div>
@@ -365,6 +389,37 @@ export function RSVPForm({ eventId, title, eventDate, eventEndDate, eventLocatio
             I agree to receive event updates and promotional emails from the organizer. You can unsubscribe at any time. Consent not required to RSVP.
           </label>
         </div>
+
+        {/* Promo code */}
+        {(promoCodes ?? []).length > 0 && (
+          <div className="rounded-xl p-3.5" style={{ background: 'rgba(6,13,16,0.6)', border: '1px solid rgba(0,229,204,0.08)' }}>
+            <p className="text-xs font-semibold text-[#4d7a90] mb-2">Have a promo code?</p>
+            {promoApplied ? (
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold text-[#00e5cc]">✓ {promoApplied.code} applied</span>
+                <span className="text-xs text-[#4d7a90]">
+                  ({promoApplied.discountType === 'percent' ? `${promoApplied.discountValue}% off` : `$${promoApplied.discountValue} off`})
+                </span>
+                <button type="button" onClick={() => { setPromoApplied(null); setPromoCodeInput(''); }} className="ml-auto text-xs text-[#4d7a90] hover:text-[#ff3cac] transition-colors">Remove</button>
+              </div>
+            ) : (
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={promoCodeInput}
+                  onChange={(e) => { setPromoCodeInput(e.target.value.toUpperCase()); setPromoError(''); }}
+                  placeholder="EARLYBIRD2024"
+                  className="flex-1 min-w-0 px-3 py-2 rounded-lg text-xs font-mono text-[#e8f4f8] bg-transparent outline-none"
+                  style={{ border: '1px solid rgba(0,229,204,0.15)' }}
+                />
+                <button type="button" onClick={applyPromoCode} className="px-3 py-2 rounded-lg text-xs font-semibold text-[#00e5cc] hover:bg-[rgba(0,229,204,0.08)] transition-colors" style={{ border: '1px solid rgba(0,229,204,0.2)' }}>
+                  Apply
+                </button>
+              </div>
+            )}
+            {promoError && <p className="text-xs text-[#ff3cac] mt-1">{promoError}</p>}
+          </div>
+        )}
 
         <Button
           type="submit"

@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, type Variants } from 'framer-motion';
+import { motion, type Variants, useReducedMotion } from 'framer-motion';
 import { ReactNode } from 'react';
 
 const container: Variants = {
@@ -13,11 +13,19 @@ const item: Variants = {
   show: { opacity: 1, y: 0, transition: { type: 'spring' as const, damping: 22, stiffness: 260 } },
 };
 
+const noMotionItem: Variants = {
+  hidden: {},
+  show: {},
+};
+
 interface Props {
   children: ReactNode;
 }
 
 export function StaggerGrid({ children }: Props) {
+  const shouldReduceMotion = useReducedMotion();
+  const activeItem = shouldReduceMotion ? noMotionItem : item;
+
   return (
     <motion.div
       variants={container}
@@ -27,11 +35,11 @@ export function StaggerGrid({ children }: Props) {
     >
       {Array.isArray(children)
         ? children.map((child, i) => (
-            <motion.div key={i} variants={item}>
+            <motion.div key={i} variants={activeItem}>
               {child}
             </motion.div>
           ))
-        : <motion.div variants={item}>{children}</motion.div>}
+        : <motion.div variants={activeItem}>{children}</motion.div>}
     </motion.div>
   );
 }

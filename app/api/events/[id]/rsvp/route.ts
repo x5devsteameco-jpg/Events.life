@@ -138,3 +138,48 @@ export async function GET(req: NextRequest, { params }: RouteContext) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
+
+// PATCH /api/events/[id]/rsvp — host-only: update one or many RSVP statuses, or check in a single RSVP
+export async function PATCH(req: NextRequest, { params }: RouteContext) {
+  const { id } = await params;
+  const session = await auth();
+  if (!session?.user?.id) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
+  // Ensure requester is the event host
+  const event = await db.event.findUnique({ where: { id }, select: { hostId: true } });
+  if (!event) return NextResponse.json({ error: 'Not found' }, { status: 404 });
+  if (event.hostId !== session.user.id) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+
+  const body = await req.json() as { rsvpIds?: string[]; status?: string; rsvpId?: string; checkedIn?: boolean };
+
+  // Single RSVP check-in
+  if (body.rsvpId !== undefined && body.checkedIn !== undefined) {
+    if (typeof body.rsvpId !== 'string' || typeof body.checkedIn !== 'boolean') {
+      return NextResponse.json({ error: 'Invalid check-in payload' }, { status: 400 });
+    }
+    await db.rSVP.update({
+      where: { id: body.rsvpId, eventId: id },
+      data: {
+        checkedIn: body.checkedIn,
+        checkedInAt: body.checkedIn ? new Date() : null,
+      },
+    });
+    return NextResponse.json({ ok: true });
+  }
+
+  // Bulk status update
+  const valid = ['CONFIRMED', 'WAITLISTED', 'CANCELLED', 'PENDING'];
+  if (!body.status || !valid.includes(body.status)) return NextResponse.json({ error: 'Invalid status' }, { status: 400 });
+  if (!Array.isArray(body.rsvpIds) || body.rsvpIds.length === 0) {
+    return NextResponse.json({ error: 'rsvpIds must be a non-empty array' }, { status: 400 });
+  }
+
+  // Restrict to max 200 at a time to prevent abuse
+  const ids = body.rsvpIds.slice(0, 200);
+  await db.rSVP.updateMany({
+    where: { id: { in: ids }, eventId: id },
+    data: { status: body.status as never },
+  });
+
+  return NextResponse.json({ ok: true, updated: ids.length });
+}

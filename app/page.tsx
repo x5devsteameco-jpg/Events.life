@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useRef } from 'react';
+import React, { useRef, Suspense } from 'react';
 import Link from 'next/link';
 import { motion, useInView, AnimatePresence } from 'framer-motion';
 import { BrandLogo } from '@/components/brand/logo';
 import { FrontierShowcase } from '@/components/marketing/frontier-showcase';
+import { FeaturedEvents } from '@/components/marketing/featured-events';
 
 const CINZEL = "var(--font-heading, 'Cinzel', Georgia, serif)";
 const BEBAS = "var(--font-label, 'Bebas Neue', 'Arial Narrow', sans-serif)";
@@ -417,6 +418,11 @@ export default function HomePage() {
           </AnimSection>
         </div>
       </section>
+
+      {/* ═══ FEATURED EVENTS ═══ */}
+      <Suspense fallback={null}>
+        <FeaturedEvents />
+      </Suspense>
 
       {/* ═══ CTA ═══ */}
       <section style={{ padding: '7rem 1.5rem' }}>

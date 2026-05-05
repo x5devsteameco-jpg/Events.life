@@ -8,7 +8,7 @@ import { useToast } from '@/components/toast';
 import { Button } from '@/components/ui/button';
 import { Input, Textarea, Select } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
-import type { CustomQuestion, FAQ } from '@/lib/types';
+import type { CustomQuestion, FAQ, Speaker, AgendaItem } from '@/lib/types';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface TicketTier {
@@ -34,6 +34,8 @@ interface WizardData {
   date: string;
   endDate: string;
   timezone: string;
+  recurrence: 'none' | 'daily' | 'weekly' | 'biweekly' | 'monthly';
+  recurrenceEnd: string;
   // Step 4
   location: string;
   address: string;
@@ -56,9 +58,14 @@ interface WizardData {
   customQuestions: CustomQuestion[];
   // Step 7 — FAQ
   faqs: FAQ[];
-  // Step 8 (preview / field toggles)
+  // Step 8 — Speakers & Agenda
+  speakers: Speaker[];
+  agenda: AgendaItem[];
+  // Promo codes (stored on event as JSON)
+  promoCodes: { id: string; code: string; discountType: 'percent' | 'flat'; discountValue: string; usageLimit: string; unlimited: boolean }[];
+  // Step 9 (preview / field toggles)
   requiredFields: string[];
-  // Step 9
+  // Step 10
   emailInviteList: string;
   visibility: 'PUBLIC' | 'PRIVATE';
   confirmationMessage: string;
@@ -67,12 +74,15 @@ interface WizardData {
 const INITIAL: WizardData = {
   title: '', category: '', eventType: 'IN_PERSON', eventTheme: 'teal',
   description: '', bannerImage: '',
-  date: '', endDate: '', timezone: 'America/Toronto',
+  date: '', endDate: '', timezone: 'America/Toronto', recurrence: 'none', recurrenceEnd: '',
   location: '', address: '', parkingAvailable: false, parkingNotes: '', onlineLink: '', thingsToKnow: '',
   ticketName: 'General Admission', ticketDescription: '', ticketQuantity: '', ticketUnlimited: true, maxTicketsPerPerson: '',
   ticketTiers: [{ id: '1', name: 'General Admission', description: '', isFree: true, price: '', quantity: '', unlimited: true }],
   ageGate: 0, requiresCertification: false, certificationNote: '', dressCode: '', customQuestions: [],
   faqs: [],
+  speakers: [],
+  agenda: [],
+  promoCodes: [],
   requiredFields: ['guestName', 'guestEmail'],
   emailInviteList: '', visibility: 'PUBLIC', confirmationMessage: '',
 };
@@ -85,8 +95,9 @@ const STEPS = [
   { num: 5, label: 'Tickets' },
   { num: 6, label: 'Requirements' },
   { num: 7, label: 'FAQ' },
-  { num: 8, label: 'RSVP Form' },
-  { num: 9, label: 'Launch' },
+  { num: 8, label: 'Speakers' },
+  { num: 9, label: 'RSVP Form' },
+  { num: 10, label: 'Launch' },
 ];
 
 const CATEGORIES = [
@@ -380,6 +391,40 @@ function Step3({ data, setData }: { data: WizardData; setData: (d: Partial<Wizar
         <Input label="End Date & Time" type="datetime-local" value={data.endDate} onChange={(e) => setData({ endDate: e.target.value })} />
       </div>
       <Select label="Timezone" options={TIMEZONES} value={data.timezone} onChange={(e) => setData({ timezone: e.target.value })} />
+
+      {/* Recurring Events */}
+      <div className="space-y-3">
+        <Select
+          label="Recurrence"
+          value={data.recurrence}
+          onChange={(e) => setData({ recurrence: e.target.value as WizardData['recurrence'] })}
+          options={[
+            { value: 'none', label: 'Does not repeat' },
+            { value: 'daily', label: 'Daily' },
+            { value: 'weekly', label: 'Weekly' },
+            { value: 'biweekly', label: 'Every 2 weeks' },
+            { value: 'monthly', label: 'Monthly' },
+          ]}
+        />
+        {data.recurrence !== 'none' && (
+          <Input
+            label="Repeat until (optional)"
+            type="date"
+            value={data.recurrenceEnd}
+            onChange={(e) => setData({ recurrenceEnd: e.target.value })}
+          />
+        )}
+        {data.recurrence !== 'none' && (
+          <div className="p-3 rounded-xl text-xs" style={{ background: 'rgba(156,107,255,0.08)', border: '1px solid rgba(156,107,255,0.2)', color: '#9c6bff' }}>
+            🔁 This event will repeat{' '}
+            {data.recurrence === 'daily' ? 'every day' :
+             data.recurrence === 'weekly' ? 'every week' :
+             data.recurrence === 'biweekly' ? 'every 2 weeks' : 'every month'}
+            {data.recurrenceEnd ? ` until ${new Date(data.recurrenceEnd).toLocaleDateString('en-CA', { month: 'long', day: 'numeric', year: 'numeric' })}` : ''}.
+          </div>
+        )}
+      </div>
+
       {data.date && (
         <div className="p-4 rounded-xl text-sm" style={{ background: 'rgba(0,229,204,0.06)', border: '1px solid rgba(0,229,204,0.15)' }}>
           <p className="text-[#00e5cc] font-semibold">📅 {new Date(data.date).toLocaleDateString('en-CA', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
@@ -571,6 +616,88 @@ function Step5({ data, setData }: { data: WizardData; setData: (d: Partial<Wizar
         onChange={(e) => setData({ maxTicketsPerPerson: e.target.value })}
         hint="Optional limit per guest"
       />
+
+      {/* ── Promo / Discount Codes ── */}
+      <div>
+        <div className="flex items-center justify-between mb-3">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-widest text-[#00e5cc]">Promo & Discount Codes</p>
+            <p className="text-xs text-[#4d7a90] mt-0.5">Create codes guests enter at RSVP for discounts or free access.</p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setData({ promoCodes: [...(data.promoCodes ?? []), { id: Math.random().toString(36).slice(2), code: '', discountType: 'percent', discountValue: '', usageLimit: '', unlimited: true }] })}
+            className="text-xs font-semibold text-[#00e5cc] hover:text-[#00b8a3] transition-colors"
+          >
+            + Add Code
+          </button>
+        </div>
+        {(data.promoCodes ?? []).length === 0 && (
+          <p className="text-xs text-[#2d5268] py-2">No promo codes yet.</p>
+        )}
+        <div className="space-y-3">
+          {(data.promoCodes ?? []).map((pc, idx) => (
+            <div key={pc.id} className="rounded-xl p-4 space-y-3" style={{ background: 'rgba(12,26,31,0.8)', border: '1px solid rgba(0,229,204,0.08)' }}>
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-[#4d7a90]">Code {idx + 1}</span>
+                <button type="button"
+                  onClick={() => setData({ promoCodes: (data.promoCodes ?? []).filter((c) => c.id !== pc.id) })}
+                  className="text-xs text-[#4d7a90] hover:text-[#ff3cac] transition-colors"
+                >Remove</button>
+              </div>
+              <Input
+                label="Code (e.g. EARLYBIRD2024)"
+                value={pc.code}
+                onChange={(e) => setData({ promoCodes: (data.promoCodes ?? []).map((c) => c.id === pc.id ? { ...c, code: e.target.value.toUpperCase() } : c) })}
+                placeholder="PROMO20"
+              />
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="label-base">Discount Type</label>
+                  <div className="flex gap-2">
+                    {([{ val: 'percent', label: '% Off' }, { val: 'flat', label: '$ Off' }] as const).map(({ val, label }) => (
+                      <button key={val} type="button"
+                        onClick={() => setData({ promoCodes: (data.promoCodes ?? []).map((c) => c.id === pc.id ? { ...c, discountType: val } : c) })}
+                        className={cn('px-3 py-1.5 rounded-lg border text-xs font-medium transition-all', pc.discountType === val ? 'border-[#00e5cc] bg-[rgba(0,229,204,0.1)] text-[#00e5cc]' : 'border-[rgba(0,229,204,0.08)] text-[#4d7a90] hover:border-[rgba(0,229,204,0.2)]')}
+                      >{label}</button>
+                    ))}
+                  </div>
+                </div>
+                <Input
+                  type="number"
+                  min="0"
+                  max={pc.discountType === 'percent' ? '100' : undefined}
+                  label={pc.discountType === 'percent' ? 'Percent Off' : 'Amount Off (CAD $)'}
+                  value={pc.discountValue}
+                  onChange={(e) => setData({ promoCodes: (data.promoCodes ?? []).map((c) => c.id === pc.id ? { ...c, discountValue: e.target.value } : c) })}
+                  placeholder={pc.discountType === 'percent' ? '20' : '10.00'}
+                />
+              </div>
+              <div>
+                <label className="label-base">Usage Limit</label>
+                <div className="flex gap-2 mb-2">
+                  {([{ val: true, label: 'Unlimited' }, { val: false, label: 'Limited' }] as const).map(({ val, label }) => (
+                    <button key={String(val)} type="button"
+                      onClick={() => setData({ promoCodes: (data.promoCodes ?? []).map((c) => c.id === pc.id ? { ...c, unlimited: val } : c) })}
+                      className={cn('px-3 py-1.5 rounded-lg border text-xs font-medium transition-all', pc.unlimited === val ? 'border-[#00e5cc] bg-[rgba(0,229,204,0.1)] text-[#00e5cc]' : 'border-[rgba(0,229,204,0.08)] text-[#4d7a90] hover:border-[rgba(0,229,204,0.2)]')}
+                    >{label}</button>
+                  ))}
+                </div>
+                {!pc.unlimited && (
+                  <Input
+                    type="number"
+                    min="1"
+                    value={pc.usageLimit}
+                    onChange={(e) => setData({ promoCodes: (data.promoCodes ?? []).map((c) => c.id === pc.id ? { ...c, usageLimit: e.target.value } : c) })}
+                    placeholder="e.g. 50"
+                    hint="Max times this code can be used"
+                  />
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
@@ -814,8 +941,128 @@ function Step7({ data }: { data: WizardData }) {
   );
 }
 
-// ─── Step 8 ───────────────────────────────────────────────────────────────────
-function Step8({ data, setData, onSubmit, submitting }: { data: WizardData; setData: (d: Partial<WizardData>) => void; onSubmit: (status: 'DRAFT' | 'LIVE') => void; submitting: boolean }) {
+// ─── Step 8: Speakers & Agenda ────────────────────────────────────────────────
+function Step8Speakers({ data, setData }: { data: WizardData; setData: (d: Partial<WizardData>) => void }) {
+  const speakers = data.speakers ?? [];
+  const agenda = data.agenda ?? [];
+
+  const addSpeaker = () => {
+    const s: Speaker = { id: Math.random().toString(36).slice(2), name: '', title: '', bio: '', photoUrl: '', linkedin: '', twitter: '' };
+    setData({ speakers: [...speakers, s] });
+  };
+
+  const updateSpeaker = (id: string, patch: Partial<Speaker>) =>
+    setData({ speakers: speakers.map((s) => s.id === id ? { ...s, ...patch } : s) });
+
+  const removeSpeaker = (id: string) =>
+    setData({ speakers: speakers.filter((s) => s.id !== id) });
+
+  const addAgendaItem = () => {
+    const item: AgendaItem = { id: Math.random().toString(36).slice(2), time: '', title: '', description: '', speakerId: '', duration: '30' };
+    setData({ agenda: [...agenda, item] });
+  };
+
+  const updateAgenda = (id: string, patch: Partial<AgendaItem>) =>
+    setData({ agenda: agenda.map((a) => a.id === id ? { ...a, ...patch } : a) });
+
+  const removeAgenda = (id: string) =>
+    setData({ agenda: agenda.filter((a) => a.id !== id) });
+
+  return (
+    <div className="space-y-8">
+      <div>
+        <h2 className="text-xl font-black text-[#e8f4f8] mb-1" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>Speakers &amp; Agenda</h2>
+        <p className="text-sm text-[#4d7a90]">Optional — add speakers and a schedule so attendees know what to expect.</p>
+      </div>
+
+      {/* Speakers */}
+      <div className="space-y-3">
+        <h3 className="text-xs font-bold uppercase tracking-widest text-[#00e5cc]">Speakers</h3>
+        {speakers.map((s, idx) => (
+          <div key={s.id} className="p-4 rounded-xl space-y-3" style={{ background: 'rgba(12,26,31,0.7)', border: '1px solid rgba(0,229,204,0.1)' }}>
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-[#2d5268] uppercase tracking-wider">Speaker {idx + 1}</span>
+              <button type="button" onClick={() => removeSpeaker(s.id)} className="p-1 rounded text-[#4d7a90] hover:text-[#ff3cac] transition-colors">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <Input label="Full Name *" placeholder="e.g. Alex Chen" value={s.name} onChange={(e) => updateSpeaker(s.id, { name: e.target.value })} />
+              <Input label="Title / Role" placeholder="e.g. VP of Marketing, Acme Co." value={s.title} onChange={(e) => updateSpeaker(s.id, { title: e.target.value })} />
+              <Input label="Photo URL" type="url" placeholder="https://cdn.example.com/photo.jpg" value={s.photoUrl} onChange={(e) => updateSpeaker(s.id, { photoUrl: e.target.value })} />
+              <Input label="LinkedIn URL" type="url" placeholder="https://linkedin.com/in/..." value={s.linkedin} onChange={(e) => updateSpeaker(s.id, { linkedin: e.target.value })} />
+            </div>
+            <Textarea label="Bio (optional)" placeholder="A short bio visible to attendees on the event page." rows={2} value={s.bio} onChange={(e) => updateSpeaker(s.id, { bio: e.target.value })} />
+            {s.photoUrl && (
+              <div className="flex items-center gap-3 mt-1">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={s.photoUrl} alt={s.name} className="w-10 h-10 rounded-full object-cover flex-shrink-0" />
+                <span className="text-xs text-[#4d7a90]">Photo preview</span>
+              </div>
+            )}
+          </div>
+        ))}
+        <button
+          type="button"
+          onClick={addSpeaker}
+          className="w-full py-3 rounded-xl border-2 border-dashed text-sm font-medium text-[#4d7a90] hover:text-[#00e5cc] hover:border-[rgba(0,229,204,0.3)] transition-all flex items-center justify-center gap-2"
+          style={{ borderColor: 'rgba(0,229,204,0.12)' }}
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+          Add Speaker
+        </button>
+      </div>
+
+      {/* Agenda */}
+      <div className="space-y-3">
+        <h3 className="text-xs font-bold uppercase tracking-widest text-[#00e5cc]">Schedule / Agenda</h3>
+        {agenda.map((item, idx) => (
+          <div key={item.id} className="p-4 rounded-xl space-y-3" style={{ background: 'rgba(12,26,31,0.7)', border: '1px solid rgba(0,229,204,0.1)' }}>
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold text-[#2d5268] uppercase tracking-wider">Slot {idx + 1}</span>
+              <button type="button" onClick={() => removeAgenda(item.id)} className="p-1 rounded text-[#4d7a90] hover:text-[#ff3cac] transition-colors">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              <Input label="Time" placeholder="e.g. 6:30 PM" value={item.time} onChange={(e) => updateAgenda(item.id, { time: e.target.value })} />
+              <Input label="Duration (min)" type="number" placeholder="30" value={item.duration} onChange={(e) => updateAgenda(item.id, { duration: e.target.value })} />
+              {speakers.length > 0 && (
+                <Select
+                  label="Speaker"
+                  value={item.speakerId}
+                  onChange={(e) => updateAgenda(item.id, { speakerId: e.target.value })}
+                  options={[{ value: '', label: '— No speaker —' }, ...speakers.filter(s => s.name).map(s => ({ value: s.id, label: s.name }))]}
+                />
+              )}
+            </div>
+            <Input label="Session Title *" placeholder="e.g. Opening Remarks, Product Deep-Dive, Networking" value={item.title} onChange={(e) => updateAgenda(item.id, { title: e.target.value })} />
+            <Input label="Description (optional)" placeholder="What will be covered in this session?" value={item.description} onChange={(e) => updateAgenda(item.id, { description: e.target.value })} />
+          </div>
+        ))}
+        <button
+          type="button"
+          onClick={addAgendaItem}
+          className="w-full py-3 rounded-xl border-2 border-dashed text-sm font-medium text-[#4d7a90] hover:text-[#00e5cc] hover:border-[rgba(0,229,204,0.3)] transition-all flex items-center justify-center gap-2"
+          style={{ borderColor: 'rgba(0,229,204,0.12)' }}
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+          Add Agenda Slot
+        </button>
+      </div>
+
+      {speakers.length === 0 && agenda.length === 0 && (
+        <div className="rounded-xl p-4 text-sm" style={{ background: 'rgba(0,229,204,0.04)', border: '1px solid rgba(0,229,204,0.1)' }}>
+          <p className="text-[#4d7a90]">💡 This step is optional. Events with speakers and a detailed agenda get significantly higher attendee confidence before RSVPing.</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ─── Step 9: RSVP Form Preview ───────────────────────────────────────────────
+// ─── Step 10: Invite & Launch ─────────────────────────────────────────────────
+function Step10Launch({ data, setData, onSubmit, submitting }: { data: WizardData; setData: (d: Partial<WizardData>) => void; onSubmit: (status: 'DRAFT' | 'LIVE') => void; submitting: boolean }) {
   return (
     <div className="space-y-6">
       <div>
@@ -952,7 +1199,7 @@ export default function NewEventPage() {
   }, []);
 
   const goNext = () => {
-    if (step < 9) { setDirection(1); setStep((s) => s + 1); }
+    if (step < 10) { setDirection(1); setStep((s) => s + 1); }
   };
 
   const goPrev = () => {
@@ -977,6 +1224,9 @@ export default function NewEventPage() {
         maxTicketsPerPerson: parseInt(data.maxTicketsPerPerson) || null,
         customQuestions: data.customQuestions,
         faqs: data.faqs,
+        speakers: data.speakers,
+        agenda: data.agenda,
+        promoCodes: data.promoCodes,
       };
 
       const res = await fetch('/api/events', {
@@ -1014,8 +1264,9 @@ export default function NewEventPage() {
     <Step5 key={5} data={data} setData={setData} />,
     <Step6 key={6} data={data} setData={setData} />,
     <Step7Faq key={7} data={data} setData={setData} />,
-    <Step7 key={8} data={data} />,
-    <Step8 key={9} data={data} setData={setData} onSubmit={handleSubmit} submitting={submitting} />,
+    <Step8Speakers key={8} data={data} setData={setData} />,
+    <Step7 key={9} data={data} />,
+    <Step10Launch key={10} data={data} setData={setData} onSubmit={handleSubmit} submitting={submitting} />,
   ];
 
   return (
@@ -1107,18 +1358,18 @@ export default function NewEventPage() {
       </div>
 
       {/* Navigation */}
-      {step < 9 && (
+      {step < 10 && (
         <div className="flex items-center justify-between">
           <Button type="button" variant="ghost" onClick={goPrev} disabled={step === 1}>
             ← Back
           </Button>
           <span className="text-xs text-[#2d5268]">{step} / {STEPS.length}</span>
           <Button type="button" variant="primary" onClick={goNext} disabled={!canProceed()}>
-            {step === 8 ? 'Review & Launch →' : 'Next →'}
+            {step === 9 ? 'Review & Launch →' : 'Next →'}
           </Button>
         </div>
       )}
-      {step === 9 && (
+      {step === 10 && (
         <div className="flex items-center justify-between">
           <Button type="button" variant="ghost" onClick={goPrev}>← Back</Button>
           <span className="text-xs text-[#2d5268]">{step} / {STEPS.length}</span>

@@ -4,7 +4,11 @@ import { db } from '@/lib/db';
 import Link from 'next/link';
 
 async function getAdminOverview() {
-  const [totalUsers, totalEvents, totalRsvps, recentEvents, activeAnnouncements] = await Promise.all([
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+  const [totalUsers, totalEvents, totalRsvps, recentEvents, activeAnnouncements, recentReports,
+    newUsersThisMonth, liveEvents, newRsvpsThisMonth, recentUsers] = await Promise.all([
     db.user.count(),
     db.event.count(),
     db.rSVP.count(),
@@ -14,8 +18,47 @@ async function getAdminOverview() {
       select: { id: true, title: true, status: true, createdAt: true, host: { select: { name: true } }, _count: { select: { rsvps: true } } },
     }),
     db.announcement.count({ where: { isActive: true } }),
+    db.contentReport.count({ where: { status: 'OPEN' } }).catch(() => 0),
+    db.user.count({ where: { createdAt: { gte: thirtyDaysAgo } } }),
+    db.event.count({ where: { status: 'LIVE' } }),
+    db.rSVP.count({ where: { createdAt: { gte: thirtyDaysAgo } } }),
+    db.user.findMany({
+      orderBy: { createdAt: 'desc' },
+      take: 5,
+      select: { id: true, name: true, email: true, role: true, createdAt: true, _count: { select: { hostedEvents: true } } },
+    }),
   ]);
-  return { totalUsers, totalEvents, totalRsvps, recentEvents, activeAnnouncements };
+
+  // Build 7-day daily trend for new users and RSVPs
+  const sevenDaysAgo = new Date();
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+  const [weeklyUsers, weeklyRsvps] = await Promise.all([
+    db.user.findMany({ where: { createdAt: { gte: sevenDaysAgo } }, select: { createdAt: true } }),
+    db.rSVP.findMany({ where: { createdAt: { gte: sevenDaysAgo } }, select: { createdAt: true } }),
+  ]);
+
+  const dailyMap: Record<string, { users: number; rsvps: number }> = {};
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    dailyMap[d.toISOString().slice(0, 10)] = { users: 0, rsvps: 0 };
+  }
+  for (const u of weeklyUsers) {
+    const k = new Date(u.createdAt).toISOString().slice(0, 10);
+    if (k in dailyMap) dailyMap[k].users++;
+  }
+  for (const r of weeklyRsvps) {
+    const k = new Date(r.createdAt).toISOString().slice(0, 10);
+    if (k in dailyMap) dailyMap[k].rsvps++;
+  }
+  const weeklyTrend = Object.entries(dailyMap).map(([date, counts]) => ({
+    label: new Date(date + 'T12:00:00Z').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }),
+    users: counts.users,
+    rsvps: counts.rsvps,
+  }));
+
+  return { totalUsers, totalEvents, totalRsvps, recentEvents, activeAnnouncements, recentReports,
+    newUsersThisMonth, liveEvents, newRsvpsThisMonth, recentUsers, weeklyTrend };
 }
 
 export default async function AdminDashboard() {
@@ -28,8 +71,10 @@ export default async function AdminDashboard() {
   const navLinks = [
     { href: '/admin/dashboard', label: 'Overview', icon: '◈' },
     { href: '/admin/events', label: 'Events', icon: '◉' },
+    { href: '/admin/users', label: 'Users', icon: '◎' },
     { href: '/admin/content', label: 'Site Content', icon: '✦' },
     { href: '/admin/announcements', label: 'Announcements', icon: '◆' },
+    { href: '/admin/audit-log', label: 'Audit Log', icon: '◍' },
   ];
 
   const STATUS_COLORS: Record<string, string> = {

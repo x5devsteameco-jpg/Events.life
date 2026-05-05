@@ -32,27 +32,36 @@ type Props = { params: Promise<{ slug: string }> };
 
 
 export async function generateStaticParams() {
-  const events = await db.event.findMany({
-    where: { status: 'LIVE', visibility: 'PUBLIC' },
-    select: { slug: true },
-    take: 200,
-  });
-  return events.map((e) => ({ slug: e.slug }));
+  try {
+    const events = await db.event.findMany({
+      where: { status: 'LIVE', visibility: 'PUBLIC' },
+      select: { slug: true },
+      take: 200,
+    });
+    return events.map((e) => ({ slug: e.slug }));
+  } catch {
+    // DB may not have updated schema during local builds — render all pages on-demand
+    return [];
+  }
 }
 
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
-  const event = await db.event.findUnique({ where: { slug } });
-  if (!event) return { title: 'Event Not Found' };
-  return {
-    title: event.title,
-    description: event.description ?? `RSVP to ${event.title}`,
-    openGraph: {
+  try {
+    const event = await db.event.findUnique({ where: { slug } });
+    if (!event) return { title: 'Event Not Found' };
+    return {
       title: event.title,
-      description: event.description ?? '',
-      images: event.bannerImage ? [event.bannerImage] : [],
-    },
-  };
+      description: event.description ?? `RSVP to ${event.title}`,
+      openGraph: {
+        title: event.title,
+        description: event.description ?? '',
+        images: event.bannerImage ? [event.bannerImage] : [],
+      },
+    };
+  } catch {
+    return { title: 'Event' };
+  }
 }
 
 export default async function PublicEventPage({ params }: Props) {
@@ -64,6 +73,7 @@ export default async function PublicEventPage({ params }: Props) {
     include: {
       host: { select: { id: true, name: true, company: true, image: true, position: true, bio: true, organizerLogo: true, themePreset: true, instagram: true, linkedin: true, website: true, twitter: true } },
       _count: { select: { rsvps: true } },
+      tickets: { where: { isVisible: true }, orderBy: { price: 'asc' } },
     },
   });
 
@@ -118,6 +128,11 @@ export default async function PublicEventPage({ params }: Props) {
     catch { return []; }
   })();
 
+  const parsedPromoCodes = (() => {
+    try { return event.promoCodes ? JSON.parse(event.promoCodes as string) : []; }
+    catch { return []; }
+  })();
+
   // JSON-LD structured data for SEO
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -157,6 +172,15 @@ export default async function PublicEventPage({ params }: Props) {
         </Link>
         <div className="flex items-center gap-3">
           <SaveEventButton eventId={event.id} initialSaved={isSaved} size="sm" />
+          <a
+            href={`/api/events/${event.id}/ics`}
+            download
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border border-[rgba(0,229,204,0.2)] text-[#00e5cc] hover:bg-[rgba(0,229,204,0.08)] transition-all"
+            title="Add to Calendar"
+          >
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Add to Calendar
+          </a>
           <ShareButton title={event.title} />
           <Badge variant={statusToBadgeVariant(event.status as EventStatus)}>{event.status}</Badge>
         </div>
@@ -246,6 +270,7 @@ export default async function PublicEventPage({ params }: Props) {
         certificationNote={event.certificationNote ?? ''}
         customQuestions={parsedQuestions}
         confirmationMessage={event.confirmationMessage ?? undefined}
+        promoCodes={parsedPromoCodes}
       />
 
       <div className="max-w-4xl mx-auto px-4 pt-6 pb-24 lg:pb-10">
@@ -257,11 +282,9 @@ export default async function PublicEventPage({ params }: Props) {
             <div className="p-4 rounded-xl space-y-3" style={{ background: 'rgba(12,26,31,0.5)', border: '1px solid var(--theme-accent-20)' }}>
               <div className="flex items-center gap-3">
                 {event.host.organizerLogo ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={event.host.organizerLogo} alt="Organizer logo" className="h-10 max-w-[100px] object-contain rounded flex-shrink-0" />
+                  <Image src={event.host.organizerLogo} alt="Organizer logo" width={100} height={40} className="h-10 max-w-[100px] object-contain rounded flex-shrink-0" />
                 ) : event.host.image ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={event.host.image} alt={event.host.name ?? 'Host'} className="w-10 h-10 rounded-full object-cover flex-shrink-0" />
+                  <Image src={event.host.image} alt={event.host.name ?? 'Host'} width={40} height={40} className="w-10 h-10 rounded-full object-cover flex-shrink-0" />
                 ) : (
                   <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-[#020408] flex-shrink-0" style={{ background: 'linear-gradient(135deg, #00c4a8, #00e5cc)' }}>
                     {(event.host.name?.[0] ?? 'H').toUpperCase()}
@@ -328,14 +351,21 @@ export default async function PublicEventPage({ params }: Props) {
                     {event.address && <p className="text-xs text-[#4d7a90]">{event.address}</p>}
                     {event.parkingAvailable && <p className="text-xs text-[#00e5cc]">Parking available</p>}
                     {(event.location || event.address) && (
-                      <a
-                        href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent([event.location, event.address].filter(Boolean).join(', '))}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-xs text-[#00e5cc] hover:underline"
-                      >
-                        View on Maps ↗
-                      </a>
+                      <>
+                        <a
+                          href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent([event.location, event.address].filter(Boolean).join(', '))}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg transition-all hover:opacity-80"
+                          style={{ background: 'rgba(0,229,204,0.06)', border: '1px solid rgba(0,229,204,0.18)', color: '#00e5cc' }}
+                        >
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                            <circle cx="12" cy="10" r="3"/>
+                          </svg>
+                          Get Directions ↗
+                        </a>
+                      </>
                     )}
                   </>
                 )}
@@ -374,6 +404,52 @@ export default async function PublicEventPage({ params }: Props) {
               </FadeIn>
             )}
 
+            {/* Ticket Tiers */}
+            {event.tickets && event.tickets.length > 0 && (
+              <FadeIn delay={0.1}>
+                <div>
+                  <h2 className="text-sm font-bold text-[#e8f4f8] uppercase tracking-wider mb-3">Tickets</h2>
+                  <div className="space-y-2">
+                    {event.tickets.map((tier) => {
+                      const sold = tier.quantitySold ?? 0;
+                      const cap = tier.quantity;
+                      const remaining = cap != null ? cap - sold : null;
+                      const pct = cap != null ? Math.min(100, Math.round((sold / cap) * 100)) : 0;
+                      return (
+                        <div key={tier.id} className="flex items-start gap-4 p-4 rounded-xl" style={{ background: 'rgba(12,26,31,0.6)', border: '1px solid rgba(0,229,204,0.08)' }}>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="font-semibold text-sm text-[#e8f4f8]">{tier.name}</span>
+                              {tier.isFree && (
+                                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ background: 'rgba(0,229,204,0.08)', border: '1px solid rgba(0,229,204,0.2)', color: '#00e5cc' }}>FREE</span>
+                              )}
+                            </div>
+                            {tier.description && <p className="text-xs text-[#4d7a90] mt-0.5">{tier.description}</p>}
+                            {cap != null && (
+                              <div className="mt-2">
+                                <div className="flex items-center justify-between text-[10px] text-[#2d5268] mb-1">
+                                  <span>{sold} claimed</span>
+                                  {remaining != null && <span>{remaining} remaining</span>}
+                                </div>
+                                <div className="h-1 rounded-full overflow-hidden" style={{ background: 'rgba(0,229,204,0.08)' }}>
+                                  <div className="h-full rounded-full" style={{ width: `${pct}%`, background: pct >= 90 ? '#ff3cac' : 'linear-gradient(90deg, #00c4a8, #00e5cc)' }} />
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                          <div className="text-right flex-shrink-0">
+                            <p className="font-black text-lg" style={{ color: tier.isFree ? '#00e5cc' : '#f59e0b' }}>
+                              {tier.isFree ? 'Free' : `$${tier.price.toFixed(2)}`}
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </FadeIn>
+            )}
+
             {/* Certification */}
             {event.requiresCertification && event.certificationNote && (
               <div className="p-5 rounded-xl" style={{ background: 'rgba(255,60,172,0.04)', border: '1px solid rgba(255,60,172,0.12)' }}>
@@ -406,6 +482,81 @@ export default async function PublicEventPage({ params }: Props) {
               let faqList: { id: string; question: string; answer: string }[] = [];
               try { faqList = JSON.parse(event.faqs as string); } catch { /* ignore */ }
               return faqList.length > 0 ? <FAQAccordion faqs={faqList} /> : null;
+            })()}
+
+            {/* Speakers */}
+            {event.speakers && (() => {
+              type Speaker = { id: string; name: string; title: string; bio: string; photoUrl: string; linkedin: string; twitter: string };
+              let speakerList: Speaker[] = [];
+              try { speakerList = JSON.parse(event.speakers as string); } catch { /* ignore */ }
+              return speakerList.length > 0 ? (
+                <FadeIn>
+                  <div className="space-y-4">
+                    <h3 className="text-base font-semibold text-[#e8f4f8]">Speakers</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {speakerList.map((s) => (
+                        <div key={s.id} className="flex gap-3 p-4 rounded-xl" style={{ background: 'rgba(12,26,31,0.5)', border: '1px solid rgba(0,229,204,0.1)' }}>
+                          {s.photoUrl ? (
+                            <Image src={s.photoUrl} alt={s.name} width={48} height={48} className="w-12 h-12 rounded-full object-cover flex-shrink-0" />
+                          ) : (
+                            <div className="w-12 h-12 rounded-full flex items-center justify-center text-base font-bold text-[#020408] flex-shrink-0" style={{ background: 'linear-gradient(135deg, #00c4a8, #00e5cc)' }}>
+                              {s.name[0]?.toUpperCase() ?? '?'}
+                            </div>
+                          )}
+                          <div className="min-w-0">
+                            <p className="text-sm font-semibold text-[#e8f4f8] truncate">{s.name}</p>
+                            {s.title && <p className="text-xs text-[#4d7a90] truncate">{s.title}</p>}
+                            {s.bio && <p className="text-xs text-[#7ba3b5] mt-1 line-clamp-2">{s.bio}</p>}
+                            <div className="flex gap-2 mt-2">
+                              {s.linkedin && <a href={s.linkedin} target="_blank" rel="noopener noreferrer" className="text-xs text-[#00e5cc] hover:underline">LinkedIn</a>}
+                              {s.twitter && <a href={s.twitter} target="_blank" rel="noopener noreferrer" className="text-xs text-[#00e5cc] hover:underline">Twitter</a>}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </FadeIn>
+              ) : null;
+            })()}
+
+            {/* Agenda */}
+            {event.agenda && (() => {
+              type AgendaItem = { id: string; time: string; title: string; description: string; speakerId: string; duration: string };
+              type Speaker = { id: string; name: string };
+              let agendaList: AgendaItem[] = [];
+              let speakerMap: Record<string, string> = {};
+              try { agendaList = JSON.parse(event.agenda as string); } catch { /* ignore */ }
+              if (event.speakers) {
+                try {
+                  const sp: Speaker[] = JSON.parse(event.speakers as string);
+                  speakerMap = Object.fromEntries(sp.map((s) => [s.id, s.name]));
+                } catch { /* ignore */ }
+              }
+              return agendaList.length > 0 ? (
+                <FadeIn>
+                  <div className="space-y-4">
+                    <h3 className="text-base font-semibold text-[#e8f4f8]">Agenda</h3>
+                    <div className="space-y-2">
+                      {agendaList.map((item, idx) => (
+                        <div key={item.id ?? idx} className="flex gap-4 p-4 rounded-xl" style={{ background: 'rgba(12,26,31,0.5)', border: '1px solid rgba(0,229,204,0.08)' }}>
+                          <div className="text-xs font-mono text-[#00e5cc] w-14 flex-shrink-0 pt-0.5">{item.time}</div>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-sm font-semibold text-[#e8f4f8]">{item.title}</p>
+                            {item.description && <p className="text-xs text-[#7ba3b5] mt-0.5">{item.description}</p>}
+                            <div className="flex items-center gap-3 mt-1">
+                              {item.speakerId && speakerMap[item.speakerId] && (
+                                <span className="text-xs text-[#4d7a90]">{speakerMap[item.speakerId]}</span>
+                              )}
+                              {item.duration && <span className="text-xs text-[#4d7a90]">· {item.duration}</span>}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </FadeIn>
+              ) : null;
             })()}
 
             {/* Capacity */}
@@ -450,6 +601,7 @@ export default async function PublicEventPage({ params }: Props) {
                     certificationNote={event.certificationNote ?? ''}
                     customQuestions={parsedQuestions}
                     confirmationMessage={event.confirmationMessage ?? undefined}
+                    promoCodes={parsedPromoCodes}
                   />
                 </AgeGate>
               ) : (
@@ -466,6 +618,7 @@ export default async function PublicEventPage({ params }: Props) {
                   certificationNote={event.certificationNote ?? ''}
                   customQuestions={parsedQuestions}
                   confirmationMessage={event.confirmationMessage ?? undefined}
+                  promoCodes={parsedPromoCodes}
                 />
               )}
             </div>
@@ -490,6 +643,7 @@ function RSVPFormWrapper(props: {
   certificationNote: string;
   customQuestions: import('@/lib/types').CustomQuestion[];
   confirmationMessage?: string;
+  promoCodes?: { id: string; code: string; discountType: 'percent' | 'flat'; discountValue: string; usageLimit: string; unlimited: boolean }[];
 }) {
   if (props.isFull) {
     return (
@@ -509,6 +663,6 @@ function RSVPFormWrapper(props: {
       </div>
     );
   }
-  return <RSVPForm eventId={props.eventId} title={props.title} eventDate={props.eventDate} eventEndDate={props.eventEndDate} eventLocation={props.eventLocation} eventSlug={props.eventSlug} requiresCertification={props.requiresCertification} certificationNote={props.certificationNote} customQuestions={props.customQuestions} confirmationMessage={props.confirmationMessage} />;
+  return <RSVPForm eventId={props.eventId} title={props.title} eventDate={props.eventDate} eventEndDate={props.eventEndDate} eventLocation={props.eventLocation} eventSlug={props.eventSlug} requiresCertification={props.requiresCertification} certificationNote={props.certificationNote} customQuestions={props.customQuestions} confirmationMessage={props.confirmationMessage} promoCodes={props.promoCodes} />;
 
 }

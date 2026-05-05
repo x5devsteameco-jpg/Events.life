@@ -23,6 +23,15 @@ const THEME_ACCENT: Record<string, string> = {
 
 type Props = { params: Promise<{ id: string }> };
 
+export async function generateStaticParams() {
+  const users = await db.user.findMany({
+    where: { role: { in: ['HOST', 'ADMIN'] } },
+    select: { id: true },
+    take: 100,
+  });
+  return users.map((u) => ({ id: u.id }));
+}
+
 export async function generateMetadata({ params }: Props) {
   const { id } = await params;
   const user = await db.user.findUnique({ where: { id }, select: { name: true, company: true } });

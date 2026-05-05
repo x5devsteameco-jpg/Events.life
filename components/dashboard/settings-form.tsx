@@ -310,6 +310,76 @@ export function SettingsForm({ initialData }: Props) {
             );
           })()}
 
+          {/* Live Profile Preview */}
+          <div className="rounded-2xl overflow-hidden" style={{ border: '1px solid rgba(0,229,204,0.12)' }}>
+            <div className="px-4 py-2.5 flex items-center gap-2" style={{ background: 'rgba(0,229,204,0.06)', borderBottom: '1px solid rgba(0,229,204,0.08)' }}>
+              <span className="w-2 h-2 rounded-full bg-[#00e5cc] animate-pulse" />
+              <span className="text-xs font-bold text-[#00e5cc] uppercase tracking-wider">Live Preview — How attendees see your profile</span>
+            </div>
+            {/* Banner */}
+            <div className="relative h-20 overflow-hidden" style={{ background: watch('bannerUrl') ? undefined : 'linear-gradient(135deg, rgba(0,229,204,0.06), rgba(0,180,150,0.03))' }}>
+              {watch('bannerUrl') && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={watch('bannerUrl')} alt="" className="w-full h-full object-cover opacity-60" aria-hidden="true" />
+              )}
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[rgba(6,13,16,0.8)]" aria-hidden="true" />
+            </div>
+            {/* Profile card body */}
+            <div className="px-5 py-4" style={{ background: 'rgba(6,13,16,0.7)' }}>
+              <div className="flex items-start gap-4 -mt-8">
+                {/* Avatar */}
+                {watch('image') ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={watch('image')} alt="" className="w-14 h-14 rounded-2xl object-cover border-2 flex-shrink-0" style={{ borderColor: THEME_PRESETS.find(p => p.id === watch('themePreset'))?.accent ?? '#00e5cc' }} aria-hidden="true" />
+                ) : (
+                  <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-xl font-black text-[#020408] border-2 flex-shrink-0" style={{ background: 'linear-gradient(135deg, #00c4a8, #00e5cc)', borderColor: THEME_PRESETS.find(p => p.id === watch('themePreset'))?.accent ?? '#00e5cc' }}>
+                    {(watch('name')?.[0] ?? '?').toUpperCase()}
+                  </div>
+                )}
+                <div className="pt-8 min-w-0 flex-1">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <p className="font-bold text-[#e8f4f8] text-sm">{watch('name') || 'Your Name'}</p>
+                    {watch('organizerLogo') && (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={watch('organizerLogo')} alt="" className="h-5 max-w-[60px] object-contain opacity-80" aria-hidden="true" />
+                    )}
+                  </div>
+                  {(watch('position') || watch('company')) && (
+                    <p className="text-xs mt-0.5" style={{ color: THEME_PRESETS.find(p => p.id === watch('themePreset'))?.accent ?? '#00e5cc' }}>
+                      {[watch('position'), watch('company')].filter(Boolean).join(' · ')}
+                    </p>
+                  )}
+                  {watch('bio') && (
+                    <p className="text-xs text-[#7aafc4] mt-1.5 line-clamp-2">{watch('bio')}</p>
+                  )}
+                  {/* Social links preview */}
+                  <div className="flex items-center gap-2 mt-2 flex-wrap">
+                    {watch('instagram') && (
+                      <span className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: 'rgba(255,60,172,0.08)', color: '#ff3cac', border: '1px solid rgba(255,60,172,0.2)' }}>
+                        IG {watch('instagram')}
+                      </span>
+                    )}
+                    {watch('twitter') && (
+                      <span className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: 'rgba(56,189,248,0.08)', color: '#38bdf8', border: '1px solid rgba(56,189,248,0.2)' }}>
+                        𝕏 {watch('twitter')}
+                      </span>
+                    )}
+                    {watch('linkedin') && (
+                      <span className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: 'rgba(0,119,181,0.1)', color: '#5ba4cf', border: '1px solid rgba(91,164,207,0.2)' }}>
+                        LinkedIn
+                      </span>
+                    )}
+                    {watch('website') && (
+                      <span className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: 'rgba(0,229,204,0.06)', color: '#4d7a90', border: '1px solid rgba(0,229,204,0.12)' }}>
+                        🌐 Website
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div className="flex items-center gap-3 pt-2">
             <Button type="submit" variant="primary" loading={isSubmitting} disabled={!isDirty && !isSubmitting}>
               {saved ? '✓ Saved' : 'Save Changes'}

@@ -18,6 +18,8 @@ interface AnalyticsData {
     pending: number;
     cancelled: number;
     waitlisted: number;
+    checkedInCount: number;
+    attendanceRate: number;
     pageViewCount: number;
     conversionRate: string;
     uniqueVisitors: number;
@@ -217,6 +219,8 @@ function exportToCSV(data: AnalyticsData) {
     [],
     ['Status', 'Count'],
     ['Confirmed', data.stats.confirmed.toString()],
+    ['Checked In', data.stats.checkedInCount.toString()],
+    ['Attendance Rate', `${data.stats.attendanceRate}%`],
     ['Pending', data.stats.pending.toString()],
     ['Cancelled', data.stats.cancelled.toString()],
     ['Waitlisted', data.stats.waitlisted.toString()],
@@ -261,12 +265,13 @@ export default function AnalyticsClient({ data }: { data: AnalyticsData }) {
       <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
         <StatCard label="Total RSVPs" value={data.stats.total} color="#00e5cc" delay={0} />
         <StatCard label="Confirmed" value={data.stats.confirmed} color="#10b981" delay={0.05} />
-        <StatCard label="Pending" value={data.stats.pending} color="#f59e0b" delay={0.1} />
-        <StatCard label="Waitlisted" value={data.stats.waitlisted} color="#9c6bff" delay={0.15} />
-        <StatCard label="Page Views" value={data.stats.pageViewCount} color="#38bdf8" delay={0.2} />
-        <StatCard label="Conversion" value={`${data.stats.conversionRate}%`} sub="views → RSVP" color="#ff3cac" delay={0.25} />
-        <StatCard label="Unique Visitors" value={data.stats.uniqueVisitors} color="#8b5cf6" delay={0.3} />
-        <StatCard label="Attributed" value={data.stats.attributedViews} sub="views with UTM" color="#f97316" delay={0.35} />
+        <StatCard label="Checked In" value={data.stats.checkedInCount} sub={`${data.stats.attendanceRate}% attendance`} color="#00e5cc" delay={0.1} />
+        <StatCard label="Pending" value={data.stats.pending} color="#f59e0b" delay={0.15} />
+        <StatCard label="Waitlisted" value={data.stats.waitlisted} color="#9c6bff" delay={0.2} />
+        <StatCard label="Page Views" value={data.stats.pageViewCount} color="#38bdf8" delay={0.25} />
+        <StatCard label="Conversion" value={`${data.stats.conversionRate}%`} sub="views → RSVP" color="#ff3cac" delay={0.3} />
+        <StatCard label="Unique Visitors" value={data.stats.uniqueVisitors} color="#8b5cf6" delay={0.35} />
+        <StatCard label="Attributed" value={data.stats.attributedViews} sub="views with UTM" color="#f97316" delay={0.4} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">

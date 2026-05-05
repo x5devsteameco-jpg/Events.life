@@ -62,7 +62,7 @@ function getWeekendRange() {
   return { sat, sun };
 }
 
-async function getPublicEvents(search?: string, category?: string, dateFrom?: string, city?: string, sort?: string, online?: string, weekend?: string, dateTo?: string) {
+async function getPublicEvents(search?: string, category?: string, dateFrom?: string, city?: string, sort?: string, online?: string, weekend?: string, dateTo?: string, today?: string, thisweek?: string) {
   const orderBy = sort === 'popular'
     ? { rsvps: { _count: 'desc' as const } }
     : sort === 'newest'
@@ -71,9 +71,17 @@ async function getPublicEvents(search?: string, category?: string, dateFrom?: st
 
   const weekendRange = weekend === '1' ? getWeekendRange() : null;
 
-  // Build date filter: dateTo sets end-of-day boundary
+  // Build date filter
   let dateFilter: Record<string, Date> = {};
-  if (weekendRange) {
+  if (today === '1') {
+    const start = new Date(); start.setHours(0, 0, 0, 0);
+    const end = new Date(); end.setHours(23, 59, 59, 999);
+    dateFilter = { gte: start, lte: end };
+  } else if (thisweek === '1') {
+    const start = new Date(); start.setHours(0, 0, 0, 0);
+    const end = new Date(start.getTime() + 7 * 24 * 60 * 60 * 1000);
+    dateFilter = { gte: start, lte: end };
+  } else if (weekendRange) {
     dateFilter = { gte: weekendRange.sat, lte: weekendRange.sun };
   } else if (dateFrom && dateTo) {
     const end = new Date(dateTo);
@@ -118,14 +126,14 @@ async function getPublicEvents(search?: string, category?: string, dateFrom?: st
 export default async function BrowseEventsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ search?: string; category?: string; dateFrom?: string; dateTo?: string; city?: string; sort?: string; online?: string; weekend?: string }>;
+  searchParams: Promise<{ search?: string; category?: string; dateFrom?: string; dateTo?: string; city?: string; sort?: string; online?: string; weekend?: string; today?: string; thisweek?: string }>;
 }) {
-  const { search, category, dateFrom, dateTo, city, sort, online, weekend } = await searchParams;
+  const { search, category, dateFrom, dateTo, city, sort, online, weekend, today, thisweek } = await searchParams;
   const [events, trendingEvents] = await Promise.all([
-    getPublicEvents(search, category, dateFrom, city, sort, online, weekend, dateTo),
+    getPublicEvents(search, category, dateFrom, city, sort, online, weekend, dateTo, today, thisweek),
     getTrendingEvents(),
   ]);
-  const hasFilter = !!(search || category || city || dateFrom || dateTo || online || weekend);
+  const hasFilter = !!(search || category || city || dateFrom || dateTo || online || weekend || today || thisweek);
 
   return (
     <div className="min-h-screen" style={{ background: '#020408' }}>
@@ -270,6 +278,16 @@ export default async function BrowseEventsPage({
                 📅 This Weekend
               </span>
             )}
+            {today === '1' && (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ background: 'rgba(0,229,204,0.08)', border: '1px solid rgba(0,229,204,0.18)', color: '#00e5cc' }}>
+                ⚡ Today
+              </span>
+            )}
+            {thisweek === '1' && (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ background: 'rgba(156,107,255,0.08)', border: '1px solid rgba(156,107,255,0.18)', color: '#9c6bff' }}>
+                📆 This Week
+              </span>
+            )}
           </div>
         )}
 
@@ -355,11 +373,18 @@ export default async function BrowseEventsPage({
                 📅 This Weekend
               </a>
               <a
-                href={`/events?dateFrom=${new Date().toISOString().slice(0, 10)}&dateTo=${new Date().toISOString().slice(0, 10)}`}
+                href="/events?today=1"
                 className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold transition-all hover:-translate-y-0.5 hover:shadow-lg"
                 style={{ background: 'rgba(0,229,204,0.08)', border: '1px solid rgba(0,229,204,0.22)', color: '#00e5cc' }}
               >
                 ⚡ Happening Today
+              </a>
+              <a
+                href="/events?thisweek=1"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold transition-all hover:-translate-y-0.5 hover:shadow-lg"
+                style={{ background: 'rgba(156,107,255,0.08)', border: '1px solid rgba(156,107,255,0.22)', color: '#9c6bff' }}
+              >
+                📆 This Week
               </a>
             </div>
           </>
