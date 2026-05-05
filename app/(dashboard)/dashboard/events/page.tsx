@@ -33,8 +33,8 @@ function StatusMenu({ eventId, currentStatus, onUpdate }: { eventId: string; cur
     { status: 'LIVE', label: '◉ Publish Live', color: '#00e5cc' },
     { status: 'PRIVATE', label: '⊗ Set Private', color: '#9dd8ea' },
     { status: 'DRAFT', label: '◫ Move to Draft', color: '#4d7a90' },
-    { status: 'ENDED', label: '🏁 Mark Ended', color: '#4d7a90' },
-    { status: 'CANCELLED', label: '❌ Cancel', color: '#ff3cac' },
+    { status: 'ENDED', label: 'Mark Ended', color: '#4d7a90' },
+    { status: 'CANCELLED', label: 'Cancel', color: '#ff3cac' },
   ] as { status: EventStatus; label: string; color: string }[]).filter((o) => o.status !== currentStatus);
 
   const change = async (status: EventStatus) => {

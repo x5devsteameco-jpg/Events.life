@@ -229,7 +229,7 @@ export default function RSVPManagePage() {
                     {eventDate?.toLocaleTimeString('en-CA', { hour: '2-digit', minute: '2-digit' })}
                   </p>
                   {data.event.isOnline ? (
-                    <p className="text-sm text-[#00e5cc]">🎥 Online Event</p>
+                    <p className="text-sm text-[#00e5cc]">Online Event</p>
                   ) : data.event.location ? (
                     <p className="text-sm text-[#4d7a90]">◉ {data.event.location}</p>
                   ) : null}

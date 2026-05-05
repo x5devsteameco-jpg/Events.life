@@ -4,6 +4,7 @@ import { Sidebar } from '@/components/dashboard/sidebar';
 import { MobileNav } from '@/components/dashboard/mobile-nav';
 import { KeyboardShortcuts } from '@/components/dashboard/keyboard-shortcuts';
 import { PageTransition } from '@/components/dashboard/page-transition';
+import { ThemeApply } from '@/components/dashboard/theme-apply';
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
@@ -12,11 +13,12 @@ export default async function DashboardLayout({ children }: { children: React.Re
     redirect('/login?callbackUrl=/dashboard');
   }
 
-  const user = { name: session.user.name ?? null, email: session.user.email ?? '', image: session.user.image ?? null };
-    const role: string | undefined = session.user.role;
+  const user = { name: session.user.name ?? null, email: session.user.email ?? '', image: session.user.image ?? null, avatarConfig: (session.user as { avatarConfig?: string | null }).avatarConfig ?? null };
+  const role: string | undefined = session.user.role;
+  const themePreset = (session.user as { themePreset?: string }).themePreset ?? 'teal';
 
   return (
-    <div className="flex h-screen bg-[#020408] overflow-hidden">
+    <div className="flex h-screen bg-[#020408] overflow-hidden" data-theme={themePreset}>
       {/* Desktop sidebar — hidden on mobile */}
       <div className="hidden lg:flex">
           <Sidebar user={user} isAdmin={role === 'ADMIN'} />
@@ -59,6 +61,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
         </main>
       </div>
       <KeyboardShortcuts />
+      <ThemeApply serverTheme={themePreset} />
     </div>
   );
 }

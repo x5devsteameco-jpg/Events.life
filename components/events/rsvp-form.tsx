@@ -315,7 +315,7 @@ export function RSVPForm({ eventId, title, eventDate, eventEndDate, eventLocatio
         {requiresCertification && (
           <div className="space-y-2">
             <div className="p-3 rounded-xl text-xs" style={{ background: 'rgba(255,60,172,0.06)', border: '1px solid rgba(255,60,172,0.15)' }}>
-              <p className="text-[#ff3cac] font-semibold mb-1">📎 Certification Required</p>
+              <p className="text-[#ff3cac] font-semibold mb-1 flex items-center gap-1.5"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg> Certification Required</p>
               <p className="text-[#6b9bb0]">
                 {certificationNote
                   ? `Please attach your ${certificationNote} certificate below.`

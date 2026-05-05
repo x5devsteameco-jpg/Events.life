@@ -25,6 +25,7 @@ export default async function SettingsPage() {
       organizerLogo: true,
       bannerUrl: true,
       themePreset: true,
+      avatarConfig: true,
       instagram: true,
       linkedin: true,
       website: true,

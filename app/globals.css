@@ -23,6 +23,17 @@
   --teal-glow:  rgba(0, 229, 204, 0.25);
   --teal-glass: rgba(0, 229, 204, 0.08);
 
+  /* ── Palette-switchable accent tokens (default: teal) ── */
+  --accent:           #00c4a8;
+  --accent-bright:    #00e5cc;
+  --accent-dim:       #009e8c;
+  --accent-glow:      rgba(0, 196, 168, 0.28);
+  --accent-glass:     rgba(0, 196, 168, 0.08);
+  --accent-line:      rgba(0, 196, 168, 0.28);
+  --accent-line-soft: rgba(0, 196, 168, 0.10);
+  --accent-gradient:  linear-gradient(135deg, #009e8c 0%, #00c4a8 100%);
+  --accent-btn-text:  #020408; /* dark text on light accent */
+
   --green:      #f59e0b;
   --green-dim:  #d97706;
   --green-glow: rgba(245, 158, 11, 0.2);
@@ -772,3 +783,85 @@ input, textarea, select {
   margin: 4px 0;
 }
 
+
+/* ═══════════════════════════════════════════════════════════
+   PALETTE THEMES — applied via data-theme on .gw-dashboard
+   ═══════════════════════════════════════════════════════════ */
+
+/* Teal (default — also explicit for clarity) */
+[data-theme="teal"] {
+  --accent:           #00c4a8;
+  --accent-bright:    #00e5cc;
+  --accent-dim:       #009e8c;
+  --accent-glow:      rgba(0, 196, 168, 0.28);
+  --accent-glass:     rgba(0, 196, 168, 0.08);
+  --accent-line:      rgba(0, 196, 168, 0.28);
+  --accent-line-soft: rgba(0, 196, 168, 0.10);
+  --accent-gradient:  linear-gradient(135deg, #009e8c 0%, #00c4a8 100%);
+  --accent-btn-text:  #020408;
+}
+
+/* Violet */
+[data-theme="violet"] {
+  --accent:           #9c6bff;
+  --accent-bright:    #b48fff;
+  --accent-dim:       #7c4fd4;
+  --accent-glow:      rgba(156, 107, 255, 0.28);
+  --accent-glass:     rgba(156, 107, 255, 0.08);
+  --accent-line:      rgba(156, 107, 255, 0.28);
+  --accent-line-soft: rgba(156, 107, 255, 0.10);
+  --accent-gradient:  linear-gradient(135deg, #7c4fd4 0%, #9c6bff 100%);
+  --accent-btn-text:  #ffffff;
+}
+
+/* Rose */
+[data-theme="rose"] {
+  --accent:           #e83d9b;
+  --accent-bright:    #ff3cac;
+  --accent-dim:       #b82e77;
+  --accent-glow:      rgba(232, 61, 155, 0.28);
+  --accent-glass:     rgba(232, 61, 155, 0.08);
+  --accent-line:      rgba(232, 61, 155, 0.28);
+  --accent-line-soft: rgba(232, 61, 155, 0.10);
+  --accent-gradient:  linear-gradient(135deg, #b82e77 0%, #e83d9b 100%);
+  --accent-btn-text:  #ffffff;
+}
+
+/* Amber */
+[data-theme="amber"] {
+  --accent:           #e8940a;
+  --accent-bright:    #f59e0b;
+  --accent-dim:       #b87008;
+  --accent-glow:      rgba(232, 148, 10, 0.28);
+  --accent-glass:     rgba(232, 148, 10, 0.08);
+  --accent-line:      rgba(232, 148, 10, 0.28);
+  --accent-line-soft: rgba(232, 148, 10, 0.10);
+  --accent-gradient:  linear-gradient(135deg, #b87008 0%, #e8940a 100%);
+  --accent-btn-text:  #020408;
+}
+
+/* Sky */
+[data-theme="sky"] {
+  --accent:           #29aadf;
+  --accent-bright:    #38bdf8;
+  --accent-dim:       #0e7eb5;
+  --accent-glow:      rgba(41, 170, 223, 0.28);
+  --accent-glass:     rgba(41, 170, 223, 0.08);
+  --accent-line:      rgba(41, 170, 223, 0.28);
+  --accent-line-soft: rgba(41, 170, 223, 0.10);
+  --accent-gradient:  linear-gradient(135deg, #0e7eb5 0%, #29aadf 100%);
+  --accent-btn-text:  #020408;
+}
+
+/* Emerald */
+[data-theme="emerald"] {
+  --accent:           #10b981;
+  --accent-bright:    #34d399;
+  --accent-dim:       #0a8c61;
+  --accent-glow:      rgba(16, 185, 129, 0.28);
+  --accent-glass:     rgba(16, 185, 129, 0.08);
+  --accent-line:      rgba(16, 185, 129, 0.28);
+  --accent-line-soft: rgba(16, 185, 129, 0.10);
+  --accent-gradient:  linear-gradient(135deg, #0a8c61 0%, #10b981 100%);
+  --accent-btn-text:  #020408;
+}

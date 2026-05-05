@@ -416,7 +416,7 @@ function Step3({ data, setData }: { data: WizardData; setData: (d: Partial<Wizar
         )}
         {data.recurrence !== 'none' && (
           <div className="p-3 rounded-xl text-xs" style={{ background: 'rgba(156,107,255,0.08)', border: '1px solid rgba(156,107,255,0.2)', color: '#9c6bff' }}>
-            🔁 This event will repeat{' '}
+            This event will repeat{' '}
             {data.recurrence === 'daily' ? 'every day' :
              data.recurrence === 'weekly' ? 'every week' :
              data.recurrence === 'biweekly' ? 'every 2 weeks' : 'every month'}

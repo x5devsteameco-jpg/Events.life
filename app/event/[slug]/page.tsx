@@ -454,7 +454,7 @@ export default async function PublicEventPage({ params }: Props) {
             {event.requiresCertification && event.certificationNote && (
               <div className="p-5 rounded-xl" style={{ background: 'rgba(255,60,172,0.04)', border: '1px solid rgba(255,60,172,0.12)' }}>
                 <h3 className="text-sm font-bold text-[#ff3cac] mb-1 flex items-center gap-2">
-                  <span>🪪</span> Certification Required
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg> Certification Required
                 </h3>
                 <p className="text-sm text-[#6b9bb0]">Attendees must hold a valid {event.certificationNote} to attend this event.</p>
               </div>
@@ -648,7 +648,9 @@ function RSVPFormWrapper(props: {
   if (props.isFull) {
     return (
       <div className="p-6 rounded-2xl text-center" style={{ background: 'rgba(12,26,31,0.8)', border: '1px solid rgba(255,60,172,0.2)' }}>
-        <p className="text-2xl mb-2">😔</p>
+        <div className="w-12 h-12 mx-auto mb-2 rounded-xl flex items-center justify-center" style={{ background: 'rgba(255,60,172,0.08)' }}>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ff3cac" strokeWidth="1.8" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </div>
         <p className="text-sm font-semibold text-[#ff3cac]">Event is Full</p>
         <p className="text-xs text-[#4d7a90] mt-1">No spots remaining</p>
       </div>

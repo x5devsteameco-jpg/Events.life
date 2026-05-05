@@ -2,11 +2,12 @@
 
 import { motion, useInView, useMotionValue, useTransform, animate } from 'framer-motion';
 import { useEffect, useRef } from 'react';
+import type { ReactNode } from 'react';
 
 interface Stat {
   label: string;
   value: number;
-  icon: string;
+  icon: ReactNode;
   color: string;
 }
 
@@ -71,7 +72,8 @@ export function AnimatedStats({ stats }: { stats: Stat[] }) {
               initial={{ scale: 0.5, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: i * 0.07 + 0.18, duration: 0.35, type: 'spring', stiffness: 280 }}
-              className="text-xl"
+              className="flex items-center justify-center w-8 h-8 rounded-lg"
+              style={{ background: `${stat.color}14`, color: stat.color }}
             >
               {stat.icon}
             </motion.div>

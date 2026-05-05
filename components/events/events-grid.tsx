@@ -45,7 +45,9 @@ export function EventsGrid({ events }: Props) {
   if (events.length === 0) {
     return (
       <div className="text-center py-24 rounded-2xl" style={{ background: 'rgba(12,26,31,0.3)', border: '1px dashed rgba(0,229,204,0.1)' }}>
-        <div className="text-5xl mb-4">🔍</div>
+        <div className="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center" style={{ background: 'rgba(0,229,204,0.06)', border: '1px solid rgba(0,229,204,0.12)' }}>
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#00e5cc" strokeWidth="1.5" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
         <h2 className="text-xl font-bold text-[#e8f4f8] mb-2" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>No events found</h2>
         <p className="text-sm text-[#4d7a90] mb-6">Try adjusting your search or check back later.</p>
         <Link href="/register" className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm text-[#020408]" style={{ background: 'linear-gradient(135deg, #00c4a8, #00e5cc)' }}>

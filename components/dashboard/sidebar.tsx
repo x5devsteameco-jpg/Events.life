@@ -7,12 +7,14 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { signOut } from 'next-auth/react';
 import { cn } from '@/lib/utils';
 import { BrandLogo } from '@/components/brand/logo';
+import { AvatarCharacter, DEFAULT_AVATAR_CONFIG, type AvatarConfig } from '@/components/ui/avatar-character';
 
 interface SidebarProps {
   user: {
     name: string | null;
     email: string;
     image: string | null;
+    avatarConfig?: string | null;
   };
 }
 
@@ -128,7 +130,7 @@ export function Sidebar({ user, isAdmin = false }: SidebarProps & { isAdmin?: bo
         <button
           onClick={() => setCollapsed(!collapsed)}
           className={cn(
-            'ml-auto p-1.5 rounded-lg text-[#2d5268] hover:text-[#00e5cc] hover:bg-[rgba(0,229,204,0.06)] transition-colors flex-shrink-0',
+            'ml-auto p-1.5 rounded-lg text-[#2d5268] hover:text-[var(--accent)] hover:bg-[var(--accent-glass)] transition-colors flex-shrink-0',
             collapsed && 'mx-auto ml-0 mt-0'
           )}
           aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
@@ -150,10 +152,10 @@ export function Sidebar({ user, isAdmin = false }: SidebarProps & { isAdmin?: bo
               className={cn(
                 'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all relative group',
                 active
-                  ? 'text-[#00e5cc] bg-[rgba(0,229,204,0.1)]'
+                  ? 'text-[var(--accent)] bg-[var(--accent-glass)]'
                   : item.accent
-                  ? 'text-[#00e5cc] hover:bg-[rgba(0,229,204,0.08)]'
-                  : 'text-[#4d7a90] hover:text-[#e8f4f8] hover:bg-[rgba(0,229,204,0.04)]'
+                  ? 'text-[var(--accent)] hover:bg-[var(--accent-glass)]'
+                  : 'text-[#4d7a90] hover:text-[#e8f4f8] hover:bg-[var(--accent-glass)]'
               )}
               title={collapsed ? item.label : undefined}
             >
@@ -161,7 +163,7 @@ export function Sidebar({ user, isAdmin = false }: SidebarProps & { isAdmin?: bo
               {active && (
                 <motion.div
                   layoutId="sidebar-active"
-                  className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-4 rounded-full bg-[#00e5cc]"
+                  className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-4 rounded-full bg-[var(--accent)]"
                 />
               )}
               <span className="flex-shrink-0">{item.icon}</span>
@@ -217,11 +219,11 @@ export function Sidebar({ user, isAdmin = false }: SidebarProps & { isAdmin?: bo
             // eslint-disable-next-line @next/next/no-img-element
             <img src={user.image} alt="Profile" className="w-8 h-8 flex-shrink-0 rounded-full object-cover" />
           ) : (
-            <div
-              className="w-8 h-8 flex-shrink-0 rounded-full flex items-center justify-center text-xs font-bold text-[#020408]"
-              style={{ background: 'linear-gradient(135deg, #00c4a8, #00e5cc)' }}
-            >
-              {(user.name?.[0] ?? user.email?.[0] ?? 'U').toUpperCase()}
+            <div className="w-8 h-8 flex-shrink-0 rounded-full overflow-hidden" style={{ background: 'rgba(0,229,204,0.06)' }}>
+              <AvatarCharacter
+                config={user.avatarConfig ? (JSON.parse(user.avatarConfig) as Partial<AvatarConfig>) : DEFAULT_AVATAR_CONFIG}
+                size={32}
+              />
             </div>
           )}
           <AnimatePresence>

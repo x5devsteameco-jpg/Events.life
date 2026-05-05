@@ -31,17 +31,14 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 
 const variantClasses: Record<string, string> = {
   primary: [
-    'bg-gradient-to-r from-[#00c4a8] to-[#00e5cc]',
-    'text-[#020408] font-bold',
     'border-0',
-    'hover:shadow-[0_0_24px_rgba(0,229,204,0.4)] hover:-translate-y-0.5',
+    'hover:brightness-110 hover:-translate-y-0.5',
     'active:translate-y-0',
+    'hover:shadow-[0_0_24px_var(--accent-glow)]',
   ].join(' '),
   secondary: [
-    'bg-[rgba(0,229,204,0.08)]',
-    'text-[#00e5cc]',
-    'border border-[rgba(0,229,204,0.2)]',
-    'hover:bg-[rgba(0,229,204,0.15)] hover:border-[#00e5cc] hover:shadow-[0_0_16px_rgba(0,229,204,0.25)]',
+    'border',
+    'hover:brightness-110 hover:shadow-[0_0_16px_var(--accent-glow)]',
   ].join(' '),
   ghost: [
     'bg-transparent',
@@ -92,7 +89,28 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           className
         )}
         {...props}
-        style={variant === 'primary' ? { ...(props.style ?? {}), background: 'linear-gradient(135deg, #00c4a8, #00e5cc)', color: '#020408' } : variant === 'danger' ? { ...(props.style ?? {}), background: 'linear-gradient(135deg, #ff3cac, #cc2e89)', color: '#fff' } : props.style}
+        style={
+          variant === 'primary'
+            ? {
+                ...(props.style ?? {}),
+                background: 'var(--accent-gradient)',
+                color: 'var(--accent-btn-text)',
+              }
+            : variant === 'secondary'
+            ? {
+                ...(props.style ?? {}),
+                background: 'var(--accent-glass)',
+                color: 'var(--accent)',
+                borderColor: 'var(--accent-line)',
+              }
+            : variant === 'danger'
+            ? {
+                ...(props.style ?? {}),
+                background: 'linear-gradient(135deg, #ff3cac, #cc2e89)',
+                color: '#fff',
+              }
+            : props.style
+        }
       >
         {loading ? (
           <Spinner size={size === 'sm' ? 14 : size === 'lg' ? 18 : 16} />

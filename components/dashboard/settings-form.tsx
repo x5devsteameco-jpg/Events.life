@@ -8,15 +8,24 @@ import { motion } from 'framer-motion';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/toast';
+import { AvatarPicker } from '@/components/dashboard/avatar-picker';
+import { AvatarCharacter, DEFAULT_AVATAR_CONFIG, type AvatarConfig } from '@/components/ui/avatar-character';
 
 const THEME_PRESETS = [
-  { id: 'teal',    label: 'Teal',    accent: '#00e5cc', glow: 'rgba(0,229,204,0.3)' },
-  { id: 'violet', label: 'Violet',  accent: '#9c6bff', glow: 'rgba(156,107,255,0.3)' },
-  { id: 'rose',   label: 'Rose',    accent: '#ff3cac', glow: 'rgba(255,60,172,0.3)' },
-  { id: 'amber',  label: 'Amber',   accent: '#f59e0b', glow: 'rgba(245,158,11,0.3)' },
-  { id: 'sky',    label: 'Sky',     accent: '#38bdf8', glow: 'rgba(56,189,248,0.3)' },
-  { id: 'emerald',label: 'Emerald', accent: '#34d399', glow: 'rgba(52,211,153,0.3)' },
+  { id: 'teal',    label: 'Teal',    accent: '#00c4a8', dim: '#009e8c', glow: 'rgba(0,196,168,0.3)' },
+  { id: 'violet',  label: 'Violet',  accent: '#9c6bff', dim: '#7c4fd4', glow: 'rgba(156,107,255,0.3)' },
+  { id: 'rose',    label: 'Rose',    accent: '#e83d9b', dim: '#b82e77', glow: 'rgba(232,61,155,0.3)' },
+  { id: 'amber',   label: 'Amber',   accent: '#e8940a', dim: '#b87008', glow: 'rgba(232,148,10,0.3)' },
+  { id: 'sky',     label: 'Sky',     accent: '#29aadf', dim: '#0e7eb5', glow: 'rgba(41,170,223,0.3)' },
+  { id: 'emerald', label: 'Emerald', accent: '#10b981', dim: '#0a8c61', glow: 'rgba(16,185,129,0.3)' },
 ] as const;
+
+function hexToRgb(hex: string): string {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `${r}, ${g}, ${b}`;
+}
 type ThemePreset = typeof THEME_PRESETS[number]['id'];
 
 const profileSchema = z.object({
@@ -28,6 +37,7 @@ const profileSchema = z.object({
   organizerLogo: z.string().url('Must be a valid URL').optional().or(z.literal('')),
   bannerUrl: z.string().url('Must be a valid URL').optional().or(z.literal('')),
   themePreset: z.enum(['teal', 'violet', 'rose', 'amber', 'sky', 'emerald']).optional(),
+  avatarConfig: z.string().optional(),
   instagram: z.string().max(100).optional().or(z.literal('')),
   linkedin: z.string().max(200).optional().or(z.literal('')),
   website: z.string().url('Must be a valid URL').optional().or(z.literal('')),
@@ -47,6 +57,7 @@ interface Props {
     organizerLogo: string | null;
     bannerUrl: string | null;
     themePreset: string | null;
+    avatarConfig: string | null;
     instagram: string | null;
     linkedin: string | null;
     website: string | null;
@@ -63,6 +74,10 @@ interface Props {
 export function SettingsForm({ initialData }: Props) {
   const { toast } = useToast();
   const [saved, setSaved] = useState(false);
+  const [avatarConfig, setAvatarConfig] = useState<Partial<AvatarConfig>>(
+    initialData.avatarConfig ? (JSON.parse(initialData.avatarConfig) as Partial<AvatarConfig>) : DEFAULT_AVATAR_CONFIG
+  );
+  const [avatarPickerOpen, setAvatarPickerOpen] = useState(false);
 
   const {
     register,
@@ -81,6 +96,7 @@ export function SettingsForm({ initialData }: Props) {
       organizerLogo: initialData.organizerLogo ?? '',
       bannerUrl: initialData.bannerUrl ?? '',
       themePreset: (initialData.themePreset as ThemePreset) ?? 'teal',
+      avatarConfig: initialData.avatarConfig ?? '',
       instagram: initialData.instagram ?? '',
       linkedin: initialData.linkedin ?? '',
       website: initialData.website ?? '',
@@ -93,7 +109,7 @@ export function SettingsForm({ initialData }: Props) {
       const res = await fetch('/api/user/profile', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, avatarConfig: JSON.stringify(avatarConfig) }),
       });
       if (res.ok) {
         setSaved(true);
@@ -234,10 +250,50 @@ export function SettingsForm({ initialData }: Props) {
             )}
           </div>
 
+          {/* Avatar Character Picker */}
+          <div>
+            <label className="label-base">Dashboard Avatar Character</label>
+            <p className="text-xs text-[#4d7a90] mt-0.5 mb-3">Choose a unique character to represent you throughout the dashboard.</p>
+            <div className="rounded-2xl overflow-hidden" style={{ background: 'rgba(6,13,16,0.5)', border: '1px solid rgba(0,229,204,0.1)' }}>
+              <button
+                type="button"
+                onClick={() => setAvatarPickerOpen(v => !v)}
+                className="w-full flex items-center gap-4 px-4 py-3 transition-colors hover:bg-[rgba(0,229,204,0.04)]"
+              >
+                <AvatarCharacter
+                  config={{ ...avatarConfig, accentColor: THEME_PRESETS.find(p => p.id === watch('themePreset'))?.accent ?? '#00e5cc' }}
+                  size={52}
+                />
+                <div className="text-left">
+                  <p className="text-sm font-semibold text-[#e8f4f8]">Customize your character</p>
+                  <p className="text-xs text-[#4d7a90]">{avatarPickerOpen ? 'Click to collapse' : 'Click to open avatar editor'}</p>
+                </div>
+                <svg
+                  width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4d7a90" strokeWidth="2"
+                  className="ml-auto transition-transform"
+                  style={{ transform: avatarPickerOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
+                  aria-hidden="true"
+                >
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </button>
+              {avatarPickerOpen && (
+                <div className="px-4 pb-5 pt-2" style={{ borderTop: '1px solid rgba(0,229,204,0.08)' }}>
+                  <AvatarPicker
+                    value={{ ...avatarConfig, accentColor: THEME_PRESETS.find(p => p.id === watch('themePreset'))?.accent ?? '#00e5cc' }}
+                    onChange={setAvatarConfig}
+                    accentColor={THEME_PRESETS.find(p => p.id === watch('themePreset'))?.accent ?? '#00e5cc'}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+
           {/* Theme preset picker */}
           <div>
-            <label className="label-base">Event Page Accent Colour</label>
-            <div className="flex flex-wrap gap-2 mt-2">
+            <label className="label-base">Dashboard Accent Colour</label>
+            <p className="text-xs text-[#4d7a90] mt-0.5 mb-3">Changes button colours, nav highlights, and accents throughout your dashboard.</p>
+            <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 mt-2">
               {THEME_PRESETS.map((preset) => {
                 const selected = watch('themePreset') === preset.id;
                 return (
@@ -246,16 +302,27 @@ export function SettingsForm({ initialData }: Props) {
                     type="button"
                     onClick={() => {
                       setValue('themePreset', preset.id, { shouldDirty: true });
+                      // Apply immediately via CSS var so user sees preview
+                      const el = document.querySelector('[data-theme]') as HTMLElement | null;
+                      if (el) el.setAttribute('data-theme', preset.id);
                     }}
-                    className="flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-medium transition-all"
+                    className="flex flex-col items-center gap-2 py-3 rounded-2xl text-xs font-medium transition-all"
                     style={{
-                      background: selected ? `${preset.glow}` : 'rgba(12,26,31,0.6)',
-                      border: `1px solid ${selected ? preset.accent : 'rgba(0,229,204,0.1)'}`,
+                      background: selected ? `rgba(${hexToRgb(preset.accent)}, 0.08)` : 'rgba(12,26,31,0.6)',
+                      border: `1.5px solid ${selected ? preset.accent : 'rgba(255,255,255,0.06)'}`,
                       color: selected ? preset.accent : '#4d7a90',
-                      boxShadow: selected ? `0 0 12px ${preset.glow}` : 'none',
+                      boxShadow: selected ? `0 0 16px ${preset.glow}` : 'none',
                     }}
                   >
-                    <span className="w-3 h-3 rounded-full flex-shrink-0" style={{ background: preset.accent }} />
+                    {/* Swatch */}
+                    <span
+                      className="w-7 h-7 rounded-xl flex-shrink-0 transition-transform"
+                      style={{
+                        background: `linear-gradient(135deg, ${(preset as { dim?: string }).dim ?? preset.accent} 0%, ${preset.accent} 100%)`,
+                        transform: selected ? 'scale(1.15)' : 'scale(1)',
+                        boxShadow: selected ? `0 0 10px ${preset.glow}` : 'none',
+                      }}
+                    />
                     {preset.label}
                   </button>
                 );
@@ -383,7 +450,7 @@ export function SettingsForm({ initialData }: Props) {
                     )}
                     {watch('website') && (
                       <span className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: 'rgba(0,229,204,0.06)', color: '#4d7a90', border: '1px solid rgba(0,229,204,0.12)' }}>
-                        ⬡ Website
+                        Website
                       </span>
                     )}
                   </div>

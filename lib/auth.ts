@@ -40,6 +40,8 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
           name: user.name,
           image: user.image,
           role: user.role,
+          themePreset: user.themePreset ?? 'teal',
+          avatarConfig: user.avatarConfig ?? null,
         };
       },
     }),
@@ -49,6 +51,8 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       if (user) {
         token.id = user.id;
         token.role = (user as { role?: string }).role;
+        token.themePreset = (user as { themePreset?: string }).themePreset ?? 'teal';
+        token.avatarConfig = (user as { avatarConfig?: string | null }).avatarConfig ?? null;
       }
       return token;
     },
@@ -56,6 +60,8 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       if (token && session.user) {
         session.user.id = token.id as string;
         (session.user as { role?: string }).role = token.role as string;
+        (session.user as { themePreset?: string }).themePreset = (token.themePreset as string) ?? 'teal';
+        (session.user as { avatarConfig?: string | null }).avatarConfig = (token.avatarConfig as string | null) ?? null;
       }
       return session;
     },

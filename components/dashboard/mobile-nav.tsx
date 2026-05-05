@@ -7,18 +7,19 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { signOut } from 'next-auth/react';
 import { BrandLogo } from '@/components/brand/logo';
 import { cn } from '@/lib/utils';
+import { AvatarCharacter, DEFAULT_AVATAR_CONFIG, type AvatarConfig } from '@/components/ui/avatar-character';
 
 interface MobileNavProps {
-  user: { name: string | null; email: string; image: string | null };
+  user: { name: string | null; email: string; image: string | null; avatarConfig?: string | null };
 }
 
 const navItems = [
-  { href: '/dashboard', label: 'Dashboard', emoji: '◉' },
-  { href: '/dashboard/events', label: 'My Events', emoji: '◈' },
-  { href: '/events/new', label: 'Create Event', emoji: '✦', accent: true },
-  { href: '/dashboard/attendees', label: 'Attendees', emoji: '◎' },
-  { href: '/dashboard/saved', label: 'Saved Events', emoji: '◬' },
-  { href: '/dashboard/settings', label: 'Settings', emoji: '⬡' },
+  { href: '/dashboard', label: 'Dashboard', icon: (<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>) },
+  { href: '/dashboard/events', label: 'My Events', icon: (<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>) },
+  { href: '/events/new', label: 'Create Event', icon: (<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>), accent: true },
+  { href: '/dashboard/attendees', label: 'Attendees', icon: (<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>) },
+  { href: '/dashboard/saved', label: 'Saved Events', icon: (<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>) },
+  { href: '/dashboard/settings', label: 'Settings', icon: (<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>) },
 ];
 
 export function MobileNav({ user, isAdmin: _isAdmin = false }: MobileNavProps & { isAdmin?: boolean }) {
@@ -120,7 +121,7 @@ export function MobileNav({ user, isAdmin: _isAdmin = false }: MobileNavProps & 
                       )}
                       style={item.accent ? { background: 'linear-gradient(135deg, #00c4a8, #00e5cc)' } : undefined}
                     >
-                      <span className="text-lg" aria-hidden="true">{item.emoji}</span>
+                      <span className="flex-shrink-0" aria-hidden="true">{item.icon}</span>
                       {item.label}
                       {active && !item.accent && (
                         <span className="ml-auto w-1.5 h-1.5 rounded-full bg-[#00e5cc]" />
@@ -137,8 +138,11 @@ export function MobileNav({ user, isAdmin: _isAdmin = false }: MobileNavProps & 
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={user.image} alt="Profile" className="w-9 h-9 rounded-full object-cover flex-shrink-0" />
                   ) : (
-                    <div className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-[#020408] flex-shrink-0" style={{ background: 'linear-gradient(135deg, #00c4a8, #00e5cc)' }}>
-                      {(user.name?.[0] ?? user.email?.[0] ?? 'U').toUpperCase()}
+                    <div className="w-9 h-9 rounded-full overflow-hidden flex-shrink-0" style={{ background: 'rgba(0,229,204,0.06)' }}>
+                      <AvatarCharacter
+                        config={user.avatarConfig ? (JSON.parse(user.avatarConfig) as Partial<AvatarConfig>) : DEFAULT_AVATAR_CONFIG}
+                        size={36}
+                      />
                     </div>
                   )}
                   <div className="min-w-0 flex-1">

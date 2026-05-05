@@ -125,8 +125,9 @@ export default async function EventRSVPsPage({ params }: Props) {
                     <p className="font-semibold text-sm text-[#e8f4f8] truncate">{rsvp.guestName}</p>
                     {rsvp.position && <p className="text-xs text-[#4d7a90] truncate">{rsvp.position}</p>}
                     {rsvp.certificationUrl && (
-                      <a href={rsvp.certificationUrl} target="_blank" rel="noopener noreferrer" className="text-[10px] text-[#00e5cc] hover:underline">
-                        📎 Certification
+                      <a href={rsvp.certificationUrl} target="_blank" rel="noopener noreferrer" className="text-[10px] text-[#00e5cc] hover:underline flex items-center gap-0.5">
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+                        Certification
                       </a>
                     )}
                     {Object.keys(answers).length > 0 && (

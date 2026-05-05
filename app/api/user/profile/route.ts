@@ -12,6 +12,7 @@ const profileSchema = z.object({
   organizerLogo: z.string().url('Organizer logo must be a valid URL').optional().or(z.literal('')),
   bannerUrl: z.string().url('Banner must be a valid URL').optional().or(z.literal('')),
   themePreset: z.enum(['teal', 'violet', 'rose', 'amber', 'sky', 'emerald']).optional(),
+  avatarConfig: z.string().max(2000).optional().or(z.literal('')),
   instagram: z.string().max(100).optional().or(z.literal('')),
   linkedin: z.string().max(200).optional().or(z.literal('')),
   website: z.string().url('Must be a valid URL').optional().or(z.literal('')),
@@ -42,15 +43,24 @@ export async function PATCH(req: NextRequest) {
         organizerLogo: parsed.data.organizerLogo || null,
         bannerUrl: parsed.data.bannerUrl || null,
         themePreset: parsed.data.themePreset ?? 'teal',
+        avatarConfig: parsed.data.avatarConfig || null,
         instagram: parsed.data.instagram || null,
         linkedin: parsed.data.linkedin || null,
         website: parsed.data.website || null,
         twitter: parsed.data.twitter || null,
       },
-      select: { id: true, name: true, email: true, company: true, position: true, image: true, bio: true, organizerLogo: true, bannerUrl: true, themePreset: true, instagram: true, linkedin: true, website: true, twitter: true },
+      select: { id: true, name: true, email: true, company: true, position: true, image: true, bio: true, organizerLogo: true, bannerUrl: true, themePreset: true, avatarConfig: true, instagram: true, linkedin: true, website: true, twitter: true },
     });
 
-    return NextResponse.json({ user: updated });
+    const response = NextResponse.json({ user: updated });
+    // Set theme cookie so ThemeApply can update the UI immediately without re-login
+    response.cookies.set('gw_theme', updated.themePreset ?? 'teal', {
+      path: '/',
+      maxAge: 60 * 60 * 24 * 365,
+      sameSite: 'lax',
+      httpOnly: false, // must be readable by client JS
+    });
+    return response;
   } catch {
     return NextResponse.json({ error: 'Failed to update profile' }, { status: 500 });
   }

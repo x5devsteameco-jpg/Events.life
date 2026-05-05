@@ -20,7 +20,9 @@ export default function GlobalError({ error, reset }: ErrorProps) {
       style={{ background: '#020408' }}
     >
       <div className="max-w-md">
-        <p className="text-5xl mb-6" aria-hidden="true">⚠️</p>
+        <div className="w-16 h-16 mx-auto mb-6 rounded-2xl flex items-center justify-center" style={{ background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.15)' }} aria-hidden="true">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="1.8"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
         <h1
           className="text-2xl font-black text-[#e8f4f8] mb-3"
           style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}

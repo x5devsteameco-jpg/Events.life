@@ -71,10 +71,10 @@ export default async function DashboardPage() {
   const { events, rsvpCount, upcoming, drafts, total, rsvpTrend, recentRsvpCount, activityFeed } = await getDashboardData(session.user.id);
 
   const stats = [
-    { label: 'Total Events', value: total, icon: '◉', color: '#00e5cc' },
-    { label: 'Total RSVPs', value: rsvpCount, icon: '◈', color: '#00d4b0' },
-    { label: 'Upcoming', value: upcoming, icon: '◬', color: '#00e5cc' },
-    { label: 'Drafts', value: drafts, icon: '◫', color: '#4d7a90' },
+    { label: 'Total Events', value: total, icon: (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>), color: '#00e5cc' },
+    { label: 'Total RSVPs', value: rsvpCount, icon: (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>), color: '#00d4b0' },
+    { label: 'Upcoming', value: upcoming, icon: (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>), color: '#00e5cc' },
+    { label: 'Drafts', value: drafts, icon: (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>), color: '#4d7a90' },
   ];
 
   const quickActions = [
@@ -181,7 +181,9 @@ export default async function DashboardPage() {
           className="rounded-2xl p-16 text-center"
           style={{ background: 'rgba(12,26,31,0.4)', border: '1px dashed rgba(0,229,204,0.15)' }}
         >
-          <div className="text-5xl mb-4">🎪</div>
+          <div className="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center" style={{ background: 'rgba(0,229,204,0.08)', border: '1px solid rgba(0,229,204,0.15)' }}>
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#00e5cc" strokeWidth="1.5" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="14" x2="16" y2="14"/></svg>
+            </div>
           <h3 className="text-xl font-bold text-[#e8f4f8] mb-2" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>
             No events yet
           </h3>

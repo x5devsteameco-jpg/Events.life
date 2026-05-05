@@ -13,12 +13,12 @@ import type { EventStatus } from '@/lib/types';
 export const revalidate = 60; // ISR
 
 const THEME_ACCENT: Record<string, string> = {
-  teal:    '#00e5cc',
+  teal:    '#00c4a8',
   violet:  '#9c6bff',
-  rose:    '#ff3cac',
-  amber:   '#f59e0b',
-  sky:     '#38bdf8',
-  emerald: '#34d399',
+  rose:    '#e83d9b',
+  amber:   '#e8940a',
+  sky:     '#29aadf',
+  emerald: '#10b981',
 };
 
 type Props = { params: Promise<{ id: string }> };
