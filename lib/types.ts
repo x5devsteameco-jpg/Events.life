@@ -36,6 +36,7 @@ export interface Event {
   isOnline: boolean;
   onlineLink: string | null;
   maxAttendees: number | null;
+  waitlistEnabled: boolean;
   ageGate: number;
   parkingAvailable: boolean;
   parkingNotes: string | null;

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { rsvpSchema } from '@/lib/validations';
 import { sendRSVPConfirmation } from '@/lib/email';
+import { promoteFromWaitlist } from '@/lib/waitlist';
 import { auth } from '@/lib/auth';
 
 // ── In-process rate limiter (per IP, resets on server restart) ─────────────
@@ -66,6 +67,9 @@ export async function POST(req: NextRequest, { params }: RouteContext) {
     if (event.maxAttendees) {
       const count = await db.rSVP.count({ where: { eventId: id, status: 'CONFIRMED' } });
       if (count >= event.maxAttendees) {
+        if (!event.waitlistEnabled) {
+          return NextResponse.json({ error: 'This event is sold out.' }, { status: 409 });
+        }
         status = 'WAITLISTED';
       }
     }
@@ -145,8 +149,8 @@ export async function PATCH(req: NextRequest, { params }: RouteContext) {
   const session = await auth();
   if (!session?.user?.id) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  // Ensure requester is the event host
-  const event = await db.event.findUnique({ where: { id }, select: { hostId: true } });
+  // Ensure requester is the event host — fetch full event for waitlist logic
+  const event = await db.event.findUnique({ where: { id } });
   if (!event) return NextResponse.json({ error: 'Not found' }, { status: 404 });
   if (event.hostId !== session.user.id) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
@@ -180,6 +184,17 @@ export async function PATCH(req: NextRequest, { params }: RouteContext) {
     where: { id: { in: ids }, eventId: id },
     data: { status: body.status as never },
   });
+
+  // If host is cancelling confirmed RSVPs, promote from waitlist for each freed slot
+  if (body.status === 'CANCELLED') {
+    const cancelledConfirmed = await db.rSVP.count({
+      where: { id: { in: ids }, status: 'CANCELLED' },
+    });
+    const promotions = Math.min(cancelledConfirmed, ids.length);
+    for (let i = 0; i < promotions; i++) {
+      await promoteFromWaitlist(event as import('@/lib/types').Event);
+    }
+  }
 
   return NextResponse.json({ ok: true, updated: ids.length });
 }

@@ -120,12 +120,12 @@ export default function LoginPage() {
 
           <div className="mt-8 pt-6 border-t border-[rgba(0,229,204,0.08)] grid grid-cols-3 gap-3 text-center">
             {[
-              { icon: '⊗', label: 'Secure Login' },
-              { icon: '◈', label: 'Instant Access' },
-              { icon: '⬡', label: 'Canadian Hosted' },
+              { icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>, label: 'Secure Login' },
+              { icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>, label: 'Instant Access' },
+              { icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>, label: 'Canadian Hosted' },
             ].map((item) => (
               <div key={item.label}>
-                <div className="text-lg mb-1" style={{ color: '#00e5cc' }}>{item.icon}</div>
+                <div className="flex justify-center mb-1" style={{ color: '#00e5cc' }}>{item.icon}</div>
                 <p className="text-[10px] text-[#2d5268] uppercase tracking-wider">{item.label}</p>
               </div>
             ))}

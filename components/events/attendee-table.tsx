@@ -199,7 +199,7 @@ export function AttendeeTable({ rsvps, eventTitle, eventId }: Props) {
                                 : 'border-[rgba(255,255,255,0.08)] text-[#4d7a90] hover:border-[rgba(0,229,204,0.2)] hover:text-[#e8f4f8]'
                             }`}
                           >
-                            {checkingIn === rsvp.id ? '…' : localCheckedIn[rsvp.id] ? '✓ In' : 'Check In'}
+                            {checkingIn === rsvp.id ? '...' : localCheckedIn[rsvp.id] ? 'Checked In' : 'Check In'}
                           </button>
                         ) : (
                           <span className="text-xs text-[#2d5268]">—</span>

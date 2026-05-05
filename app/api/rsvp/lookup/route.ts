@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { promoteFromWaitlist } from '@/lib/waitlist';
 
 // GET /api/rsvp/lookup?email=...&slug=...
 // Allows a guest to look up their RSVP status by email + event slug (no auth required)
@@ -79,7 +80,7 @@ export async function DELETE(req: NextRequest) {
 
     const event = await db.event.findUnique({
       where: { slug },
-      select: { id: true, title: true, date: true },
+      select: { id: true, title: true, date: true, slug: true, waitlistEnabled: true, maxAttendees: true, status: true, visibility: true, isOnline: true, hostId: true },
     });
 
     if (!event) {
@@ -107,6 +108,13 @@ export async function DELETE(req: NextRequest) {
       where: { id: rsvp.id },
       data: { status: 'CANCELLED' },
     });
+
+    // If they were confirmed, try to promote next waitlisted person
+    if (rsvp.status === 'CONFIRMED') {
+      promoteFromWaitlist(event as import('@/lib/types').Event).catch((err) =>
+        console.error('[waitlist] promote after guest cancel:', err)
+      );
+    }
 
     return NextResponse.json({ data: { message: 'RSVP cancelled successfully' } });
   } catch (error) {

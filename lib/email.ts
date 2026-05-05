@@ -127,6 +127,35 @@ export async function sendAnnouncement({
   });
 }
 
+export async function sendWaitlistPromotion(rsvp: RSVP, event: Event): Promise<void> {
+  const eventUrl = `${BASE_URL}/event/${event.slug}`;
+  const dateStr = event.endDate
+    ? formatDateRange(event.date, event.endDate)
+    : formatDate(event.date, 'EEE, MMM d, yyyy · h:mm a');
+
+  const html = emailFrame(
+    `You're in! Spot confirmed — ${event.title}`,
+    `
+      <h1 style="margin:0 0 8px;font-size:24px;">Great news, ${rsvp.guestName}!</h1>
+      <p style="margin:0 0 16px;color:#7aafc4;">A spot opened up and you've been moved off the waitlist. Your attendance is now confirmed.</p>
+      <div style="background:rgba(0,229,204,0.06);border:1px solid rgba(0,229,204,0.18);border-radius:12px;padding:16px;margin:0 0 20px;">
+        <p style="margin:0 0 6px;font-weight:700;font-size:18px;">${event.title}</p>
+        <p style="margin:0 0 4px;color:#7aafc4;font-size:14px;">${dateStr}</p>
+        ${event.location ? `<p style="margin:0;color:#7aafc4;font-size:14px;">${event.location}</p>` : ''}
+      </div>
+      <a href="${eventUrl}" style="display:inline-block;padding:12px 18px;border-radius:10px;background:linear-gradient(135deg,#00c4a8,#00e5cc);color:#020408;text-decoration:none;font-weight:700;">View Event Details</a>
+      <p style="margin-top:18px;font-size:12px;color:#4d7a90;">You're receiving this because you were on the waitlist for this event on Gatewise Events.</p>
+    `
+  );
+
+  await sendEmail({
+    from: FROM_EMAIL,
+    to: rsvp.guestEmail,
+    subject: `You're confirmed! A spot opened up for ${event.title}`,
+    html,
+  });
+}
+
 export async function sendEventUpdate(rsvp: RSVP, event: Event, updateMessage: string): Promise<void> {
   const eventUrl = `${BASE_URL}/event/${event.slug}`;
 

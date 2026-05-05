@@ -14,10 +14,10 @@ interface RSVPData {
 }
 
 const STATUS_CONFIG: Record<RSVPStatus, { label: string; color: string; bg: string; icon: string }> = {
-  CONFIRMED: { label: 'Confirmed', color: '#00e5cc', bg: 'rgba(0,229,204,0.1)', icon: '✓' },
-  WAITLISTED: { label: 'Waitlisted', color: '#9dd8ea', bg: 'rgba(157,216,234,0.1)', icon: '◎' },
-  CANCELLED: { label: 'Cancelled', color: '#ff3cac', bg: 'rgba(255,60,172,0.1)', icon: '✕' },
-  PENDING: { label: 'Pending', color: '#4d7a90', bg: 'rgba(77,122,144,0.1)', icon: '…' },
+  CONFIRMED: { label: 'Confirmed', color: '#00e5cc', bg: 'rgba(0,229,204,0.1)', icon: '' },
+  WAITLISTED: { label: 'Waitlisted', color: '#9dd8ea', bg: 'rgba(157,216,234,0.1)', icon: '' },
+  CANCELLED: { label: 'Cancelled', color: '#ff3cac', bg: 'rgba(255,60,172,0.1)', icon: '' },
+  PENDING: { label: 'Pending', color: '#4d7a90', bg: 'rgba(77,122,144,0.1)', icon: '' },
 };
 
 export default function RSVPManagePage() {
@@ -207,7 +207,7 @@ export default function RSVPManagePage() {
                     className="px-3 py-1 rounded-full text-xs font-bold"
                     style={{ color: statusCfg.color, background: statusCfg.bg }}
                   >
-                    {statusCfg.icon} {statusCfg.label}
+                    {statusCfg.label}
                   </span>
                 </div>
 
@@ -231,7 +231,7 @@ export default function RSVPManagePage() {
                   {data.event.isOnline ? (
                     <p className="text-sm text-[#00e5cc]">Online Event</p>
                   ) : data.event.location ? (
-                    <p className="text-sm text-[#4d7a90]">◉ {data.event.location}</p>
+                    <p className="text-sm text-[#4d7a90]">{data.event.location}</p>
                   ) : null}
                 </div>
 
@@ -260,7 +260,7 @@ export default function RSVPManagePage() {
                       className="w-full text-center py-2.5 rounded-xl text-sm font-semibold text-[#ff3cac]"
                       style={{ background: 'rgba(255,60,172,0.06)', border: '1px solid rgba(255,60,172,0.15)' }}
                     >
-                      ✕ RSVP Cancelled
+                      RSVP Cancelled
                     </div>
                   ) : canCancel ? (
                     <button
