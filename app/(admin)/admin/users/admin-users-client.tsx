@@ -78,7 +78,7 @@ export default function AdminUsersClient({ users, actorId }: { users: User[]; ac
           <span>Actions</span>
         </div>
 
-        <div className="divide-y divide-[rgba(0,229,204,0.06)]">
+        <div>
           {list.map((user) => (
             <div
               key={user.id}

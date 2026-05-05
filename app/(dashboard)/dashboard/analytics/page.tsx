@@ -3,7 +3,6 @@ import { redirect } from 'next/navigation';
 import { auth } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { PageTransition } from '@/components/ui/page-transition';
-import { AnalyticsBarChart, ConversionFunnel } from '@/components/dashboard/analytics-charts';
 
 async function getPortfolioAnalytics(userId: string) {
   const events = await db.event.findMany({
@@ -59,28 +58,6 @@ export default async function PortfolioAnalyticsPage() {
           </div>
         ))}
       </div>
-
-      {/* Charts Row */}
-      {events.length > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <AnalyticsBarChart
-            title="RSVPs per Event"
-            data={events.slice(0, 8).map((e) => ({
-              label: e.title.slice(0, 14) + (e.title.length > 14 ? '…' : ''),
-              value: e._count.rsvps,
-              color: '#00e5cc',
-            }))}
-          />
-          <ConversionFunnel
-            title="Portfolio Funnel"
-            data={[
-              { label: 'Page Views', value: totals.pageViews, color: '#9c6bff' },
-              { label: 'Total RSVPs', value: totals.rsvps, color: '#38bdf8' },
-              { label: 'Confirmed', value: totals.confirmed, color: '#00e5cc' },
-            ]}
-          />
-        </div>
-      )}
 
       <div className="overflow-hidden rounded-2xl" style={{ background: 'rgba(12,26,31,0.7)', border: '1px solid rgba(0,229,204,0.1)' }}>
         <div className="grid grid-cols-[minmax(0,1.7fr)_120px_120px_120px_120px] gap-4 px-5 py-3 text-xs font-semibold uppercase tracking-[0.14em]" style={{ color: '#4d7a90', borderBottom: '1px solid rgba(0,229,204,0.08)' }}>

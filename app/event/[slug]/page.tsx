@@ -45,19 +45,12 @@ export async function generateMetadata({ params }: Props) {
   const event = await db.event.findUnique({ where: { slug } });
   if (!event) return { title: 'Event Not Found' };
   return {
-    title: `${event.title} | Events.life`,
+    title: event.title,
     description: event.description ?? `RSVP to ${event.title}`,
     openGraph: {
       title: event.title,
-      description: event.description ?? `Join us at ${event.title}`,
-      type: 'website',
-      url: `https://gatewise-events.vercel.app/event/${slug}`,
-      images: event.bannerImage ? [{ url: event.bannerImage, width: 1200, height: 630, alt: event.title }] : [{ url: 'https://gatewise-events.vercel.app/og-default.png', width: 1200, height: 630, alt: event.title }],
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: event.title,
-      description: event.description ?? `RSVP to ${event.title}`,
+      description: event.description ?? '',
+      images: event.bannerImage ? [event.bannerImage] : [],
     },
   };
 }
@@ -69,7 +62,7 @@ export default async function PublicEventPage({ params }: Props) {
   const event = await db.event.findUnique({
     where: { slug },
     include: {
-      host: { select: { id: true, name: true, company: true, image: true, position: true, bio: true, organizerLogo: true, themePreset: true } },
+      host: { select: { id: true, name: true, company: true, image: true, position: true, bio: true, organizerLogo: true, themePreset: true, instagram: true, linkedin: true, website: true, twitter: true } },
       _count: { select: { rsvps: true } },
     },
   });
@@ -87,7 +80,7 @@ export default async function PublicEventPage({ params }: Props) {
   const isFull = event.maxAttendees ? confirmedCount >= event.maxAttendees : false;
   const isAccepting = event.status === 'LIVE' && !isFull;
 
-  // Fetch similar events (same category, exclude current)
+  // Fetch similar events - improved matching on category + location/online status
   const similarEvents = event.category
     ? await db.event.findMany({
         where: {
@@ -96,9 +89,15 @@ export default async function PublicEventPage({ params }: Props) {
           category: event.category,
           id: { not: event.id },
           date: { gte: new Date() },
+          // Match on event type (online/in-person) when possible
+          isOnline: event.isOnline,
+          // If not online, optionally match location (removed for more variety)
         },
-        orderBy: { date: 'asc' },
-        take: 3,
+        orderBy: [
+          { date: 'asc' }, // Soonest first
+          { rsvps: { _count: 'desc' } }, // Then by popularity
+        ],
+        take: 4,
         select: {
           id: true,
           slug: true,
@@ -108,6 +107,7 @@ export default async function PublicEventPage({ params }: Props) {
           isOnline: true,
           bannerImage: true,
           eventTheme: true,
+          host: { select: { name: true, company: true } },
           _count: { select: { rsvps: true } },
         },
       })
@@ -280,6 +280,30 @@ export default async function PublicEventPage({ params }: Props) {
               {event.host.bio && (
                 <p className="text-xs text-[#6b9bb0] leading-relaxed border-t border-[rgba(0,229,204,0.06)] pt-3">{event.host.bio}</p>
               )}
+              {(event.host.instagram || event.host.linkedin || event.host.website || event.host.twitter) && (
+                <div className="flex gap-2 pt-2 border-t border-[rgba(0,229,204,0.06)]">
+                  {event.host.website && (
+                    <a href={event.host.website.startsWith('http') ? event.host.website : `https://${event.host.website}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center w-8 h-8 rounded-lg text-[#00e5cc] hover:bg-[rgba(0,229,204,0.1)] transition-all" title="Website">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                    </a>
+                  )}
+                  {event.host.instagram && (
+                    <a href={`https://instagram.com/${event.host.instagram.replace('@', '')}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center w-8 h-8 rounded-lg text-[#00e5cc] hover:bg-[rgba(0,229,204,0.1)] transition-all" title="Instagram">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5" fill="none" stroke="currentColor" strokeWidth="2"/><path d="M8 12a4 4 0 1 0 8 0 4 4 0 0 0-8 0" fill="currentColor"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor"/></svg>
+                    </a>
+                  )}
+                  {event.host.linkedin && (
+                    <a href={`https://linkedin.com/in/${event.host.linkedin.replace('@', '').split('/').pop()}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center w-8 h-8 rounded-lg text-[#00e5cc] hover:bg-[rgba(0,229,204,0.1)] transition-all" title="LinkedIn">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.39v-1.2h-2.5v8.5h2.5v-4.34c0-.77.62-1.4 1.4-1.4.77 0 1.4.63 1.4 1.4v4.34h2.5M6.5 6.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m-1 13.5h2v-8.5h-2v8.5z"/></svg>
+                    </a>
+                  )}
+                  {event.host.twitter && (
+                    <a href={`https://twitter.com/${event.host.twitter.replace('@', '')}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center w-8 h-8 rounded-lg text-[#00e5cc] hover:bg-[rgba(0,229,204,0.1)] transition-all" title="Twitter/X">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2s9 5 20 5a9.5 9.5 0 0 0-9-5.5c4.75 2.25 9-1.5 11-5-4.5 1.5-9 1.5-11-1"/></svg>
+                    </a>
+                  )}
+                </div>
+              )}
             </div>
             </FadeIn>
 
@@ -449,44 +473,6 @@ export default async function PublicEventPage({ params }: Props) {
         </div>
       </div>
     </div>
-
-    {/* Similar Events */}
-    {similarEvents.length > 0 && (
-      <div className="max-w-6xl mx-auto px-4 pb-16">
-        <h2 className="text-lg font-black text-[#e8f4f8] mb-4" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)", letterSpacing: '0.05em' }}>
-          YOU MAY ALSO LIKE
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {similarEvents.map((sim) => {
-            const accentColor = THEME_ACCENT[sim.eventTheme ?? 'teal'] ?? '#00e5cc';
-            return (
-              <Link
-                key={sim.id}
-                href={`/event/${sim.slug}`}
-                className="group rounded-2xl overflow-hidden transition-all hover:-translate-y-1 hover:shadow-xl"
-                style={{ background: 'rgba(12,26,31,0.8)', border: `1px solid ${accentColor}18` }}
-              >
-                {sim.bannerImage ? (
-                  <div className="relative h-36 overflow-hidden">
-                    <Image src={sim.bannerImage} alt={sim.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
-                    <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(2,4,8,0.7), transparent)' }} />
-                  </div>
-                ) : (
-                  <div className="h-36 flex items-center justify-center" style={{ background: `linear-gradient(135deg, ${accentColor}18, ${accentColor}08)` }}>
-                    <span className="text-3xl">🎉</span>
-                  </div>
-                )}
-                <div className="p-3">
-                  <p className="text-sm font-bold text-[#e8f4f8] line-clamp-2 leading-snug">{sim.title}</p>
-                  <p className="text-xs text-[#4d7a90] mt-1">{formatDate(sim.date)} · {sim.isOnline ? 'Online' : (sim.location ?? 'TBD')}</p>
-                  <p className="text-xs mt-1" style={{ color: accentColor }}>{sim._count.rsvps} RSVPs</p>
-                </div>
-              </Link>
-            );
-          })}
-        </div>
-      </div>
-    )}
     </>
   );
 }

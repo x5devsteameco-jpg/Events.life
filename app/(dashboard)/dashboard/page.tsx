@@ -10,7 +10,7 @@ import type { Event } from '@/lib/types';
 
 async function getDashboardData(userId: string) {
   const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-  const [events, rsvpCount, recentRsvps, activityFeed] = await Promise.all([
+  const [events, rsvpCount, recentRsvps] = await Promise.all([
     db.event.findMany({
       where: { hostId: userId },
       orderBy: { createdAt: 'desc' },
@@ -27,18 +27,6 @@ async function getDashboardData(userId: string) {
       },
       select: { createdAt: true },
     }),
-    db.rSVP.findMany({
-      where: { event: { hostId: userId } },
-      orderBy: { createdAt: 'desc' },
-      take: 7,
-      select: {
-        id: true,
-        guestName: true,
-        status: true,
-        createdAt: true,
-        event: { select: { title: true, slug: true } },
-      },
-    }),
   ]);
 
   const now = new Date();
@@ -54,14 +42,14 @@ async function getDashboardData(userId: string) {
     }).length;
   });
 
-  return { events, rsvpCount, upcoming, drafts, total: events.length, rsvpTrend, recentRsvpCount: recentRsvps.length, activityFeed };
+  return { events, rsvpCount, upcoming, drafts, total: events.length, rsvpTrend, recentRsvpCount: recentRsvps.length };
 }
 
 export default async function DashboardPage() {
   const session = await auth();
   if (!session?.user?.id) return null;
 
-  const { events, rsvpCount, upcoming, drafts, total, rsvpTrend, recentRsvpCount, activityFeed } = await getDashboardData(session.user.id);
+  const { events, rsvpCount, upcoming, drafts, total, rsvpTrend, recentRsvpCount } = await getDashboardData(session.user.id);
 
   const stats = [
     { label: 'Total Events', value: total, icon: '📅', color: '#00e5cc' },
@@ -126,42 +114,6 @@ export default async function DashboardPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6 mb-2">
         <RSVPSparkline data={rsvpTrend} label="RSVPs This Week" total={recentRsvpCount} />
       </div>
-
-      {/* Recent Activity Feed */}
-      {activityFeed.length > 0 && (
-        <div className="mt-6 rounded-2xl p-5" style={{ background: 'rgba(12,26,31,0.6)', border: '1px solid rgba(0,229,204,0.1)' }}>
-          <h3 className="text-sm font-black text-[#e8f4f8] mb-4 uppercase tracking-widest" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>
-            Recent Activity
-          </h3>
-          <div className="space-y-2.5">
-            {activityFeed.map((rsvp) => {
-              const elapsed = Date.now() - new Date(rsvp.createdAt).getTime();
-              const mins = Math.floor(elapsed / 60000);
-              const hours = Math.floor(mins / 60);
-              const days = Math.floor(hours / 24);
-              const timeAgo = days > 0 ? `${days}d ago` : hours > 0 ? `${hours}h ago` : mins > 1 ? `${mins}m ago` : 'Just now';
-              const statusColor = rsvp.status === 'CONFIRMED' ? '#00e5cc' : rsvp.status === 'WAITLISTED' ? '#f59e0b' : '#4d7a90';
-              return (
-                <div key={rsvp.id} className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold" style={{ background: `${statusColor}18`, color: statusColor }}>
-                    {(rsvp.guestName ?? '?').charAt(0).toUpperCase()}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs text-[#e8f4f8]">
-                      <span className="font-semibold">{rsvp.guestName ?? 'Someone'}</span>
-                      <span className="text-[#4d7a90]"> RSVPd to </span>
-                      <Link href={`/event/${rsvp.event.slug}`} className="font-medium hover:underline" style={{ color: statusColor }}>
-                        {rsvp.event.title}
-                      </Link>
-                    </p>
-                    <p className="text-[10px] text-[#2d5268] mt-0.5">{timeAgo} · {rsvp.status}</p>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
 
       {/* Events */}
       <div className="flex items-center justify-between mb-5 mt-8">

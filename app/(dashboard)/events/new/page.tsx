@@ -62,7 +62,6 @@ interface WizardData {
   emailInviteList: string;
   visibility: 'PUBLIC' | 'PRIVATE';
   confirmationMessage: string;
-  customSlug: string;
 }
 
 const INITIAL: WizardData = {
@@ -75,7 +74,7 @@ const INITIAL: WizardData = {
   ageGate: 0, requiresCertification: false, certificationNote: '', dressCode: '', customQuestions: [],
   faqs: [],
   requiredFields: ['guestName', 'guestEmail'],
-  emailInviteList: '', visibility: 'PUBLIC', confirmationMessage: '', customSlug: '',
+  emailInviteList: '', visibility: 'PUBLIC', confirmationMessage: '',
 };
 
 const STEPS = [
@@ -822,24 +821,6 @@ function Step8({ data, setData, onSubmit, submitting }: { data: WizardData; setD
       <div>
         <h2 className="text-xl font-black text-[#e8f4f8] mb-1" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>Invite & Launch</h2>
         <p className="text-sm text-[#4d7a90]">Send invites and choose how your event appears.</p>
-      </div>
-
-      {/* Custom URL slug */}
-      <div>
-        <label className="label-base">Custom Event URL <span className="text-[#2d5268] normal-case font-normal">(optional)</span></label>
-        <div className="flex items-center gap-0 rounded-xl overflow-hidden" style={{ border: '1px solid rgba(0,229,204,0.2)', background: 'rgba(2,4,8,0.8)' }}>
-          <span className="px-3 py-2.5 text-xs text-[#4d7a90] select-none" style={{ borderRight: '1px solid rgba(0,229,204,0.1)', background: 'rgba(0,229,204,0.04)' }}>
-            events.life/event/
-          </span>
-          <input
-            type="text"
-            value={data.customSlug}
-            onChange={(e) => setData({ customSlug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-') })}
-            placeholder={data.title ? data.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '') : 'my-event-url'}
-            className="flex-1 h-11 px-3 text-sm text-[#e8f4f8] bg-transparent outline-none"
-          />
-        </div>
-        <p className="text-xs text-[#2d5268] mt-1">Leave blank to auto-generate from title.</p>
       </div>
 
       <div>
