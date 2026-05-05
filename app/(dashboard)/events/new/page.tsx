@@ -49,6 +49,7 @@ interface WizardData {
   ticketQuantity: string;
   ticketUnlimited: boolean;
   maxTicketsPerPerson: string;
+  waitlistEnabled: boolean;
   ticketTiers: TicketTier[];
   // Step 6
   ageGate: number;
@@ -76,7 +77,7 @@ const INITIAL: WizardData = {
   description: '', bannerImage: '',
   date: '', endDate: '', timezone: 'America/Toronto', recurrence: 'none', recurrenceEnd: '',
   location: '', address: '', parkingAvailable: false, parkingNotes: '', onlineLink: '', thingsToKnow: '',
-  ticketName: 'General Admission', ticketDescription: '', ticketQuantity: '', ticketUnlimited: true, maxTicketsPerPerson: '',
+  ticketName: 'General Admission', ticketDescription: '', ticketQuantity: '', ticketUnlimited: true, maxTicketsPerPerson: '', waitlistEnabled: false,
   ticketTiers: [{ id: '1', name: 'General Admission', description: '', isFree: true, price: '', quantity: '', unlimited: true }],
   ageGate: 0, requiresCertification: false, certificationNote: '', dressCode: '', customQuestions: [],
   faqs: [],
@@ -617,6 +618,27 @@ function Step5({ data, setData }: { data: WizardData; setData: (d: Partial<Wizar
         hint="Optional limit per guest"
       />
 
+      {/* ── Waitlist ── */}
+      <div className="rounded-xl p-4 flex items-center justify-between" style={{ background: 'rgba(12,26,31,0.8)', border: '1px solid rgba(0,229,204,0.08)' }}>
+        <div>
+          <p className="text-xs font-bold uppercase tracking-widest text-[#00e5cc]">Enable Waitlist</p>
+          <p className="text-xs text-[#4d7a90] mt-0.5">When capacity is reached, guests can join a waitlist instead of being turned away.</p>
+        </div>
+        <button
+          type="button"
+          role="switch"
+          aria-checked={data.waitlistEnabled}
+          onClick={() => setData({ waitlistEnabled: !data.waitlistEnabled })}
+          className="relative flex-shrink-0 w-11 h-6 rounded-full transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00e5cc]"
+          style={{ background: data.waitlistEnabled ? '#00e5cc' : 'rgba(6,13,16,0.8)', border: '1px solid rgba(0,229,204,0.3)' }}
+        >
+          <span
+            className="absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white transition-transform duration-200"
+            style={{ transform: data.waitlistEnabled ? 'translateX(20px)' : 'translateX(0)' }}
+          />
+        </button>
+      </div>
+
       {/* ── Promo / Discount Codes ── */}
       <div>
         <div className="flex items-center justify-between mb-3">
@@ -1113,6 +1135,7 @@ function Step10Launch({ data, setData, onSubmit, submitting }: { data: WizardDat
           { label: 'Location', value: data.location || (data.eventType === 'ONLINE' ? 'Online' : '—') },
           { label: 'Capacity', value: data.ticketUnlimited ? 'Unlimited' : (data.ticketQuantity || '—') },
           { label: 'Per Person Cap', value: data.maxTicketsPerPerson || '—' },
+          { label: 'Waitlist', value: data.waitlistEnabled ? 'Enabled' : 'Disabled' },
           { label: 'Age Gate', value: data.ageGate > 0 ? `${data.ageGate}+` : 'None' },
           { label: 'Dress Code', value: data.dressCode || '—' },
           { label: 'Certification', value: data.requiresCertification ? 'Required' : 'Not required' },
@@ -1242,7 +1265,7 @@ export default function NewEventPage() {
         return;
       }
 
-      toast(status === 'LIVE' ? '◈ Event launched!' : '◫ Saved as draft', 'success');
+      toast(status === 'LIVE' ? 'Event launched!' : 'Saved as draft', 'success');
       clearDraftOnSuccess();
       if (status === 'LIVE' && json.data?.slug) {
         router.push(`/event/${json.data.slug}?launched=1`);

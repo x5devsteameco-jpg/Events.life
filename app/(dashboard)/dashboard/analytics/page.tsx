@@ -87,12 +87,13 @@ export default async function PortfolioAnalyticsPage() {
         <Link href="/dashboard" className="rounded-xl border px-4 py-2 text-sm font-medium text-[#7aafc4]" style={{ borderColor: 'rgba(0,229,204,0.18)' }}>Back to Dashboard</Link>
       </div>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
         {[
           { label: 'Events', value: totals.events, color: '#00e5cc' },
           { label: 'RSVPs', value: totals.rsvps, color: '#38bdf8' },
           { label: 'Page Views', value: totals.pageViews, color: '#9c6bff' },
           { label: 'Confirmed', value: totals.confirmed, color: '#10b981' },
+          { label: 'Attendance Rate', value: `${totals.confirmed > 0 ? Math.round((totals.checkedIn / totals.confirmed) * 100) : 0}%`, color: '#f59e0b' },
         ].map((card) => (
           <div key={card.label} className="rounded-2xl p-5" style={{ background: 'rgba(12,26,31,0.7)', border: `1px solid ${card.color}22` }}>
             <p className="text-xs uppercase tracking-[0.16em]" style={{ color: '#4d7a90' }}>{card.label}</p>

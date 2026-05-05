@@ -1,42 +1,53 @@
-import { db } from '@/lib/db';
+'use client';
+
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+
+type FeaturedEvent = {
+  id: string;
+  slug: string;
+  title: string;
+  date: string;
+  location: string | null;
+  isOnline: boolean;
+  bannerImage: string | null;
+  category: string | null;
+  maxAttendees: number | null;
+  _count: { rsvps: number };
+  host: { name: string | null; organizerLogo: string | null } | null;
+};
 
 const CINZEL = "var(--font-heading, 'Cinzel', Georgia, serif)";
 const BEBAS = "var(--font-label, 'Bebas Neue', 'Arial Narrow', sans-serif)";
 
-async function getFeaturedEvents() {
-  try {
-    const events = await db.event.findMany({
-      where: { status: 'LIVE', visibility: 'PUBLIC', date: { gte: new Date() } },
-      orderBy: [{ rsvps: { _count: 'desc' } }, { date: 'asc' }],
-      take: 4,
-      select: {
-        id: true,
-        slug: true,
-        title: true,
-        date: true,
-        location: true,
-        isOnline: true,
-        bannerImage: true,
-        category: true,
-        maxAttendees: true,
-        _count: { select: { rsvps: true } },
-        host: { select: { name: true, organizerLogo: true } },
-      },
-    });
-    return events;
-  } catch {
-    return [];
-  }
-}
+export function FeaturedEvents() {
+  const [events, setEvents] = useState<FeaturedEvent[]>([]);
+  const [visible, setVisible] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
 
-export async function FeaturedEvents() {
-  const events = await getFeaturedEvents();
+  useEffect(() => {
+    fetch('/api/featured-events')
+      .then((r) => r.json())
+      .then((data: FeaturedEvent[]) => setEvents(data))
+      .catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    if (!events.length) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setVisible(true); observer.disconnect(); } },
+      { threshold: 0.1 }
+    );
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, [events]);
+
   if (!events.length) return null;
 
   return (
-    <section style={{ padding: '5rem 1.5rem', borderTop: '1px solid rgba(0,229,204,0.08)' }}>
+    <section ref={sectionRef} style={{ padding: '5rem 1.5rem', borderTop: '1px solid rgba(0,229,204,0.08)' }}>
+      <style>{`.fe-card:hover{border-color:rgba(0,229,204,0.28)!important;box-shadow:0 16px 56px rgba(0,0,0,0.6),0 0 40px rgba(0,229,204,0.06)!important}.fe-stagger{opacity:0;transform:translateY(24px);transition:opacity 0.5s ease,transform 0.5s ease}.fe-stagger.fe-in{opacity:1;transform:none}`}</style>
       <div className="max-w-6xl mx-auto">
         <div className="flex items-end justify-between mb-10 gap-4 flex-wrap">
           <div>
@@ -59,7 +70,7 @@ export async function FeaturedEvents() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {events.map((event) => {
+          {events.map((event, index) => {
             const spotsLeft = event.maxAttendees ? event.maxAttendees - event._count.rsvps : null;
             const soldOut = spotsLeft !== null && spotsLeft <= 0;
             const fewLeft = spotsLeft !== null && spotsLeft > 0 && spotsLeft <= 10;
@@ -71,19 +82,12 @@ export async function FeaturedEvents() {
               <Link
                 key={event.id}
                 href={`/event/${event.slug}`}
-                className="group block rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1"
+                className={`fe-card fe-stagger${visible ? ' fe-in' : ''} group block rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1`}
                 style={{
                   background: 'rgba(12,26,31,0.7)',
                   border: '1px solid rgba(0,229,204,0.1)',
                   boxShadow: '0 8px 32px rgba(0,0,0,0.45)',
-                }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(0,229,204,0.28)';
-                  (e.currentTarget as HTMLAnchorElement).style.boxShadow = '0 16px 56px rgba(0,0,0,0.6), 0 0 40px rgba(0,229,204,0.06)';
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLAnchorElement).style.borderColor = 'rgba(0,229,204,0.1)';
-                  (e.currentTarget as HTMLAnchorElement).style.boxShadow = '0 8px 32px rgba(0,0,0,0.45)';
+                  transitionDelay: visible ? `${index * 80}ms` : '0ms',
                 }}
               >
                 {/* Banner */}

@@ -92,6 +92,7 @@ export const eventSchema = z.object({
   ticketDescription: z.string().optional(),
   ticketQuantity: z.number().int().positive().optional().nullable(),
   ticketUnlimited: z.boolean().default(false),
+  waitlistEnabled: z.boolean().default(false),
   ticketTiers: z.array(z.object({
     id: z.string(),
     name: z.string(),

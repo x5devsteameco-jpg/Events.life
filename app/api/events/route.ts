@@ -52,6 +52,7 @@ export async function POST(req: NextRequest) {
         eventTheme: d.eventTheme,
         category: d.category,
         maxTicketsPerPerson: d.maxTicketsPerPerson,
+        waitlistEnabled: d.waitlistEnabled ?? false,
         customQuestions: d.customQuestions ? JSON.stringify(d.customQuestions) : null,
         faqs: d.faqs ? JSON.stringify(d.faqs) : null,
         speakers: d.speakers ? JSON.stringify(d.speakers) : null,

@@ -3,6 +3,7 @@ import { auth } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { SettingsForm } from '@/components/dashboard/settings-form';
 import { DataDeletionSection } from '@/components/dashboard/data-deletion-section';
+import { DataExportSection } from '@/components/dashboard/data-export-section';
 
 export const metadata = {
   title: 'Settings',
@@ -44,6 +45,7 @@ export default async function SettingsPage() {
   return (
     <div className="space-y-10">
       <SettingsForm initialData={user} />
+      <DataExportSection />
       <DataDeletionSection />
     </div>
   );

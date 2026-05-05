@@ -87,7 +87,7 @@ export function EventsGrid({ events }: Props) {
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center" style={{ background: 'linear-gradient(135deg, rgba(0,229,204,0.1), rgba(0,180,150,0.06))' }}>
-                    <span className="text-4xl opacity-60" style={{ color: '#00e5cc' }}>◈</span>
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#00e5cc" strokeWidth="1.2" opacity="0.5" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                   </div>
                 )}
                 <div className="absolute top-3 left-3 flex gap-2">
@@ -158,6 +158,19 @@ export function EventsGrid({ events }: Props) {
                     )}
                   </div>
                 </div>
+                {event.maxAttendees && event.maxAttendees > 0 && (
+                  <div className="mt-2">
+                    <div className="h-1 rounded-full overflow-hidden" style={{ background: 'rgba(0,229,204,0.08)' }}>
+                      <div
+                        className="h-full rounded-full transition-all"
+                        style={{
+                          width: `${Math.min((confirmedCount / event.maxAttendees) * 100, 100)}%`,
+                          background: isFull ? '#ff3cac' : confirmedCount / event.maxAttendees > 0.7 ? '#f59e0b' : '#00e5cc',
+                        }}
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
             </Link>
           </motion.div>
