@@ -3,6 +3,7 @@ import { auth } from '@/lib/auth';
 import { Sidebar } from '@/components/dashboard/sidebar';
 import { MobileNav } from '@/components/dashboard/mobile-nav';
 import { KeyboardShortcuts } from '@/components/dashboard/keyboard-shortcuts';
+import { PageTransition } from '@/components/dashboard/page-transition';
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
@@ -54,7 +55,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
             paddingBottom: 'max(5rem, calc(env(safe-area-inset-bottom) + 4rem))',
           }}
         >
-          {children}
+          <PageTransition>{children}</PageTransition>
         </main>
       </div>
       <KeyboardShortcuts />

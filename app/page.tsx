@@ -424,6 +424,48 @@ export default function HomePage() {
         <FeaturedEvents />
       </Suspense>
 
+      {/* ═══ CATEGORY BROWSE GRID ═══ */}
+      <section style={{ padding: '5rem 1.5rem' }}>
+        <div className="max-w-6xl mx-auto">
+          <AnimSection>
+            <div className="text-center mb-10">
+              <p style={{ fontFamily: BEBAS, fontSize: '0.88rem', letterSpacing: '0.2em', color: '#00e5cc', textTransform: 'uppercase', marginBottom: '10px' }}>Browse By Category</p>
+              <h2 style={{ fontFamily: CINZEL, fontSize: 'clamp(1.6rem, 3.5vw, 2.6rem)', fontWeight: 800, color: '#e8f4f8', letterSpacing: '0.04em', lineHeight: 1.2 }}>
+                Find Your Kind of Event
+              </h2>
+            </div>
+          </AnimSection>
+          <AnimSection delay={0.12}>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+              {[
+                { label: 'Networking', icon: '🤝', slug: 'NETWORKING' },
+                { label: 'Product Demo', icon: '🎯', slug: 'PRODUCT_DEMO' },
+                { label: 'Private Gathering', icon: '🔒', slug: 'PRIVATE_GATHERING' },
+                { label: 'Industry Event', icon: '🏭', slug: 'INDUSTRY_EVENT' },
+                { label: 'Trade Show', icon: '🏛️', slug: 'TRADE_SHOW' },
+                { label: 'Tech & Innovation', icon: '💡', slug: 'TECH' },
+                { label: 'Arts & Culture', icon: '🎨', slug: 'ARTS' },
+                { label: 'VIP Experience', icon: '⭐', slug: 'VIP' },
+              ].map((cat) => (
+                <Link
+                  key={cat.slug}
+                  href={`/events?category=${cat.slug}`}
+                  className="group flex flex-col items-center gap-3 p-5 rounded-2xl transition-all duration-200 hover:scale-[1.03]"
+                  style={{
+                    background: 'rgba(10,22,28,0.7)',
+                    border: '1px solid rgba(0,229,204,0.1)',
+                    textDecoration: 'none',
+                  }}
+                >
+                  <span className="text-3xl group-hover:scale-110 transition-transform duration-200">{cat.icon}</span>
+                  <span className="text-sm font-semibold text-center leading-tight" style={{ color: '#a8c8d8', fontFamily: 'Space Grotesk, sans-serif' }}>{cat.label}</span>
+                </Link>
+              ))}
+            </div>
+          </AnimSection>
+        </div>
+      </section>
+
       {/* ═══ CTA ═══ */}
       <section style={{ padding: '7rem 1.5rem' }}>
         <AnimSection>

@@ -8,7 +8,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { signUpSchema, type SignUpInput } from '@/lib/validations';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { FloatingInput } from '@/components/ui/input';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -85,47 +85,42 @@ export default function RegisterPage() {
         )}
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
-          <Input
+          <FloatingInput
             label="Full Name"
             type="text"
             autoComplete="name"
-            placeholder="Alex Johnson"
             error={errors.name?.message}
             {...register('name')}
           />
 
-          <Input
+          <FloatingInput
             label="Email Address"
             type="email"
             autoComplete="email"
-            placeholder="you@company.com"
             error={errors.email?.message}
             {...register('email')}
           />
 
-          <Input
+          <FloatingInput
             label="Password"
             type="password"
             autoComplete="new-password"
-            placeholder="Min. 8 characters"
             error={errors.password?.message}
             hint="Must be at least 8 characters"
             {...register('password')}
           />
 
           <div className="grid grid-cols-2 gap-4">
-            <Input
+            <FloatingInput
               label="Company / Brand"
               type="text"
               autoComplete="organization"
-              placeholder="Your Company"
               error={errors.company?.message}
               {...register('company')}
             />
-            <Input
+            <FloatingInput
               label="Your Position"
               type="text"
-              placeholder="e.g. Brand Rep"
               error={errors.position?.message}
               {...register('position')}
             />

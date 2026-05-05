@@ -75,10 +75,11 @@ export function RSVPDrawer({
     <>
       {/* Sticky bottom bar – only visible on mobile (lg:hidden) */}
       <div
-        className="fixed bottom-0 inset-x-0 z-40 px-4 pt-4 lg:hidden"
+        className="fixed inset-x-0 z-[55] px-4 pt-4 lg:hidden"
         style={{
+          bottom: 0,
+          paddingBottom: 'max(calc(env(safe-area-inset-bottom) + 4.5rem), 5rem)',
           background: 'linear-gradient(to top, rgba(2,4,8,0.99) 60%, transparent)',
-          paddingBottom: 'max(1rem, env(safe-area-inset-bottom))',
         }}
       >
         {isFull ? (
@@ -110,7 +111,7 @@ export function RSVPDrawer({
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
               onClick={() => setOpen(false)}
-              className="fixed inset-0 z-40 lg:hidden"
+              className="fixed inset-0 z-[55] lg:hidden"
               style={{ background: 'rgba(2,4,8,0.7)', backdropFilter: 'blur(4px)' }}
               aria-hidden="true"
             />
@@ -134,7 +135,7 @@ export function RSVPDrawer({
               onDragEnd={(_, info) => {
                 if (info.offset.y > 120 || info.velocity.y > 500) setOpen(false);
               }}
-              className="fixed bottom-0 inset-x-0 z-50 lg:hidden rounded-t-3xl overflow-hidden flex flex-col"
+              className="fixed bottom-0 inset-x-0 z-[60] lg:hidden rounded-t-3xl overflow-hidden flex flex-col"
               style={{
                 background: 'rgba(8,18,24,0.98)',
                 border: '1px solid rgba(0,229,204,0.15)',

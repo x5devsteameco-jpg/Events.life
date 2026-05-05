@@ -2,6 +2,7 @@ import { auth } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import { db } from '@/lib/db';
 import Link from 'next/link';
+import { ADMIN_NAV_LINKS } from '@/lib/admin';
 
 async function getAdminOverview() {
   const thirtyDaysAgo = new Date();
@@ -68,15 +69,6 @@ export default async function AdminDashboard() {
 
   const data = await getAdminOverview();
 
-  const navLinks = [
-    { href: '/admin/dashboard', label: 'Overview', icon: '◈' },
-    { href: '/admin/events', label: 'Events', icon: '◉' },
-    { href: '/admin/users', label: 'Users', icon: '◎' },
-    { href: '/admin/content', label: 'Site Content', icon: '✦' },
-    { href: '/admin/announcements', label: 'Announcements', icon: '◆' },
-    { href: '/admin/audit-log', label: 'Audit Log', icon: '◍' },
-  ];
-
   const STATUS_COLORS: Record<string, string> = {
     LIVE: '#00e5cc', DRAFT: '#4d7a90', ENDED: '#6b7280', CANCELLED: '#ff3cac', PRIVATE: '#9c6bff'
   };
@@ -95,7 +87,7 @@ export default async function AdminDashboard() {
           </div>
         </div>
         <nav className="p-3 space-y-1">
-          {navLinks.map((link) => (
+          {ADMIN_NAV_LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}

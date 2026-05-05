@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { Input, Textarea } from '@/components/ui/input';
+import { Input, FloatingInput, Textarea } from '@/components/ui/input';
 import { useToast } from '@/components/toast';
 import { Confetti } from '@/components/events/confetti';
 import { generateICS, downloadICS, googleCalendarUrl } from '@/lib/calendar';
@@ -238,22 +238,19 @@ export function RSVPForm({ eventId, title, eventDate, eventEndDate, eventLocatio
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="p-5 space-y-4">
-        <Input
+        <FloatingInput
           label="Full Name *"
-          placeholder="Jane Doe"
           error={errors.guestName?.message}
           {...register('guestName')}
         />
-        <Input
+        <FloatingInput
           label="Email Address *"
           type="email"
-          placeholder="jane@example.com"
           error={errors.guestEmail?.message}
           {...register('guestEmail')}
         />
-        <Input
+        <FloatingInput
           label="Store Name"
-          placeholder="e.g. The Green Room Dispensary"
           {...register('storeName')}
         />
         <Input

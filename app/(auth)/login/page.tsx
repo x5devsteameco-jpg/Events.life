@@ -9,7 +9,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { signInSchema, type SignInInput } from '@/lib/validations';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { FloatingInput } from '@/components/ui/input';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -77,21 +77,19 @@ export default function LoginPage() {
         )}
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
-          <Input
+          <FloatingInput
             label="Email address"
             type="email"
             autoComplete="email"
-            placeholder="you@company.com"
             error={errors.email?.message}
             {...register('email')}
           />
 
           <div>
-            <Input
+            <FloatingInput
               label="Password"
               type="password"
               autoComplete="current-password"
-              placeholder="••••••••"
               error={errors.password?.message}
               {...register('password')}
             />

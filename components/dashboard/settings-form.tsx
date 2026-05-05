@@ -37,6 +37,7 @@ type ProfileForm = z.infer<typeof profileSchema>;
 
 interface Props {
   initialData: {
+    id: string;
     name: string | null;
     email: string;
     image: string | null;
@@ -118,7 +119,8 @@ export function SettingsForm({ initialData }: Props) {
 
       {/* Profile Section */}
       <section className="rounded-2xl p-6" style={{ background: 'rgba(12,26,31,0.6)', border: '1px solid rgba(0,229,204,0.08)' }}>
-        <div className="flex items-center gap-3 mb-6">
+        <div className="flex items-start justify-between gap-4 mb-6">
+          <div className="flex items-center gap-3">
           {/* Avatar */}
           {watch('image') ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -135,6 +137,16 @@ export function SettingsForm({ initialData }: Props) {
               {initialData.role}
             </span>
           </div>
+          </div>
+          <a
+            href={`/organizer/${initialData.id}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex-shrink-0 text-xs font-semibold px-3 py-1.5 rounded-xl transition-all hover:brightness-110"
+            style={{ background: 'rgba(0,229,204,0.07)', border: '1px solid rgba(0,229,204,0.18)', color: '#00e5cc', textDecoration: 'none', whiteSpace: 'nowrap' }}
+          >
+            View Public Profile →
+          </a>
         </div>
 
         <h2 className="text-sm font-bold text-[#00e5cc] uppercase tracking-wider mb-4">Edit Profile</h2>

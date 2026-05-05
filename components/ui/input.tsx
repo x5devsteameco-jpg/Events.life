@@ -65,6 +65,84 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
 Input.displayName = 'Input';
 
+// ─── FloatingInput ────────────────────────────────────────────────────────────
+// Animated floating label input — label starts in the field, floats up on focus/fill
+export interface FloatingInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  label: string;
+  error?: string;
+  hint?: string;
+}
+
+export const FloatingInput = React.forwardRef<HTMLInputElement, FloatingInputProps>(
+  ({ label, error, hint, className, id, value, defaultValue, ...props }, ref) => {
+    const inputId = id || label.toLowerCase().replace(/\s+/g, '-');
+    const [focused, setFocused] = React.useState(false);
+    const [hasValue, setHasValue] = React.useState(() => !!(value || defaultValue));
+
+    const floated = focused || hasValue;
+
+    return (
+      <div className="w-full">
+        <div className="relative">
+          <input
+            ref={ref}
+            id={inputId}
+            value={value}
+            defaultValue={defaultValue}
+            onFocus={(e) => { setFocused(true); props.onFocus?.(e); }}
+            onBlur={(e) => {
+              setFocused(false);
+              setHasValue(!!(e.target.value));
+              props.onBlur?.(e);
+            }}
+            onChange={(e) => {
+              setHasValue(!!(e.target.value));
+              (props as React.InputHTMLAttributes<HTMLInputElement>).onChange?.(e);
+            }}
+            placeholder=""
+            className={cn(
+              'w-full pt-5 pb-2 px-3.5 rounded-xl text-sm text-[#e8f4f8] bg-transparent outline-none transition-all peer',
+              'border placeholder:text-transparent',
+              error
+                ? 'border-[#ff3cac] focus:border-[#ff3cac]'
+                : 'border-[rgba(0,229,204,0.15)] focus:border-[#00e5cc]',
+              className
+            )}
+            style={{ background: 'rgba(6,13,16,0.8)', minHeight: '52px' }}
+            {...props}
+          />
+          <label
+            htmlFor={inputId}
+            className="absolute left-3.5 pointer-events-none select-none transition-all duration-200 origin-left"
+            style={{
+              top: floated ? '6px' : '50%',
+              transform: floated ? 'translateY(0) scale(0.78)' : 'translateY(-50%) scale(1)',
+              color: focused ? '#00e5cc' : floated ? '#4d7a90' : '#4d7a90',
+              fontSize: '0.875rem',
+              lineHeight: 1.2,
+            }}
+          >
+            {label}
+          </label>
+        </div>
+        {error && (
+          <p className="mt-1.5 text-xs text-[#ff3cac] flex items-center gap-1">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
+            </svg>
+            {error}
+          </p>
+        )}
+        {hint && !error && (
+          <p className="mt-1.5 text-xs text-[#4d7a90]">{hint}</p>
+        )}
+      </div>
+    );
+  }
+);
+
+FloatingInput.displayName = 'FloatingInput';
+
 // ─── Textarea ─────────────────────────────────────────────────────────────────
 export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   label?: string;
