@@ -139,7 +139,7 @@ const EVENT_TEMPLATES: { id: string; label: string; emoji: string; desc: string;
   {
     id: 'networking',
     label: 'Networking Mixer',
-    emoji: '🤝',
+    emoji: '⬡',
     desc: 'Industry meetup, drinks & conversations',
     preset: {
       category: 'Networking',
@@ -155,7 +155,7 @@ const EVENT_TEMPLATES: { id: string; label: string; emoji: string; desc: string;
   {
     id: 'product-demo',
     label: 'Product Demo',
-    emoji: '🚀',
+    emoji: '◈',
     desc: 'Brand showcase or product launch',
     preset: {
       category: 'Product Demo',
@@ -172,7 +172,7 @@ const EVENT_TEMPLATES: { id: string; label: string; emoji: string; desc: string;
   {
     id: 'private-gathering',
     label: 'Private Gathering',
-    emoji: '🥂',
+    emoji: '◎',
     desc: 'Exclusive invite-only event',
     preset: {
       category: 'Private Gathering',
@@ -190,7 +190,7 @@ const EVENT_TEMPLATES: { id: string; label: string; emoji: string; desc: string;
   {
     id: 'webinar',
     label: 'Online Webinar',
-    emoji: '💻',
+    emoji: '◬',
     desc: 'Virtual presentation or workshop',
     preset: {
       category: 'Industry Event',
@@ -205,7 +205,7 @@ const EVENT_TEMPLATES: { id: string; label: string; emoji: string; desc: string;
   {
     id: 'blank',
     label: 'Start from Scratch',
-    emoji: '✏️',
+    emoji: '✦',
     desc: 'Build a fully custom event',
     preset: {},
   },
@@ -245,7 +245,7 @@ function Step1({ data, setData }: { data: WizardData; setData: (d: Partial<Wizar
         <div className="grid grid-cols-3 gap-3">
           {(['IN_PERSON', 'ONLINE', 'HYBRID'] as const).map((type) => {
             const labels = { IN_PERSON: 'In-Person', ONLINE: 'Online', HYBRID: 'Hybrid' };
-            const icons = { IN_PERSON: '📍', ONLINE: '💻', HYBRID: '🌐' };
+            const icons = { IN_PERSON: '◉', ONLINE: '◬', HYBRID: '⬡' };
             const active = data.eventType === type;
             return (
               <button key={type} type="button" onClick={() => setData({ eventType: type })}
@@ -427,7 +427,7 @@ function Step3({ data, setData }: { data: WizardData; setData: (d: Partial<Wizar
 
       {data.date && (
         <div className="p-4 rounded-xl text-sm" style={{ background: 'rgba(0,229,204,0.06)', border: '1px solid rgba(0,229,204,0.15)' }}>
-          <p className="text-[#00e5cc] font-semibold">📅 {new Date(data.date).toLocaleDateString('en-CA', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+          <p className="text-[#00e5cc] font-semibold">◈ {new Date(data.date).toLocaleDateString('en-CA', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
           {data.endDate && <p className="text-[#4d7a90] text-xs mt-1">Ends: {new Date(data.endDate).toLocaleDateString('en-CA', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>}
         </div>
       )}
@@ -863,7 +863,7 @@ function Step7Faq({ data, setData }: { data: WizardData; setData: (d: Partial<Wi
 
       {data.faqs.length === 0 && (
         <div className="rounded-xl p-4 text-sm" style={{ background: 'rgba(0,229,204,0.04)', border: '1px solid rgba(0,229,204,0.1)' }}>
-          <p className="text-[#4d7a90]">💡 <span className="text-[#7aafc4]">Pro tip:</span> Common questions include parking details, dress code, what to bring, ID requirements, and cancellation policies.</p>
+          <p className="text-[#4d7a90]">◬ <span className="text-[#7aafc4]">Pro tip:</span> Common questions include parking details, dress code, what to bring, ID requirements, and cancellation policies.</p>
         </div>
       )}
     </div>
@@ -1053,7 +1053,7 @@ function Step8Speakers({ data, setData }: { data: WizardData; setData: (d: Parti
 
       {speakers.length === 0 && agenda.length === 0 && (
         <div className="rounded-xl p-4 text-sm" style={{ background: 'rgba(0,229,204,0.04)', border: '1px solid rgba(0,229,204,0.1)' }}>
-          <p className="text-[#4d7a90]">💡 This step is optional. Events with speakers and a detailed agenda get significantly higher attendee confidence before RSVPing.</p>
+          <p className="text-[#4d7a90]">◬ This step is optional. Events with speakers and a detailed agenda get significantly higher attendee confidence before RSVPing.</p>
         </div>
       )}
     </div>
@@ -1073,7 +1073,7 @@ function Step10Launch({ data, setData, onSubmit, submitting }: { data: WizardDat
       <div>
         <label className="label-base">Event Visibility</label>
         <div className="flex gap-3">
-          {[{ val: 'PUBLIC', label: '🌐 Public', desc: 'Anyone can find and RSVP' }, { val: 'PRIVATE', label: '🔒 Private', desc: 'Only invited guests can access' }].map(({ val, label, desc }) => (
+          {[{ val: 'PUBLIC', label: '◉ Public', desc: 'Anyone can find and RSVP' }, { val: 'PRIVATE', label: '⊗ Private', desc: 'Only invited guests can access' }].map(({ val, label, desc }) => (
             <button key={val} type="button" onClick={() => setData({ visibility: val as 'PUBLIC' | 'PRIVATE' })}
               className={cn('flex-1 p-4 rounded-xl border text-left transition-all', data.visibility === val ? 'border-[#00e5cc] bg-[rgba(0,229,204,0.1)]' : 'border-[rgba(0,229,204,0.08)] hover:border-[rgba(0,229,204,0.2)]')}>
               <p className={cn('text-sm font-semibold', data.visibility === val ? 'text-[#00e5cc]' : 'text-[#e8f4f8]')}>{label}</p>
@@ -1130,7 +1130,7 @@ function Step10Launch({ data, setData, onSubmit, submitting }: { data: WizardDat
           Save as Draft
         </Button>
         <Button type="button" variant="primary" size="lg" className="flex-1" loading={submitting} onClick={() => onSubmit('LIVE')}>
-          🚀 Launch Event
+          ◈ Launch Event
         </Button>
       </div>
     </div>
@@ -1242,7 +1242,7 @@ export default function NewEventPage() {
         return;
       }
 
-      toast(status === 'LIVE' ? '🚀 Event launched!' : '📝 Saved as draft', 'success');
+      toast(status === 'LIVE' ? '◈ Event launched!' : '◫ Saved as draft', 'success');
       clearDraftOnSuccess();
       if (status === 'LIVE' && json.data?.slug) {
         router.push(`/event/${json.data.slug}?launched=1`);
@@ -1292,7 +1292,7 @@ export default function NewEventPage() {
                 className="flex items-start gap-4 p-5 rounded-2xl text-left transition-all"
                 style={{ background: 'rgba(12,26,31,0.7)', border: '1px solid rgba(0,229,204,0.12)' }}
               >
-                <span className="text-3xl flex-shrink-0">{tmpl.emoji}</span>
+                <span className="text-3xl flex-shrink-0" style={{ color: '#00e5cc' }}>{tmpl.emoji}</span>
                 <div>
                   <p className="text-sm font-bold text-[#e8f4f8]">{tmpl.label}</p>
                   <p className="text-xs text-[#4d7a90] mt-0.5">{tmpl.desc}</p>
@@ -1308,7 +1308,7 @@ export default function NewEventPage() {
       {/* Draft restore banner */}
       {showDraftBanner && (
         <div className="mb-6 flex items-center justify-between gap-3 px-5 py-3.5 rounded-2xl text-sm" style={{ background: 'rgba(0,229,204,0.08)', border: '1px solid rgba(0,229,204,0.25)' }}>
-          <p className="text-[#7aafc4]">📝 You have an unsaved draft. Continue where you left off?</p>
+          <p className="text-[#7aafc4]">◫ You have an unsaved draft. Continue where you left off?</p>
           <div className="flex items-center gap-2 flex-shrink-0">
             <button type="button" onClick={restoreDraft} className="px-3 py-1.5 rounded-lg text-xs font-bold text-[#020408]" style={{ background: 'linear-gradient(135deg, #00c4a8, #00e5cc)' }}>Restore</button>
             <button type="button" onClick={discardDraft} className="px-3 py-1.5 rounded-lg text-xs font-semibold text-[#4d7a90] hover:text-[#ff3cac] transition-colors">Discard</button>

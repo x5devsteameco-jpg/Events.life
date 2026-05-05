@@ -13,12 +13,12 @@ interface MobileNavProps {
 }
 
 const navItems = [
-  { href: '/dashboard', label: 'Dashboard', emoji: '🏠' },
-  { href: '/dashboard/events', label: 'My Events', emoji: '📅' },
-  { href: '/events/new', label: 'Create Event', emoji: '✨', accent: true },
-  { href: '/dashboard/attendees', label: 'Attendees', emoji: '👥' },
-  { href: '/dashboard/saved', label: 'Saved Events', emoji: '🔖' },
-  { href: '/dashboard/settings', label: 'Settings', emoji: '⚙️' },
+  { href: '/dashboard', label: 'Dashboard', emoji: '◉' },
+  { href: '/dashboard/events', label: 'My Events', emoji: '◈' },
+  { href: '/events/new', label: 'Create Event', emoji: '✦', accent: true },
+  { href: '/dashboard/attendees', label: 'Attendees', emoji: '◎' },
+  { href: '/dashboard/saved', label: 'Saved Events', emoji: '◬' },
+  { href: '/dashboard/settings', label: 'Settings', emoji: '⬡' },
 ];
 
 export function MobileNav({ user, isAdmin: _isAdmin = false }: MobileNavProps & { isAdmin?: boolean }) {

@@ -147,7 +147,7 @@ export function RSVPForm({ eventId, title, eventDate, eventEndDate, eventLocatio
             transition={{ type: 'spring', stiffness: 300, damping: 18, delay: 0.1 }}
             className="text-5xl mb-4"
           >
-            {rsvpStatus === 'CONFIRMED' ? '🎉' : '⏳'}
+            {rsvpStatus === 'CONFIRMED' ? '◈' : '◬'}
           </motion.div>
           <h3 className="text-xl font-black text-[#00e5cc] mb-2" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>
             {rsvpStatus === 'CONFIRMED' ? "You're In!" : "You're on the waitlist"}

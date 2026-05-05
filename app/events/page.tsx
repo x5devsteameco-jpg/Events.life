@@ -265,27 +265,27 @@ export default async function BrowseEventsPage({
             )}
             {city && (
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ background: 'rgba(0,229,204,0.06)', border: '1px solid rgba(0,229,204,0.15)', color: '#00e5cc' }}>
-                📍 {city}
+                ◉ {city}
               </span>
             )}
             {online === '1' && (
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ background: 'rgba(56,189,248,0.08)', border: '1px solid rgba(56,189,248,0.18)', color: '#38bdf8' }}>
-                🌐 Online Only
+                ⬡ Online Only
               </span>
             )}
             {weekend === '1' && (
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.18)', color: '#f59e0b' }}>
-                📅 This Weekend
+                ⬡ This Weekend
               </span>
             )}
             {today === '1' && (
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ background: 'rgba(0,229,204,0.08)', border: '1px solid rgba(0,229,204,0.18)', color: '#00e5cc' }}>
-                ⚡ Today
+                ◈ Today
               </span>
             )}
             {thisweek === '1' && (
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium" style={{ background: 'rgba(156,107,255,0.08)', border: '1px solid rgba(156,107,255,0.18)', color: '#9c6bff' }}>
-                📆 This Week
+                ◉ This Week
               </span>
             )}
           </div>
@@ -303,7 +303,7 @@ export default async function BrowseEventsPage({
                     className="text-xs font-bold uppercase tracking-widest"
                     style={{ color: '#00e5cc', fontFamily: "var(--font-label, 'Bebas Neue', 'Arial Narrow', sans-serif)", letterSpacing: '0.18em' }}
                   >
-                    🔥 Trending This Week
+                    ✦ Trending This Week
                   </span>
                   <div className="h-px flex-1" style={{ background: 'linear-gradient(to left, rgba(0,229,204,0.0), rgba(0,229,204,0.15))' }} />
                 </div>
@@ -363,28 +363,28 @@ export default async function BrowseEventsPage({
                 className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold transition-all hover:-translate-y-0.5 hover:shadow-lg"
                 style={{ background: 'rgba(56,189,248,0.1)', border: '1px solid rgba(56,189,248,0.28)', color: '#38bdf8' }}
               >
-                🌐 Online Events Only
+                ⬡ Online Events Only
               </a>
               <a
                 href="/events?weekend=1"
                 className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold transition-all hover:-translate-y-0.5 hover:shadow-lg"
                 style={{ background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.28)', color: '#f59e0b' }}
               >
-                📅 This Weekend
+                ⬡ This Weekend
               </a>
               <a
                 href="/events?today=1"
                 className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold transition-all hover:-translate-y-0.5 hover:shadow-lg"
                 style={{ background: 'rgba(0,229,204,0.08)', border: '1px solid rgba(0,229,204,0.22)', color: '#00e5cc' }}
               >
-                ⚡ Happening Today
+                ◈ Happening Today
               </a>
               <a
                 href="/events?thisweek=1"
                 className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold transition-all hover:-translate-y-0.5 hover:shadow-lg"
                 style={{ background: 'rgba(156,107,255,0.08)', border: '1px solid rgba(156,107,255,0.22)', color: '#9c6bff' }}
               >
-                📆 This Week
+                ◉ This Week
               </a>
             </div>
           </>

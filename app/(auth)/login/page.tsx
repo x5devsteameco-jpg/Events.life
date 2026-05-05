@@ -120,12 +120,12 @@ export default function LoginPage() {
 
           <div className="mt-8 pt-6 border-t border-[rgba(0,229,204,0.08)] grid grid-cols-3 gap-3 text-center">
             {[
-              { icon: '🔒', label: 'Secure Login' },
-              { icon: '⚡', label: 'Instant Access' },
-              { icon: '🍁', label: 'Canadian Hosted' },
+              { icon: '⊗', label: 'Secure Login' },
+              { icon: '◈', label: 'Instant Access' },
+              { icon: '⬡', label: 'Canadian Hosted' },
             ].map((item) => (
               <div key={item.label}>
-                <div className="text-lg mb-1">{item.icon}</div>
+                <div className="text-lg mb-1" style={{ color: '#00e5cc' }}>{item.icon}</div>
                 <p className="text-[10px] text-[#2d5268] uppercase tracking-wider">{item.label}</p>
               </div>
             ))}

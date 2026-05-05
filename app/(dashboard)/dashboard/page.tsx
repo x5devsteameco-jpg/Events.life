@@ -71,18 +71,18 @@ export default async function DashboardPage() {
   const { events, rsvpCount, upcoming, drafts, total, rsvpTrend, recentRsvpCount, activityFeed } = await getDashboardData(session.user.id);
 
   const stats = [
-    { label: 'Total Events', value: total, icon: '📅', color: '#00e5cc' },
-    { label: 'Total RSVPs', value: rsvpCount, icon: '✅', color: '#00d4b0' },
-    { label: 'Upcoming', value: upcoming, icon: '🚀', color: '#00e5cc' },
-    { label: 'Drafts', value: drafts, icon: '📝', color: '#4d7a90' },
+    { label: 'Total Events', value: total, icon: '◉', color: '#00e5cc' },
+    { label: 'Total RSVPs', value: rsvpCount, icon: '◈', color: '#00d4b0' },
+    { label: 'Upcoming', value: upcoming, icon: '◬', color: '#00e5cc' },
+    { label: 'Drafts', value: drafts, icon: '◫', color: '#4d7a90' },
   ];
 
   const quickActions = [
-    { href: '/events/new', label: 'Create Event', icon: '✨', accent: true },
-    { href: '/dashboard/analytics', label: 'Analytics', icon: '📊' },
-    { href: '/dashboard/events', label: 'Manage Events', icon: '📋' },
-    { href: '/dashboard/attendees', label: 'View Attendees', icon: '👥' },
-    { href: '/dashboard/settings', label: 'Edit Profile', icon: '⚙️' },
+    { href: '/events/new', label: 'Create Event', icon: '✦', accent: true },
+    { href: '/dashboard/analytics', label: 'Analytics', icon: '◐' },
+    { href: '/dashboard/events', label: 'Manage Events', icon: '◫' },
+    { href: '/dashboard/attendees', label: 'View Attendees', icon: '◎' },
+    { href: '/dashboard/settings', label: 'Edit Profile', icon: '◈' },
   ];
 
   return (

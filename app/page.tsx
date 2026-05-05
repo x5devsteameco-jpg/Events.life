@@ -122,12 +122,12 @@ function Navbar() {
 
 export default function HomePage() {
   const features = [
-    { icon: '\u26a1', title: 'Full Event Control', body: 'Draft, publish, pause or end events at any time. Set visibility, capacity, and attendee requirements exactly how you need.', accent: '#00e5cc' },
-    { icon: '🔞', title: 'Age Gates Built-In', body: 'Set minimum age requirements (18, 19, 21+). Attendees verify before seeing event details. Fully compliance-ready.', accent: '#ff3cac' },
-    { icon: '📋', title: 'RSVP & Lead Capture', body: 'Collect store name, brand, position, and certifications from every attendee. Export to CSV at any time.', accent: '#00e5cc' },
-    { icon: '❓', title: 'Custom Questions', body: 'Add your own RSVP fields — text, dropdowns, or checkboxes. Perfect for dietary needs, product preferences, or compliance checks.', accent: '#00e5cc' },
-    { icon: '📧', title: 'Email Blast Invites', body: 'Paste a list of emails and send personalized invites instantly. Track RSVPs directly from your dashboard.', accent: '#00e5cc' },
-    { icon: '👥', title: 'Team Sharing', body: 'Invite team members to co-manage events with view or edit permissions. No extra seats to purchase.', accent: '#00e5cc' },
+    { icon: '◈', title: 'Full Event Control', body: 'Draft, publish, pause or end events at any time. Set visibility, capacity, and attendee requirements exactly how you need.', accent: '#00e5cc' },
+    { icon: '⊗', title: 'Age Gates Built-In', body: 'Set minimum age requirements (18, 19, 21+). Attendees verify before seeing event details. Fully compliance-ready.', accent: '#ff3cac' },
+    { icon: '◫', title: 'RSVP & Lead Capture', body: 'Collect store name, brand, position, and certifications from every attendee. Export to CSV at any time.', accent: '#00e5cc' },
+    { icon: '◬', title: 'Custom Questions', body: 'Add your own RSVP fields — text, dropdowns, or checkboxes. Perfect for dietary needs, product preferences, or compliance checks.', accent: '#00e5cc' },
+    { icon: '◎', title: 'Email Blast Invites', body: 'Paste a list of emails and send personalized invites instantly. Track RSVPs directly from your dashboard.', accent: '#00e5cc' },
+    { icon: '⬡', title: 'Team Sharing', body: 'Invite team members to co-manage events with view or edit permissions. No extra seats to purchase.', accent: '#00e5cc' },
   ];
 
   const steps = [
@@ -190,7 +190,7 @@ export default function HomePage() {
             style={{ background: 'rgba(0,229,204,0.06)', border: '1px solid rgba(0,229,204,0.22)', color: '#00e5cc', fontSize: '0.72rem', letterSpacing: '0.16em', textTransform: 'uppercase', fontFamily: BEBAS }}
           >
             <span className="w-1.5 h-1.5 rounded-full bg-[#00e5cc] animate-pulse" />
-            Industry-Neutral · Compliance-Grade · Built for Canada 🍁
+            Industry-Neutral · Compliance-Grade · Built for Canada
           </motion.div>
 
           <motion.div initial={{ opacity: 0, y: 32 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.1 }}>
@@ -296,7 +296,7 @@ export default function HomePage() {
               { value: '100%', label: 'Data Ownership', color: '#00e5cc' },
               { value: '9-Step', label: 'Event Wizard', color: '#00e5cc' },
               { value: 'Free', label: 'Forever to Start', color: '#00e5cc' },
-              { value: '🍁', label: 'Canadian Built', color: '#ff3cac' },
+              { value: 'CA', label: 'Canadian Built', color: '#ff3cac' },
             ].map((stat) => (
               <div key={stat.label} className="text-center p-5 rounded-[22px]" style={{ border: '1px solid rgba(0,229,204,0.1)', background: 'rgba(10,22,30,0.6)' }}>
                 <div style={{ fontSize: 'clamp(1.8rem, 4vw, 2.6rem)', fontFamily: CINZEL, fontWeight: 900, color: stat.color, lineHeight: 1.1, marginBottom: '6px' }}>{stat.value}</div>
@@ -362,7 +362,7 @@ export default function HomePage() {
                 <motion.div whileHover={{ y: -4 }} transition={{ duration: 0.2 }}
                   style={{ padding: '24px 26px', borderRadius: '22px', border: `1px solid ${f.accent}28`, background: 'linear-gradient(180deg, rgba(12,24,32,0.94), rgba(6,13,16,0.98))', boxShadow: '0 8px 32px rgba(0,0,0,0.5)', height: '100%', display: 'flex', flexDirection: 'column' as const, gap: '12px' }}
                 >
-                  <div style={{ width: 48, height: 48, borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.4rem', background: `${f.accent}10`, border: `1px solid ${f.accent}24`, flexShrink: 0 }}>{f.icon}</div>
+                  <div style={{ width: 48, height: 48, borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.4rem', color: f.accent, background: `${f.accent}10`, border: `1px solid ${f.accent}24`, flexShrink: 0 }}>{f.icon}</div>
                   <h3 style={{ fontFamily: CINZEL, fontSize: '1.05rem', fontWeight: 700, color: '#e8f4f8', letterSpacing: '0.04em' }}>{f.title}</h3>
                   <p style={{ fontSize: '0.88rem', color: '#7aafc4', lineHeight: 1.6, flex: 1 }}>{f.body}</p>
                 </motion.div>
@@ -438,14 +438,14 @@ export default function HomePage() {
           <AnimSection delay={0.12}>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
               {[
-                { label: 'Networking', icon: '🤝', slug: 'NETWORKING' },
-                { label: 'Product Demo', icon: '🎯', slug: 'PRODUCT_DEMO' },
-                { label: 'Private Gathering', icon: '🔒', slug: 'PRIVATE_GATHERING' },
-                { label: 'Industry Event', icon: '🏭', slug: 'INDUSTRY_EVENT' },
-                { label: 'Trade Show', icon: '🏛️', slug: 'TRADE_SHOW' },
-                { label: 'Tech & Innovation', icon: '💡', slug: 'TECH' },
-                { label: 'Arts & Culture', icon: '🎨', slug: 'ARTS' },
-                { label: 'VIP Experience', icon: '⭐', slug: 'VIP' },
+                { label: 'Networking', icon: '⬡', slug: 'NETWORKING' },
+                { label: 'Product Demo', icon: '◈', slug: 'PRODUCT_DEMO' },
+                { label: 'Private Gathering', icon: '⊗', slug: 'PRIVATE_GATHERING' },
+                { label: 'Industry Event', icon: '◉', slug: 'INDUSTRY_EVENT' },
+                { label: 'Trade Show', icon: '◫', slug: 'TRADE_SHOW' },
+                { label: 'Tech & Innovation', icon: '◬', slug: 'TECH' },
+                { label: 'Arts & Culture', icon: '✦', slug: 'ARTS' },
+                { label: 'VIP Experience', icon: '◐', slug: 'VIP' },
               ].map((cat) => (
                 <Link
                   key={cat.slug}
@@ -457,7 +457,11 @@ export default function HomePage() {
                     textDecoration: 'none',
                   }}
                 >
-                  <span className="text-3xl group-hover:scale-110 transition-transform duration-200">{cat.icon}</span>
+                  <span
+                    className="group-hover:scale-110 transition-transform duration-200"
+                    style={{ fontSize: '1.6rem', lineHeight: 1, color: '#00e5cc', fontFamily: 'inherit' }}
+                    aria-hidden="true"
+                  >{cat.icon}</span>
                   <span className="text-sm font-semibold text-center leading-tight" style={{ color: '#a8c8d8', fontFamily: 'Space Grotesk, sans-serif' }}>{cat.label}</span>
                 </Link>
               ))}
@@ -495,7 +499,7 @@ export default function HomePage() {
                 <BrandLogo size="sm" textClassName="uppercase tracking-[0.1em] text-[0.88rem]" />
               </div>
               <p style={{ fontSize: '0.75rem', color: '#2d5268' }}>Your events. Your data. Your rules.</p>
-              <p style={{ fontSize: '0.75rem', color: '#2d5268', marginTop: '2px' }}>Built in Canada 🍁</p>
+              <p style={{ fontSize: '0.75rem', color: '#2d5268', marginTop: '2px' }}>Built in Canada · CA</p>
             </div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '24px', fontSize: '0.875rem', color: '#4d7a90' }}>
               {[{ href: '/events', label: 'Browse Events' }, { href: '/register', label: 'Create Account' }, { href: '/login', label: 'Sign In' }, { href: '/dashboard', label: 'Dashboard' }].map((link) => (

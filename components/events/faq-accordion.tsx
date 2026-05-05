@@ -15,7 +15,7 @@ export function FAQAccordion({ faqs }: { faqs: FAQ[] }) {
   return (
     <div>
       <h3 className="text-sm font-bold text-[#00e5cc] mb-3 flex items-center gap-2">
-        <span>❓</span> FAQ
+        <span style={{ color: '#00e5cc' }}>◬</span> FAQ
       </h3>
       <div className="space-y-2">
         {faqs.map((faq) => {

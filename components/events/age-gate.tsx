@@ -16,7 +16,7 @@ export function AgeGate({ minAge, children }: Props) {
   if (denied) {
     return (
       <div className="rounded-2xl p-8 text-center" style={{ background: 'rgba(12,26,31,0.85)', border: '1px solid rgba(255,60,172,0.2)' }}>
-        <p className="text-4xl mb-3">🚫</p>
+        <p className="text-4xl mb-3" style={{ color: '#ff3cac' }}>⊗</p>
         <h3 className="text-lg font-black text-[#ff3cac] mb-2" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>Access Restricted</h3>
         <p className="text-sm text-[#4d7a90]">You must be {minAge}+ years old to attend this event.</p>
       </div>
@@ -36,7 +36,7 @@ export function AgeGate({ minAge, children }: Props) {
         style={{ background: 'rgba(12,26,31,0.9)', border: '1px solid rgba(255,60,172,0.25)' }}
       >
         <div className="w-16 h-16 rounded-full mx-auto mb-5 flex items-center justify-center" style={{ background: 'rgba(255,60,172,0.1)', border: '1px solid rgba(255,60,172,0.3)' }}>
-          <span className="text-2xl">🔞</span>
+          <span className="text-2xl" style={{ color: '#ff3cac' }}>⊗</span>
         </div>
         <h3 className="text-xl font-black text-[#e8f4f8] mb-2" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>Age Verification</h3>
         <p className="text-sm text-[#4d7a90] mb-6 leading-relaxed">

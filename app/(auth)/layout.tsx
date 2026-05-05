@@ -40,7 +40,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
 
         {/* Footer */}
         <p className="text-center text-xs text-[#2d5268] mt-6">
-          Built in Canada 🍁 &nbsp;·&nbsp; © {new Date().getFullYear()} Gatewise Events
+          Built in Canada &nbsp;·&nbsp; © {new Date().getFullYear()} Gatewise Events
         </p>
       </div>
     </div>

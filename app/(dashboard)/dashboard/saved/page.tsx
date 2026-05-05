@@ -56,7 +56,7 @@ export default async function SavedEventsPage() {
             className="rounded-2xl py-20 text-center"
             style={{ background: 'rgba(12,26,31,0.4)', border: '1px dashed rgba(0,229,204,0.1)' }}
           >
-            <div className="text-5xl mb-4">🔖</div>
+            <div className="text-5xl mb-4" style={{ color: '#00e5cc' }}>◬</div>
             <h2 className="text-lg font-bold text-[#e8f4f8] mb-2">No saved events yet</h2>
             <p className="text-sm text-[#4d7a90] mb-6">
               Tap the bookmark icon on any event to save it for later.

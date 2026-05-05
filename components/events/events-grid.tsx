@@ -85,7 +85,7 @@ export function EventsGrid({ events }: Props) {
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center" style={{ background: 'linear-gradient(135deg, rgba(0,229,204,0.1), rgba(0,180,150,0.06))' }}>
-                    <span className="text-4xl opacity-60">🎉</span>
+                    <span className="text-4xl opacity-60" style={{ color: '#00e5cc' }}>◈</span>
                   </div>
                 )}
                 <div className="absolute top-3 left-3 flex gap-2">

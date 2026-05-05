@@ -53,7 +53,7 @@ export default function AdminUsersClient({ users, actorId }: { users: User[]; ac
   if (list.length === 0) {
     return (
       <div className="rounded-2xl p-16 text-center" style={{ background: 'rgba(12,26,31,0.4)', border: '1px dashed rgba(0,229,204,0.15)' }}>
-        <p className="text-4xl mb-3">👥</p>
+        <p className="text-4xl mb-3" style={{ color: '#00e5cc' }}>◎</p>
         <h3 className="text-lg font-bold text-[#e8f4f8]">No users found</h3>
         <p className="text-sm text-[#4d7a90] mt-1">Try adjusting your search filters.</p>
       </div>

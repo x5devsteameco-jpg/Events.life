@@ -98,7 +98,7 @@ export default async function EventRSVPsPage({ params }: Props) {
       {/* RSVPs table */}
       {event.rsvps.length === 0 ? (
         <div className="text-center py-20 rounded-2xl" style={{ background: 'rgba(12,26,31,0.3)', border: '1px dashed rgba(0,229,204,0.1)' }}>
-          <div className="text-4xl mb-3">👥</div>
+          <div className="text-4xl mb-3" style={{ color: '#00e5cc' }}>◎</div>
           <h3 className="text-lg font-bold text-[#e8f4f8] mb-2" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>No RSVPs yet</h3>
           <p className="text-sm text-[#4d7a90]">Share your event link to start collecting RSVPs.</p>
         </div>

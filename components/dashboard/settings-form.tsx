@@ -383,7 +383,7 @@ export function SettingsForm({ initialData }: Props) {
                     )}
                     {watch('website') && (
                       <span className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: 'rgba(0,229,204,0.06)', color: '#4d7a90', border: '1px solid rgba(0,229,204,0.12)' }}>
-                        🌐 Website
+                        ⬡ Website
                       </span>
                     )}
                   </div>

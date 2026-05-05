@@ -133,7 +133,7 @@ export function AttendeeTable({ rsvps, eventTitle, eventId }: Props) {
       <div className="rounded-xl overflow-hidden" style={{ border: '1px solid rgba(0,229,204,0.08)' }}>
         {filtered.length === 0 ? (
           <div className="py-16 text-center" style={{ background: 'rgba(12,26,31,0.4)' }}>
-            <p className="text-4xl mb-3">👥</p>
+            <p className="text-4xl mb-3" style={{ color: '#00e5cc' }}>◎</p>
             <p className="text-sm text-[#4d7a90]">{search || statusFilter !== 'ALL' ? 'No matching attendees' : 'No RSVPs yet'}</p>
           </div>
         ) : (
