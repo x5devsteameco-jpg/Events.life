@@ -8,6 +8,7 @@ import { AttendeeTable } from '@/components/events/attendee-table';
 import type { EventStatus } from '@/lib/types';
 import { DuplicateEventButton } from '@/components/events/duplicate-event-button';
 import { PromoteWaitlistButton } from '@/components/events/promote-waitlist-button';
+import { ExportRSVPButton } from '@/components/events/export-rsvp-button';
 import { AnnouncePanel } from '@/components/events/announce-panel';
 
 type Props = { params: Promise<{ id: string }>; searchParams: Promise<{ tab?: string }> };
@@ -139,11 +140,17 @@ export default async function EventManagePage({ params, searchParams }: Props) {
       )}
 
       {tab === 'attendees' && (
-        <AttendeeTable
-          rsvps={event.rsvps.filter((r) => r.status === 'CONFIRMED') as import('@/lib/types').RSVP[]}
-          eventTitle={event.title}
-          eventId={id}
-        />
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <p className="text-sm text-[#4d7a90]">{confirmed} attendee{confirmed !== 1 ? 's' : ''} confirmed</p>
+            <ExportRSVPButton eventId={id} eventTitle={event.title} />
+          </div>
+          <AttendeeTable
+            rsvps={event.rsvps.filter((r) => r.status === 'CONFIRMED') as import('@/lib/types').RSVP[]}
+            eventTitle={event.title}
+            eventId={id}
+          />
+        </div>
       )}
 
       {tab === 'waitlist' && (
