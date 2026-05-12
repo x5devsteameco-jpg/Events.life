@@ -180,6 +180,15 @@ export async function PATCH(req: NextRequest, { params }: RouteContext) {
 
   // Restrict to max 200 at a time to prevent abuse
   const ids = body.rsvpIds.slice(0, 200);
+
+  // If host is cancelling, count confirmed RSVPs BEFORE update for promotion logic
+  let confirmedBeforeCancel = 0;
+  if (body.status === 'CANCELLED') {
+    confirmedBeforeCancel = await db.rSVP.count({
+      where: { id: { in: ids }, eventId: id, status: 'CONFIRMED' },
+    });
+  }
+
   await db.rSVP.updateMany({
     where: { id: { in: ids }, eventId: id },
     data: { status: body.status as never },
@@ -187,11 +196,7 @@ export async function PATCH(req: NextRequest, { params }: RouteContext) {
 
   // If host is cancelling confirmed RSVPs, promote from waitlist for each freed slot
   if (body.status === 'CANCELLED') {
-    const cancelledConfirmed = await db.rSVP.count({
-      where: { id: { in: ids }, status: 'CANCELLED' },
-    });
-    const promotions = Math.min(cancelledConfirmed, ids.length);
-    for (let i = 0; i < promotions; i++) {
+    for (let i = 0; i < confirmedBeforeCancel; i++) {
       await promoteFromWaitlist(event as import('@/lib/types').Event);
     }
   }

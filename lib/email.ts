@@ -44,13 +44,25 @@ export async function sendRSVPConfirmation(rsvp: RSVP, event: Event): Promise<vo
     ? formatDateRange(event.date, event.endDate)
     : formatDate(event.date, 'EEE, MMM d, yyyy · h:mm a');
 
+  const isConfirmed = rsvp.status === 'CONFIRMED';
+  const statusMessage = isConfirmed
+    ? 'Your attendance is confirmed.'
+    : "You've been added to the waitlist. If a spot opens up, you'll be promoted automatically.";
+  const statusEmoji = isConfirmed ? '✅' : '⏳';
+  const title = isConfirmed
+    ? `RSVP Confirmed — ${event.title}`
+    : `Waitlisted — ${event.title}`;
+  const subject = isConfirmed
+    ? `✅ RSVP Confirmed: ${event.title}`
+    : `⏳ Added to Waitlist: ${event.title}`;
+
   const html = emailFrame(
-    `RSVP Confirmed — ${event.title}`,
+    title,
     `
       <h1 style="margin:0 0 8px;font-size:24px;">${event.title}</h1>
       <p style="margin:0 0 16px;color:#7aafc4;">📅 ${dateStr}</p>
-      <p style="margin:0 0 12px;color:#00e5cc;font-weight:700;">✅ You're on the list, ${rsvp.guestName}!</p>
-      <p style="margin:0 0 20px;color:#7aafc4;">Status: ${rsvp.status}</p>
+      <p style="margin:0 0 12px;color:#00e5cc;font-weight:700;">${statusEmoji} Hello, ${rsvp.guestName}!</p>
+      <p style="margin:0 0 20px;color:#7aafc4;">${statusMessage}</p>
       <a href="${eventUrl}" style="display:inline-block;padding:12px 18px;border-radius:10px;background:linear-gradient(135deg,#00c4a8,#00e5cc);color:#020408;text-decoration:none;font-weight:700;">View Event Details</a>
       <p style="margin-top:18px;font-size:12px;color:#4d7a90;">You're receiving this because you RSVP'd to an event on Gatewise Events.</p>
     `
@@ -59,7 +71,7 @@ export async function sendRSVPConfirmation(rsvp: RSVP, event: Event): Promise<vo
   await sendEmail({
     from: FROM_EMAIL,
     to: rsvp.guestEmail,
-    subject: `✅ RSVP Confirmed: ${event.title}`,
+    subject,
     html,
   });
 }

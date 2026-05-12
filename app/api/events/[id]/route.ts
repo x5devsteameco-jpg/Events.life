@@ -83,6 +83,7 @@ export async function PATCH(req: NextRequest, { params }: RouteContext) {
         }),
         ...(d.parkingAvailable !== undefined && { parkingAvailable: d.parkingAvailable }),
         ...(d.parkingNotes !== undefined && { parkingNotes: d.parkingNotes }),
+        ...(d.waitlistEnabled !== undefined && { waitlistEnabled: d.waitlistEnabled }),
       },
     });
 
