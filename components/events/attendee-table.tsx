@@ -43,8 +43,12 @@ export function AttendeeTable({ rsvps, eventTitle, eventId }: Props) {
   const [sortField, setSortField] = useState<keyof RSVP>('createdAt');
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
   const [checkingIn, setCheckingIn] = useState<string | null>(null);
+  const [actingOnWaitlist, setActingOnWaitlist] = useState<{ id: string; action: string } | null>(null);
   const [localCheckedIn, setLocalCheckedIn] = useState<Record<string, boolean>>(() =>
     Object.fromEntries(rsvps.map((r) => [r.id, r.checkedIn ?? false]))
+  );
+  const [localRsvpStatuses, setLocalRsvpStatuses] = useState<Record<string, string>>(() =>
+    Object.fromEntries(rsvps.map((r) => [r.id, r.status]))
   );
 
   const handleSort = (field: keyof RSVP) => {
@@ -69,6 +73,24 @@ export function AttendeeTable({ rsvps, eventTitle, eventId }: Props) {
       if (res.ok) setLocalCheckedIn((prev) => ({ ...prev, [rsvpId]: newValue }));
     } finally {
       setCheckingIn(null);
+    }
+  };
+
+  const handleWaitlistAction = async (rsvpId: string, action: 'promote' | 'deny') => {
+    if (!eventId || actingOnWaitlist) return;
+    const newStatus = action === 'promote' ? 'CONFIRMED' : 'CANCELLED';
+    setActingOnWaitlist({ id: rsvpId, action });
+    try {
+      const res = await fetch(`/api/events/${eventId}/rsvp`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ rsvpIds: [rsvpId], status: newStatus }),
+      });
+      if (res.ok) {
+        setLocalRsvpStatuses((prev) => ({ ...prev, [rsvpId]: newStatus }));
+      }
+    } finally {
+      setActingOnWaitlist(null);
     }
   };
 
@@ -181,14 +203,14 @@ export function AttendeeTable({ rsvps, eventTitle, eventId }: Props) {
                     <td className="px-4 py-3 text-[#6b9bb0]">{rsvp.brand ?? '—'}</td>
                     <td className="px-4 py-3 text-[#6b9bb0]">{rsvp.position ?? '—'}</td>
                     <td className="px-4 py-3">
-                      <Badge variant={badgeVariantMap[rsvp.status] ?? 'default'}>{rsvp.status}</Badge>
+                      <Badge variant={badgeVariantMap[localRsvpStatuses[rsvp.id]] ?? 'default'}>{localRsvpStatuses[rsvp.id]}</Badge>
                     </td>
                     <td className="px-4 py-3 text-[#4d7a90] text-xs">
                       {new Date(rsvp.createdAt).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric' })}
                     </td>
                     {eventId && (
                       <td className="px-4 py-3">
-                        {rsvp.status === 'CONFIRMED' ? (
+                        {localRsvpStatuses[rsvp.id] === 'CONFIRMED' ? (
                           <button
                             type="button"
                             onClick={() => handleCheckIn(rsvp.id)}
@@ -201,6 +223,27 @@ export function AttendeeTable({ rsvps, eventTitle, eventId }: Props) {
                           >
                             {checkingIn === rsvp.id ? '...' : localCheckedIn[rsvp.id] ? 'Checked In' : 'Check In'}
                           </button>
+                        ) : localRsvpStatuses[rsvp.id] === 'WAITLISTED' ? (
+                          <div className="flex gap-1.5">
+                            <button
+                              type="button"
+                              onClick={() => handleWaitlistAction(rsvp.id, 'promote')}
+                              disabled={actingOnWaitlist?.id === rsvp.id}
+                              title="Promote to confirmed"
+                              className="px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all border border-[rgba(0,229,204,0.3)] text-[#00e5cc] hover:bg-[rgba(0,229,204,0.1)] disabled:opacity-50"
+                            >
+                              {actingOnWaitlist?.id === rsvp.id && actingOnWaitlist.action === 'promote' ? '...' : 'Promote'}
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleWaitlistAction(rsvp.id, 'deny')}
+                              disabled={actingOnWaitlist?.id === rsvp.id}
+                              title="Deny / cancel from waitlist"
+                              className="px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all border border-[rgba(255,60,172,0.3)] text-[#ff3cac] hover:bg-[rgba(255,60,172,0.08)] disabled:opacity-50"
+                            >
+                              {actingOnWaitlist?.id === rsvp.id && actingOnWaitlist.action === 'deny' ? '...' : 'Deny'}
+                            </button>
+                          </div>
                         ) : (
                           <span className="text-xs text-[#2d5268]">—</span>
                         )}
