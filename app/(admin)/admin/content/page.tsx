@@ -19,10 +19,10 @@ export default async function AdminContentPage() {
         </div>
         <nav className="p-3 space-y-1">
           {[
-            { href: '/admin/dashboard', label: 'Overview', icon: '◈' },
-            { href: '/admin/events', label: 'Events', icon: '◉' },
-            { href: '/admin/content', label: 'Site Content', icon: '✦', active: true },
-            { href: '/admin/announcements', label: 'Announcements', icon: '◆' },
+            { href: '/admin/dashboard', label: 'Overview', icon: '' },
+            { href: '/admin/events', label: 'Events', icon: '' },
+            { href: '/admin/content', label: 'Site Content', icon: '', active: true },
+            { href: '/admin/announcements', label: 'Announcements', icon: '' },
           ].map((link) => (
             <Link key={link.href} href={link.href} className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all"
               style={{ background: link.active ? 'rgba(0,229,204,0.08)' : 'transparent', color: link.active ? '#00e5cc' : '#7aafc4' }}>

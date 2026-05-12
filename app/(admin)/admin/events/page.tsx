@@ -48,10 +48,10 @@ export default async function AdminEventsPage({
         </div>
         <nav className="p-3 space-y-1">
           {[
-            { href: '/admin/dashboard', label: 'Overview', icon: '◈' },
-            { href: '/admin/events', label: 'Events', icon: '◉', active: true },
-            { href: '/admin/content', label: 'Site Content', icon: '✦' },
-            { href: '/admin/announcements', label: 'Announcements', icon: '◆' },
+            { href: '/admin/dashboard', label: 'Overview', icon: '' },
+            { href: '/admin/events', label: 'Events', icon: '', active: true },
+            { href: '/admin/content', label: 'Site Content', icon: '' },
+            { href: '/admin/announcements', label: 'Announcements', icon: '' },
           ].map((link) => (
             <Link
               key={link.href}

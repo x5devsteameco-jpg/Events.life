@@ -87,7 +87,7 @@ export default function SiteContentClient({ contents }: { contents: SiteContent[
                 color: saved[content.key] ? '#00e5cc' : '#7aafc4',
               }}
             >
-              {saved[content.key] ? '✓ Saved' : 'Save'}
+              {saved[content.key] ? 'Saved' : 'Save'}
             </button>
           </div>
         </div>

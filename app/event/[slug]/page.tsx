@@ -397,7 +397,7 @@ export default async function PublicEventPage({ params }: Props) {
               <FadeIn delay={0.18}>
                 <div className="p-5 rounded-xl" style={{ background: 'rgba(0,229,204,0.04)', border: '1px solid rgba(0,229,204,0.15)' }}>
                 <h3 className="text-sm font-bold text-[#00e5cc] mb-2 flex items-center gap-2">
-                  <span> ◫</span> Things to Know / Bring
+                  <span>Things to Know / Bring</span>
                 </h3>
                 <p className="text-sm text-[#6b9bb0] whitespace-pre-line leading-relaxed">{event.thingsToKnow}</p>
                 </div>
@@ -660,7 +660,7 @@ function RSVPFormWrapper(props: {
   if (!props.isAccepting) {
     return (
       <div className="p-6 rounded-2xl text-center" style={{ background: 'rgba(12,26,31,0.8)', border: '1px solid rgba(0,229,204,0.08)' }}>
-        <p className="text-2xl mb-2" style={{ color: '#ff3cac' }}>⊗</p>
+        <div className="mb-2" style={{ color: '#ff3cac' }}><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg></div>
         <p className="text-sm font-semibold text-[#4d7a90]">RSVPs Closed</p>
       </div>
     );

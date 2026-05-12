@@ -74,7 +74,7 @@ export default function AdminReportsClient({ initialReports }: { initialReports:
 
       {reports.length === 0 ? (
         <div className="rounded-2xl p-16 text-center" style={{ background: 'rgba(12,26,31,0.4)', border: '1px dashed rgba(0,229,204,0.15)' }}>
-          <p className="text-4xl mb-3" style={{ color: '#00e5cc' }}>◈</p>
+          <div className="mb-3" style={{ color: '#00e5cc' }}><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0 1 12 2.944a11.955 11.955 0 0 1-8.618 3.04A12.02 12.02 0 0 0 3 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg></div>
           <h3 className="text-lg font-bold text-[#e8f4f8]">No reports yet</h3>
           <p className="text-sm text-[#4d7a90] mt-1">The platform is clean.</p>
         </div>
@@ -118,7 +118,7 @@ export default function AdminReportsClient({ initialReports }: { initialReports:
                         className="text-xs font-bold px-3 py-2 rounded-lg transition-all disabled:opacity-50 min-h-[36px]"
                         style={{ background: 'rgba(0,229,204,0.1)', color: '#00e5cc', border: '1px solid rgba(0,229,204,0.25)' }}
                       >
-                        {loading === report.id + 'RESOLVED' ? '…' : '✓ Resolve'}
+                        {loading === report.id + 'RESOLVED' ? '...' : 'Resolve'}
                       </button>
                       <button
                         onClick={() => updateStatus(report.id, 'DISMISSED')}
@@ -126,7 +126,7 @@ export default function AdminReportsClient({ initialReports }: { initialReports:
                         className="text-xs font-bold px-3 py-2 rounded-lg transition-all disabled:opacity-50 min-h-[36px]"
                         style={{ background: 'rgba(77,122,144,0.08)', color: '#4d7a90', border: '1px solid rgba(77,122,144,0.2)' }}
                       >
-                        {loading === report.id + 'DISMISSED' ? '…' : '✕ Dismiss'}
+                        {loading === report.id + 'DISMISSED' ? '...' : 'Dismiss'}
                       </button>
                     </div>
                   )}

@@ -461,7 +461,7 @@ export function SettingsForm({ initialData }: Props) {
 
           <div className="flex items-center gap-3 pt-2">
             <Button type="submit" variant="primary" loading={isSubmitting} disabled={!isDirty && !isSubmitting}>
-              {saved ? '✓ Saved' : 'Save Changes'}
+              {saved ? 'Saved' : 'Save Changes'}
             </Button>
             {saved && (
               <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-sm text-[#00e5cc]">

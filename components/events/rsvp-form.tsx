@@ -145,9 +145,12 @@ export function RSVPForm({ eventId, title, eventDate, eventEndDate, eventLocatio
             initial={{ scale: 0, rotate: -15 }}
             animate={{ scale: 1, rotate: 0 }}
             transition={{ type: 'spring', stiffness: 300, damping: 18, delay: 0.1 }}
-            className="text-5xl mb-4"
+            className="mb-4 flex justify-center"
           >
-            {rsvpStatus === 'CONFIRMED' ? '◈' : '◬'}
+            {rsvpStatus === 'CONFIRMED'
+              ? <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#00e5cc" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              : <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#7aafc4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            }
           </motion.div>
           <h3 className="text-xl font-black text-[#00e5cc] mb-2" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>
             {rsvpStatus === 'CONFIRMED' ? "You're In!" : "You're on the waitlist"}
@@ -393,7 +396,7 @@ export function RSVPForm({ eventId, title, eventDate, eventEndDate, eventLocatio
             <p className="text-xs font-semibold text-[#4d7a90] mb-2">Have a promo code?</p>
             {promoApplied ? (
               <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-[#00e5cc]">✓ {promoApplied.code} applied</span>
+                <span className="text-xs font-bold text-[#00e5cc]">{promoApplied.code} applied</span>
                 <span className="text-xs text-[#4d7a90]">
                   ({promoApplied.discountType === 'percent' ? `${promoApplied.discountValue}% off` : `$${promoApplied.discountValue} off`})
                 </span>

@@ -79,7 +79,7 @@ export default async function AdminDashboard() {
       <aside className="w-56 flex-shrink-0 border-r" style={{ background: 'rgba(12,26,31,0.5)', borderColor: 'rgba(0,229,204,0.1)' }}>
         <div className="p-5 border-b" style={{ borderColor: 'rgba(0,229,204,0.08)' }}>
           <div className="flex items-center gap-2">
-            <span className="text-xl">⬡</span>
+            <span className="text-xl" aria-hidden="true">+</span>
             <div>
               <p className="text-xs font-black text-[#e8f4f8]" style={{ fontFamily: 'Bebas Neue, sans-serif', letterSpacing: '0.1em' }}>ADMIN PORTAL</p>
               <p className="text-[10px]" style={{ color: '#4d7a90' }}>events.life</p>

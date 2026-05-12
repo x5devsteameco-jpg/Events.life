@@ -141,7 +141,7 @@ export default function EditEventPage() {
         <div className="glass-strong rounded-2xl p-5">
           <h2 className="text-sm font-bold text-[#e8f4f8] mb-3" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>Event Status</h2>
           <div className="flex gap-3">
-            {[{ val: 'DRAFT', label: '◫ Draft' }, { val: 'LIVE', label: '◉ Live' }, { val: 'CANCELLED', label: '⊗ Cancelled' }].map(({ val, label }) => (
+            {[{ val: 'DRAFT', label: 'Draft' }, { val: 'LIVE', label: 'Live' }, { val: 'CANCELLED', label: 'Cancelled' }].map(({ val, label }) => (
               <button key={val} type="button" onClick={() => set({ status: val })}
                 className={cn('px-4 py-2 rounded-xl border text-sm font-medium transition-all', form.status === val ? 'border-[#00e5cc] bg-[rgba(0,229,204,0.1)] text-[#00e5cc]' : 'border-[rgba(0,229,204,0.08)] text-[#4d7a90] hover:border-[rgba(0,229,204,0.2)]')}>
                 {label}
@@ -259,7 +259,7 @@ export default function EditEventPage() {
         <div className="glass-strong rounded-2xl p-5 space-y-3">
           <h2 className="text-sm font-bold text-[#e8f4f8]" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>Visibility</h2>
           <div className="flex gap-3">
-            {[{ val: 'PUBLIC', label: '◉ Public' }, { val: 'PRIVATE', label: '⊗ Private' }].map(({ val, label }) => (
+            {[{ val: 'PUBLIC', label: 'Public' }, { val: 'PRIVATE', label: 'Private' }].map(({ val, label }) => (
               <button key={val} type="button" onClick={() => set({ visibility: val })}
                 className={cn('flex-1 py-2 rounded-xl border text-sm font-medium transition-all', form.visibility === val ? 'border-[#00e5cc] bg-[rgba(0,229,204,0.1)] text-[#00e5cc]' : 'border-[rgba(0,229,204,0.08)] text-[#4d7a90] hover:border-[rgba(0,229,204,0.2)]')}>
                 {label}

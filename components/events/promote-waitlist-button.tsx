@@ -40,7 +40,7 @@ export function PromoteWaitlistButton({ eventId, waitlistedIds }: Props) {
       className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-all disabled:opacity-50 hover:-translate-y-0.5 hover:shadow-[0_0_20px_rgba(0,229,204,0.25)]"
       style={{ background: done ? 'rgba(0,229,204,0.12)' : 'linear-gradient(135deg, #00c4a8, #00e5cc)', color: done ? '#00e5cc' : '#020408' }}
     >
-      {done ? '✓ Promoted' : loading ? 'Promoting…' : `◈ Promote All (${waitlistedIds.length})`}
+      {done ? 'Promoted' : loading ? 'Promoting...' : `Promote All (${waitlistedIds.length})`}
     </button>
   );
 }

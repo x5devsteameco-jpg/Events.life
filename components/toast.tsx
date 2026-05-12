@@ -35,25 +35,25 @@ export function useToast(): ToastContextValue {
 // ─── Config ───────────────────────────────────────────────────────────────────
 const variantConfig: Record<ToastVariant, { icon: string; color: string; bg: string; border: string }> = {
   success: {
-    icon: '✓',
+    icon: 'ok',
     color: '#00e5cc',
     bg: 'rgba(0,229,204,0.08)',
     border: 'rgba(0,229,204,0.25)',
   },
   error: {
-    icon: '✕',
+    icon: 'x',
     color: '#ff3cac',
     bg: 'rgba(255,60,172,0.08)',
     border: 'rgba(255,60,172,0.25)',
   },
   warning: {
-    icon: '⚠',
+    icon: '!',
     color: '#ffa500',
     bg: 'rgba(255,165,0,0.08)',
     border: 'rgba(255,165,0,0.25)',
   },
   info: {
-    icon: 'ℹ',
+    icon: 'i',
     color: '#7aafc4',
     bg: 'rgba(122,175,196,0.08)',
     border: 'rgba(122,175,196,0.25)',

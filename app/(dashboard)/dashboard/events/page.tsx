@@ -30,9 +30,9 @@ function StatusMenu({ eventId, currentStatus, onUpdate }: { eventId: string; cur
   const [open, setOpen] = useState(false);
   const { toast } = useToast();
   const options: { status: EventStatus; label: string; color: string }[] = ([
-    { status: 'LIVE', label: '◉ Publish Live', color: '#00e5cc' },
-    { status: 'PRIVATE', label: '⊗ Set Private', color: '#9dd8ea' },
-    { status: 'DRAFT', label: '◫ Move to Draft', color: '#4d7a90' },
+    { status: 'LIVE', label: 'Publish Live', color: '#00e5cc' },
+    { status: 'PRIVATE', label: 'Set Private', color: '#9dd8ea' },
+    { status: 'DRAFT', label: 'Move to Draft', color: '#4d7a90' },
     { status: 'ENDED', label: 'Mark Ended', color: '#4d7a90' },
     { status: 'CANCELLED', label: 'Cancel', color: '#ff3cac' },
   ] as { status: EventStatus; label: string; color: string }[]).filter((o) => o.status !== currentStatus);
@@ -177,7 +177,7 @@ export default function MyEventsPage() {
         </div>
       ) : filtered.length === 0 ? (
         <div className="text-center py-20 rounded-2xl" style={{ background: 'rgba(12,26,31,0.3)', border: '1px dashed rgba(0,229,204,0.1)' }}>
-          <div className="text-4xl mb-3" style={{ color: '#00e5cc' }}>◈</div>
+          <div className="mb-3" style={{ color: '#00e5cc' }}><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
           <h3 className="text-lg font-bold text-[#e8f4f8] mb-2" style={{ fontFamily: "var(--font-heading, 'Cinzel', Georgia, serif)" }}>
             {filter === 'ALL' ? 'No events yet' : `No ${filter.toLowerCase()} events`}
           </h3>
@@ -221,7 +221,7 @@ export default function MyEventsPage() {
                   <div className="flex items-center gap-2 mt-0.5">
                     {event.category && <span className="text-[10px] text-[#2d5268]">{event.category}</span>}
                     {event.ageGate > 0 && <span className="text-[10px] text-[#ff3cac]">{event.ageGate}+</span>}
-                    {event.visibility === 'PRIVATE' && <span className="text-[10px] text-[#4d7a90]">⊗ Private</span>}
+                    {event.visibility === 'PRIVATE' && <span className="text-[10px] text-[#4d7a90]">Private</span>}
                   </div>
                 </div>
 
