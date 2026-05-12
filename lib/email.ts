@@ -188,3 +188,33 @@ export async function sendEventUpdate(rsvp: RSVP, event: Event, updateMessage: s
     html,
   });
 }
+
+export async function sendEventReminder(rsvp: RSVP, event: Event): Promise<void> {
+  const eventUrl = `${BASE_URL}/event/${event.slug}`;
+  const dateStr = event.endDate
+    ? formatDateRange(event.date, event.endDate)
+    : formatDate(event.date, 'EEE, MMM d, yyyy · h:mm a');
+  const timeUntil = formatDate(event.date, 'h:mm a');
+
+  const html = emailFrame(
+    `Event Reminder — ${event.title}`,
+    `
+      <h1 style="margin:0 0 8px;font-size:24px;">${event.title}</h1>
+      <p style="margin:0 0 16px;color:#00e5cc;font-weight:700;">📅 Tomorrow at ${timeUntil}</p>
+      <div style="background:rgba(0,229,204,0.06);border:1px solid rgba(0,229,204,0.18);border-radius:12px;padding:16px;margin:0 0 20px;">
+        <p style="margin:0 0 6px;font-size:14px;"><strong>Date & Time</strong></p>
+        <p style="margin:0 0 12px;color:#7aafc4;font-size:14px;">${dateStr}</p>
+        ${event.location ? `<p style="margin:0 0 4px;font-size:14px;"><strong>Location</strong></p><p style="margin:0;color:#7aafc4;font-size:14px;">${event.location}</p>` : ''}
+      </div>
+      <a href="${eventUrl}" style="display:inline-block;padding:12px 18px;border-radius:10px;background:linear-gradient(135deg,#00c4a8,#00e5cc);color:#020408;text-decoration:none;font-weight:700;">View Event Details & Get Your QR Code</a>
+      <p style="margin-top:18px;font-size:12px;color:#4d7a90;">We're excited to see you tomorrow! Reply to this email if you have any questions.</p>
+    `
+  );
+
+  await sendEmail({
+    from: FROM_EMAIL,
+    to: rsvp.guestEmail,
+    subject: `📅 Reminder: ${event.title} is tomorrow!`,
+    html,
+  });
+}
